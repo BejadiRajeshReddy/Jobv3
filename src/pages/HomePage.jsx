@@ -22,21 +22,18 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import companies from "../data/companies.json";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel";
+// import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import { InfiniteSlider } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import JobList from "../components/job/JobList";
 
 const HomePage = () => {
- const handleClick = () => {
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth',
-  });
-};
+  const handleClick = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
 
   const categories = [
     {
@@ -98,10 +95,11 @@ const HomePage = () => {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
+
       <section className="min-h-screen flex items-start bg-blue-500  text-white py-18  px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center">
-            <h1 className="text-5xl sm:text-5xl md:text-7xl font-extrabold sm:tracking-tight mb-4 py-10">
+            <h1 className="text-5xl sm:text-5xl md:text-7xl font-black sm:tracking-tight mb-4 py-10">
               Find Your Dream Job Today
             </h1>
             <p className="text-xl max-w-3xl mx-auto opacity-90 mb-8">
@@ -140,9 +138,8 @@ const HomePage = () => {
           </div>
         </div>
       </section>
-
       {/* Featured Jobs Section */}
-      <section className="bg-white py-12 px-4 sm:px-6 lg:px-8">
+      <section className="bg-white py-12 px-8 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-10">
             <h2 className="text-3xl font-bold text-gray-900">Featured Jobs</h2>
@@ -158,10 +155,9 @@ const HomePage = () => {
           </div>
         </div>
       </section>
-
       {/* Job Categories Section */}
       <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-10 sm:px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Explore Job Categories
@@ -193,10 +189,9 @@ const HomePage = () => {
           </div>
         </div>
       </section>
-
       {/* For Candidates Section */}
       <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-10 sm:px-4">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -232,10 +227,9 @@ const HomePage = () => {
           </div>
         </div>
       </section>
-
       {/* For Employers Section */}
       <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-10 sm:px-4">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -274,10 +268,9 @@ const HomePage = () => {
           </div>
         </div>
       </section>
-
       {/* Why us */}
       <section className="py-20  bg-white">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-10 sm:px-4 ">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -318,7 +311,6 @@ const HomePage = () => {
           </div>
         </div>
       </section>
-
       {/* CTA Section */}
       <section className="bg-gradient-to-r from-teal-500 to-teal-600 text-white py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
@@ -343,9 +335,8 @@ const HomePage = () => {
           </div>
         </div>
       </section>
-
       {/* Client Logos Section */}
-      <Carousel
+      {/* <Carousel
         plugins={[
           Autoplay({
             delay: 2000,
@@ -368,7 +359,23 @@ const HomePage = () => {
             </CarouselItem>
           ))}
         </CarouselContent>
-      </Carousel>
+      </Carousel> */}
+
+      <InfiniteSlider
+        gap={112}
+        duration={40}
+        durationOnHover={60}
+        className="bg-gray-900 w-full py-10"
+      >
+        {companies.map(({ name, id, path }) => (
+          <div
+            key={id}
+            className="basis-1/3 lg:basis-1/5 flex justify-center items-center"
+          >
+            <img src={path} alt={name} className="h-6 sm:h-8 object-contain" />
+          </div>
+        ))}
+      </InfiniteSlider>
     </div>
   );
 };

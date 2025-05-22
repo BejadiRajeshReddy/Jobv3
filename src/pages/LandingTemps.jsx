@@ -369,70 +369,73 @@
 
 
 
-import React from "react";
-import { Link } from "react-router-dom";
-import { MapPin, DollarSign, Clock, Briefcase } from "lucide-react";
-import { Button } from "@/components/ui/Button";
+// import React from "react";
+// import { Link } from "react-router-dom";
+// import { MapPin, DollarSign, Clock, Briefcase } from "lucide-react";
+// import { Button } from "@/components/ui/Button";
 
-const JobCard = ({ job }) => {
-  return (
-    <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 hover:border-blue-500 transition-all duration-200">
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-0">
-        <div className="flex flex-col sm:flex-row items-start gap-4">
-          <img
-            src={job.company.logo}
-            alt={job.company.name}
-            className="w-12 h-12 object-contain"
-          />
-          <div>
-            <h3 className="text-lg sm:text-xl font-semibold text-gray-900">{job.title}</h3>
-            <p className="text-gray-600">{job.company.name}</p>
-            <div className="flex flex-wrap items-center gap-3 mt-2 text-sm text-gray-500">
-              <div className="flex items-center">
-                <MapPin className="w-4 h-4 mr-1" />
-                {job.location}
-              </div>
-              <div className="flex items-center">
-                <DollarSign className="w-4 h-4 mr-1" />
-                {job.salary}
-              </div>
-              <div className="flex items-center">
-                <Clock className="w-4 h-4 mr-1" />
-                {job.posted}
-              </div>
-              <div className="flex items-center">
-                <Briefcase className="w-4 h-4 mr-1" />
-                {job.experience}
-              </div>
-            </div>
-          </div>
-        </div>
-        <span className="inline-flex items-center rounded-full bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10 whitespace-nowrap">
-          {job.type}
-        </span>
-      </div>
-      <p className="mt-4 text-gray-600 text-sm sm:text-base line-clamp-2 sm:line-clamp-none">
-        {job.description}
-      </p>
-      <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
-        <div className="flex flex-wrap gap-2">
-          {job.skills.map((skill) => (
-            <span
-              key={skill}
-              className="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10"
-            >
-              {skill}
-            </span>
-          ))}
-        </div>
-        <Link to={`/jobs/${job.id}`}>
-          <Button variant="blue" className="w-full sm:w-auto">
-            View Details
-          </Button>
-        </Link>
-      </div>
-    </div>
-  );
-};
+// const JobCard = ({ job }) => {
+//   return (
+//     <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 hover:border-blue-500 transition-all duration-200">
+//       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-0">
+//         <div className="flex flex-col sm:flex-row items-start gap-4">
+//           <img
+//             src={job.company.logo}
+//             alt={job.company.name}
+//             className="w-12 h-12 object-contain"
+//           />
+//           <div>
+//             <h3 className="text-lg sm:text-xl font-semibold text-gray-900">{job.title}</h3>
+//             <p className="text-gray-600">{job.company.name}</p>
+//             <div className="flex flex-wrap items-center gap-3 mt-2 text-sm text-gray-500">
+//               <div className="flex items-center">
+//                 <MapPin className="w-4 h-4 mr-1" />
+//                 {job.location}
+//               </div>
+//               <div className="flex items-center">
+//                 <DollarSign className="w-4 h-4 mr-1" />
+//                 {job.salary}
+//               </div>
+//               <div className="flex items-center">
+//                 <Clock className="w-4 h-4 mr-1" />
+//                 {job.posted}
+//               </div>
+//               <div className="flex items-center">
+//                 <Briefcase className="w-4 h-4 mr-1" />
+//                 {job.experience}
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//         <span className="inline-flex items-center rounded-full bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10 whitespace-nowrap">
+//           {job.type}
+//         </span>
+//       </div>
+//       <p className="mt-4 text-gray-600 text-sm sm:text-base line-clamp-2 sm:line-clamp-none">
+//         {job.description}
+//       </p>
+//       <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
+//         <div className="flex flex-wrap gap-2">
+//           {job.skills.map((skill) => (
+//             <span
+//               key={skill}
+//               className="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10"
+//             >
+//               {skill}
+//             </span>
+//           ))}
+//         </div>
+//         <Link to={`/jobs/${job.id}`}>
+//           <Button variant="blue" className="w-full sm:w-auto">
+//             View Details
+//           </Button>
+//         </Link>
+//       </div>
+//     </div>
+//   );
+// };
 
-export default JobCard;      
+// export default JobCard;      
+
+
+

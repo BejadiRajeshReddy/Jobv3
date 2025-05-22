@@ -16,7 +16,7 @@ const JobCard = ({ job }) => {
               <img
                 src={job.company.logo}
                 alt={job.company.name}
-                className="w-12 h-12 object-contain rounded-md"
+                className="w-12 h-12 object-contain rounded-md group-hover:scale-110 transition-transform duration-300"
               />
             </div>
             <div className="flex-1 min-w-0">
@@ -73,17 +73,17 @@ const JobCard = ({ job }) => {
               {skill}
             </span>
           ))}
-          {/* {job.skills.length > 3 && (
+          {job.skills.length > 3 && (
             <span className="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">
               +{job.skills.length - 3} more
             </span>
-          )} */}
+          )}
         </div>
 
         {/* Button */}
-        <div className="flex justify-end">
+        <div className="flex justify-end ">
           <Link to={`/jobs/${job.id}`} className="block w-full sm:w-auto">
-            <Button variant="blue" className="w-full">
+            <Button variant="blue" className="w-full group-hover:scale-105 transition-transform duration-300">
               View Details
             </Button>
           </Link>

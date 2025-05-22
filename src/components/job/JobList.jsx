@@ -16,7 +16,7 @@ const jobs = [
     experience: "1-3 years",
     description:
       "We are looking for a skilled frontend developer to join our team. You will be responsible for building user interfaces using React.",
-    skills: ["React", "JavaScript", "CSS", "HTML"],
+    skills: ["React", "JavaScript", "CSS", "HTML","tailwindcss"],
   },
   {
     id: 2,
@@ -32,7 +32,7 @@ const jobs = [
     experience: "3-5 years",
     description:
       "Looking for an experienced backend developer with strong Node.js skills.",
-    skills: ["Node.js", "Express", "MongoDB", "AWS"],
+    skills: ["Node.js", "Express", "MongoDB", "AWS","SQL"],
   },
   {
     id: 3,
@@ -48,7 +48,7 @@ const jobs = [
     experience: "5+ years",
     description:
       "Join our team as a full stack developer working on exciting projects.",
-    skills: ["React", "Node.js", "TypeScript", "PostgreSQL"],
+    skills: ["React", "Node.js", "TypeScript", "PostgreSQL","MongoDB","Express","Next.js"],
   },
   {
     id: 4,

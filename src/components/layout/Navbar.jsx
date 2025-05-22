@@ -52,10 +52,10 @@ const Navbar = () => {
           <div className="flex items-center">
             {/* desktop auth */}
             <div className="hidden md:flex md:items-center md:space-x-4">
-              <Link to="/login">
+              <Link to="/login" onClick={handleClick}>
                 <Button variant="blue">Login</Button>
               </Link>
-              <Link to="/register">
+              <Link to="/register" onClick={handleClick}>
                 <Button variant="danger">Register</Button>
               </Link>
             </div>

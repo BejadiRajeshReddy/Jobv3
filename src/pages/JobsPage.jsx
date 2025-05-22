@@ -178,7 +178,6 @@ const JobsPage = () => {
           )}
         </div>
       </div>
-
       <JobList searchQuery={searchQuery} filters={filters} />
     </div>
   );
