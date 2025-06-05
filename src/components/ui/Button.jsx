@@ -38,13 +38,25 @@ const buttonVariants = cva(
   }
 );
 
-function Button({ className, variant, size, asChild = false, leftIcon, children, ...props }) {
+function Button({ 
+  className, 
+  variant, 
+  size, 
+  asChild = false, 
+  leftIcon, 
+  children, 
+  fullWidth,
+  ...props 
+}) {
   const Comp = asChild ? Slot : "button";
 
   return (
     <Comp
       data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={cn(
+        buttonVariants({ variant, size, className }),
+        fullWidth && "w-full"
+      )}
       {...props}
     >
       {leftIcon}
