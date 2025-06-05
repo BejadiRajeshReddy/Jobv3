@@ -425,13 +425,15 @@ const JobDetailPage = () => {
                   <Button 
                     variant="outline" 
                     className="flex-1"
-                    leftIcon={<BookmarkPlus className="h-4 w-4" />}>
+                  >
+                    <BookmarkPlus className="h-4 w-4 mr-2" />
                     Save
                   </Button>
                   <Button 
                     variant="outline" 
                     className="flex-1"
-                    leftIcon={<Share2 className="h-4 w-4" />}>
+                  >
+                    <Share2 className="h-4 w-4 mr-2" />
                     Share
                   </Button>
                 </div>
