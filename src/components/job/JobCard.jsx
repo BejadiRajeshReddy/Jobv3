@@ -3,6 +3,23 @@ import { Link } from "react-router-dom";
 import { MapPin, Clock, IndianRupee, Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
+const formatSalary = (salary) => {
+  if (!salary || typeof salary !== 'object') return 'Not Disclosed';
+  
+  const { min, max, currency = 'INR' } = salary;
+  if (!min && !max) return 'Not Disclosed';
+  
+  const formatNumber = (num) => num.toLocaleString('en-IN');
+  
+  if (min && max) {
+    return `${currency} ${formatNumber(min)} - ${formatNumber(max)}`;
+  } else if (min) {
+    return `${currency} ${formatNumber(min)}+`;
+  } else {
+    return `Up to ${currency} ${formatNumber(max)}`;
+  }
+};
+
 const JobCard = ({ job }) => {
   return (
     <div className="bg-white p-4 md:p-8 rounded-lg border hover:shadow-lg border-gray-200  transition-colors duration-300 hover:border-blue-400 cursor-pointer group">
@@ -43,7 +60,7 @@ const JobCard = ({ job }) => {
           </div>
           <div className="flex items-center mr-2">
             <IndianRupee className="w-4 h-4 mr-1 " />
-            <span className="truncate">{job.salary}</span>
+            <span className="truncate">{formatSalary(job.salary)}</span>
           </div>
           <div className="flex items-center">
             <Clock className="w-4 h-4 mr-1" />
