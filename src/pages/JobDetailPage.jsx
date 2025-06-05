@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams, Link } from "react-router-dom";
-import { MapPin, IndianRupee, Clock, Briefcase, ArrowLeft } from "lucide-react";
+import { MapPin, IndianRupee, Clock, Briefcase, ArrowLeft, DollarSign, Building, CheckCircle2, BookmarkPlus, Share2, Calendar } from "lucide-react";
 import { Button } from "../components/ui/Button";
 
 const jobs = [
