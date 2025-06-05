@@ -3,6 +3,27 @@ import { useParams, Link } from "react-router-dom";
 import { MapPin, IndianRupee, Clock, Briefcase, ArrowLeft, DollarSign, Building, CheckCircle2, BookmarkPlus, Share2, Calendar } from "lucide-react";
 import { Button } from "../components/ui/Button";
 
+// Helper function to format salary
+const formatSalary = (min, max, currency = "INR") => {
+  if (!min || !max) return "Not specified";
+  const formatter = new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: currency,
+    maximumFractionDigits: 0
+  });
+  return `${formatter.format(min)} - ${formatter.format(max)}`;
+};
+
+// Helper function to format date
+const formatDate = (date) => {
+  if (!date) return "Not specified";
+  return new Date(date).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+};
+
 const jobs = [
   {
     id: 1,
@@ -16,9 +37,14 @@ const jobs = [
       website: "https://facebook.com",
     },
     location: "Hyderabad, India",
-    salary: "₹250,000 - ₹300,000",
+    salary: {
+      min: 250000,
+      max: 300000,
+      currency: "INR"
+    },
     type: "full-time",
-    posted: "8 days ago",
+    postedAt: "2023-10-18T10:00:00Z",
+    deadline: "2023-11-18T10:00:00Z",
     experience: "1-3 years",
     description: "We are looking for a skilled frontend developer to join our team. You will be responsible for building user interfaces using React. The ideal candidate should have strong experience with modern JavaScript frameworks and a passion for creating exceptional user experiences.",
     responsibilities: [
@@ -56,9 +82,14 @@ const jobs = [
       website: "https://netflix.com",
     },
     location: "Bangalore, India",
-    salary: "₹500,000 - ₹550,000",
+    salary: {
+      min: 500000,
+      max: 550000,
+      currency: "INR"
+    },
     type: "full-time",
-    posted: "3 days ago",
+    postedAt: "2023-10-23T10:00:00Z",
+    deadline: "2023-11-23T10:00:00Z",
     experience: "3-5 years",
     description: "Looking for an experienced backend developer with strong Node.js skills. You'll be working on our core streaming infrastructure and helping scale our services to millions of users.",
     responsibilities: [
@@ -96,9 +127,14 @@ const jobs = [
       website: "https://microsoft.com",
     },
     location: "Mumbai, India",
-    salary: "₹800,000 - ₹900,000",
+    salary: {
+      min: 800000,
+      max: 900000,
+      currency: "INR"
+    },
     type: "full-time",
-    posted: "5 days ago",
+    postedAt: "2023-10-21T10:00:00Z",
+    deadline: "2023-11-21T10:00:00Z",
     experience: "5+ years",
     description: "Join our team as a full stack developer working on exciting projects. We're looking for someone who can handle both frontend and backend development, with a focus on creating scalable enterprise applications.",
     responsibilities: [
@@ -144,7 +180,7 @@ const JobDetailPage = () => {
   }
 
   return (
- <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
@@ -240,7 +276,7 @@ const JobDetailPage = () => {
                   </div>
                   <div className="mt-1 flex items-center text-sm text-gray-500">
                     <MapPin className="h-4 w-4 mr-1" />
-                    {job.company.location}
+                    {job.location}
                   </div>
                   {job.company.website && (
                     <a 
@@ -350,7 +386,7 @@ const JobDetailPage = () => {
                       <DollarSign className="h-5 w-5 text-gray-500 mr-3 mt-0.5" />
                       <div>
                         <p className="text-sm font-medium text-gray-700">Salary Range</p>
-                        <p className="text-sm text-gray-600">```{formatSalary(job.salary.min, job.salary.max, job.salary.currency)}```</p>
+                        <p className="text-sm text-gray-600">{formatSalary(job.salary.min, job.salary.max, job.salary.currency)}</p>
                       </div>
                     </div>
                   )}
