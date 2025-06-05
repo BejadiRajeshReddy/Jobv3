@@ -1,5 +1,5 @@
-import React from "react";
-import { useParams, Link } from "react-router-dom";
+import React, { useState } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { MapPin, IndianRupee, Clock, Briefcase, ArrowLeft, DollarSign, Building, CheckCircle2, BookmarkPlus, Share2, Calendar } from "lucide-react";
 import { Button } from "../components/ui/Button";
 
@@ -164,7 +164,30 @@ const jobs = [
 
 const JobDetailPage = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const [isApplying, setIsApplying] = useState(false);
+  const [coverLetter, setCoverLetter] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasApplied, setHasApplied] = useState(false);
+  const [alreadyApplied, setAlreadyApplied] = useState(false);
+
   const job = jobs.find((j) => j.id === parseInt(id));
+
+  const handleApplyClick = () => {
+    setIsApplying(true);
+  };
+
+  const handleApplySubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    setHasApplied(true);
+    setIsSubmitting(false);
+    setIsApplying(false);
+  };
 
   if (!job) {
     return (
