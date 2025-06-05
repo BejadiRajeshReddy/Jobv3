@@ -20,7 +20,8 @@ import {
   Leaf,
   Gavel,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Input } from "../components/ui/input";
+import { Button } from "../components/ui/Button";
 import companies from "../data/companies.json";
 // import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { InfiniteSlider } from "@/components/ui/carousel";
