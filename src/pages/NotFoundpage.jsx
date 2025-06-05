@@ -24,7 +24,7 @@ const NotFoundPage = () => {
 
         <div className="flex justify-center space-x-4">
           <Link to="/">
-            <Button LeftIcon={<Home className="h-5 w-5" />}>
+            <Button leftIcon={<Home className="h-5 w-5" />}>
               Back to Home
             </Button>
           </Link>
@@ -35,6 +35,3 @@ const NotFoundPage = () => {
 };
 
 export default NotFoundPage;
-
-
-
