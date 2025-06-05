@@ -8,15 +8,18 @@ const jobs = [
     company: {
       name: "Facebook",
       logo: "/assets/facebook.svg",
+      description: "Facebook is a social media and technology company that connects billions of people worldwide.",
+      employees: "10,000+",
+      industry: "Technology",
+      website: "https://facebook.com",
     },
     location: "Hyderabad, India",
     salary: "₹250,000 - ₹300,000",
     type: "full-time",
     posted: "8 days ago",
     experience: "1-3 years",
-    description:
-      "We are looking for a skilled frontend developer to join our team. You will be responsible for building user interfaces using React.",
-    skills: ["React", "JavaScript", "CSS", "HTML","tailwindcss"],
+    description: "We are looking for a skilled frontend developer to join our team. You will be responsible for building user interfaces using React.",
+    skills: ["React", "JavaScript", "CSS", "HTML", "tailwindcss"],
   },
   {
     id: 2,
@@ -24,15 +27,18 @@ const jobs = [
     company: {
       name: "Netflix",
       logo: "/assets/netflix.svg",
+      description: "Netflix is the world's leading streaming entertainment service.",
+      employees: "5,000+",
+      industry: "Entertainment",
+      website: "https://netflix.com",
     },
     location: "Bangalore, India",
     salary: "₹500,000 - ₹550,000",
     type: "full-time",
     posted: "3 days ago",
     experience: "3-5 years",
-    description:
-      "Looking for an experienced backend developer with strong Node.js skills.",
-    skills: ["Node.js", "Express", "MongoDB", "AWS","SQL"],
+    description: "Looking for an experienced backend developer with strong Node.js skills.",
+    skills: ["Node.js", "Express", "MongoDB", "AWS", "SQL"],
   },
   {
     id: 3,
@@ -40,15 +46,18 @@ const jobs = [
     company: {
       name: "Microsoft",
       logo: "/assets/microsoft.svg",
+      description: "Microsoft is a leading global provider of software, cloud services, and technology solutions.",
+      employees: "150,000+",
+      industry: "Technology",
+      website: "https://microsoft.com",
     },
     location: "Mumbai, India",
     salary: "₹800,000 - ₹900,000",
     type: "full-time",
     posted: "5 days ago",
     experience: "5+ years",
-    description:
-      "Join our team as a full stack developer working on exciting projects.",
-    skills: ["React", "Node.js", "TypeScript", "PostgreSQL","MongoDB","Express","Next.js"],
+    description: "Join our team as a full stack developer working on exciting projects.",
+    skills: ["React", "Node.js", "TypeScript", "PostgreSQL", "MongoDB", "Express", "Next.js"],
   },
   {
     id: 4,
@@ -62,8 +71,7 @@ const jobs = [
     type: "part-time",
     posted: "2 days ago",
     experience: "0-1 years",
-    description:
-      "Create beautiful and intuitive user interfaces for our products.",
+    description: "Create beautiful and intuitive user interfaces for our products.",
     skills: ["Figma", "Adobe XD", "UI Design", "UX Research"],
   },
   {
@@ -78,8 +86,7 @@ const jobs = [
     type: "contract",
     posted: "1 week ago",
     experience: "3-5 years",
-    description:
-      "Looking for a DevOps engineer to help us scale our infrastructure.",
+    description: "Looking for a DevOps engineer to help us scale our infrastructure.",
     skills: ["AWS", "Docker", "Kubernetes", "CI/CD"],
   },
 ];
