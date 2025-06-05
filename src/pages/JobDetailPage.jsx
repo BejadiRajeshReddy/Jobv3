@@ -144,153 +144,240 @@ const JobDetailPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <Link
-          to="/jobs"
-          className="inline-flex items-center text-blue-600 hover:text-blue-500 mb-6"
-        >
-          <ArrowLeft className="h-5 w-5 mr-2" />
-          Back to Jobs
-        </Link>
-
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          {/* Header */}
-          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
-            <div className="flex items-start gap-4">
-              <img
-                src={job.company.logo}
-                alt={job.company.name}
-                className="w-16 h-16 object-contain"
-              />
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">{job.title}</h1>
-                <p className="text-lg text-gray-600">{job.company.name}</p>
-                <div className="flex flex-wrap items-center gap-4 mt-2 text-sm text-gray-500">
-                  <div className="flex items-center">
-                    <MapPin className="w-4 h-4 mr-1" />
-                    {job.location}
+ <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            {/* Job Header */}
+            <div className="p-6 border-b border-gray-200">
+              <div className="flex items-start gap-4">
+                {job.company.logo && (
+                  <div className="flex-shrink-0">
+                    <img 
+                      src={job.company.logo} 
+                      alt={job.company.name} 
+                      className="w-16 h-16 object-cover rounded-md"
+                    />
                   </div>
-                  <div className="flex items-center">
-                    <IndianRupee className="w-4 h-4 mr-1" />
-                    {job.salary}
-                  </div>
-                  <div className="flex items-center">
-                    <Clock className="w-4 h-4 mr-1" />
-                    {job.posted}
-                  </div>
-                  <div className="flex items-center">
-                    <Briefcase className="w-4 h-4 mr-1" />
-                    {job.experience}
+                )}
+                <div className="flex-1 min-w-0">
+                  <h1 className="text-2xl font-bold text-gray-900">
+                    {job.title}
+                  </h1>
+                  <p className="mt-1 text-lg text-gray-600">
+                    {job.company.name}
+                  </p>
+                  
+                  <div className="mt-4 flex flex-wrap gap-4 text-sm text-gray-500">
+                    <div className="flex items-center">
+                      <MapPin className="h-4 w-4 mr-1" />
+                      {job.location}
+                    </div>
+                    <div className="flex items-center">
+                      <Briefcase className="h-4 w-4 mr-1" />
+                      {job.type}
+                    </div>
+                    {job.salary && (
+                      <div className="flex items-center">
+                        <DollarSign className="h-4 w-4 mr-1" />
+                        {formatSalary(job.salary.min, job.salary.max, job.salary.currency)}
+                      </div>
+                    )}
+                    <div className="flex items-center">
+                      <Clock className="h-4 w-4 mr-1" />
+                      Posted {formatDate(job.postedAt)}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="flex flex-col gap-2">
-              <Button variant="blue" className="w-full md:w-auto">
-                Apply Now
-              </Button>
-              <span className="inline-flex items-center justify-center rounded-full bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">
-                {job.type}
-              </span>
+            
+            {/* Job Description */}
+            <div className="p-6">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">Job Description</h2>
+              <p className="text-gray-700 whitespace-pre-line">
+                {job.description}
+              </p>
+              
+              <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">Requirements</h2>
+              <ul className="list-disc pl-5 space-y-2 text-gray-700">
+                {job.requirements.map((req, index) => (
+                  <li key={index}>{req}</li>
+                ))}
+              </ul>
+              
+              <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">Skills</h2>
+              <div className="flex flex-wrap gap-2">
+                {job.skills.map((skill, index) => (
+                  <span 
+                    key={index}
+                    className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+            
+            {/* Company Info */}
+            <div className="p-6 border-t border-gray-200 bg-gray-50">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">About the Company</h2>
+              <div className="flex items-start gap-4">
+                {job.company.logo && (
+                  <div className="flex-shrink-0">
+                    <img 
+                      src={job.company.logo} 
+                      alt={job.company.name} 
+                      className="w-16 h-16 object-cover rounded-md"
+                    />
+                  </div>
+                )}
+                <div>
+                  <h3 className="text-lg font-medium text-gray-900">{job.company.name}</h3>
+                  <div className="mt-2 flex items-center text-sm text-gray-500">
+                    <Building className="h-4 w-4 mr-1" />
+                    {job.company.industry}
+                  </div>
+                  <div className="mt-1 flex items-center text-sm text-gray-500">
+                    <MapPin className="h-4 w-4 mr-1" />
+                    {job.company.location}
+                  </div>
+                  {job.company.website && (
+                    <a 
+                      href={job.company.website} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="mt-3 inline-flex items-center text-sm text-blue-600 hover:text-blue-800"
+                    >
+                      Visit Website
+                    </a>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
-
-          {/* Company Info */}
-          <div className="mt-8 p-4 bg-gray-50 rounded-lg">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              About {job.company.name}
-            </h3>
-            <p className="text-gray-600 mb-4">{job.company.description}</p>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              <div>
-                <span className="text-sm text-gray-500">Industry</span>
-                <p className="font-medium text-gray-900">{job.company.industry}</p>
-              </div>
-              <div>
-                <span className="text-sm text-gray-500">Company Size</span>
-                <p className="font-medium text-gray-900">
-                  {job.company.employees}
+        </div>
+        
+        {/* Application Sidebar */}
+        <div className="lg:col-span-1">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sticky top-8">
+            {alreadyApplied || hasApplied ? (
+              <div className="text-center py-4">
+                <div className="inline-flex items-center justify-center h-16 w-16 rounded-full bg-green-100 text-green-600 mb-4">
+                  <CheckCircle2 className="h-8 w-8" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">Application Submitted</h3>
+                <p className="text-gray-600 mb-4">
+                  Your application has been successfully submitted. Good luck!
                 </p>
+                <Button 
+                  variant="outline" 
+                  fullWidth
+                  onClick={() => navigate('/jobs')}
+                >
+                  Browse More Jobs
+                </Button>
               </div>
+            ) : isApplying ? (
               <div>
-                <span className="text-sm text-gray-500">Website</span>
-                <a
-                  href={job.company.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-medium text-blue-600 hover:text-blue-500"
-                >
-                  Visit Website
-                </a>
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">Apply for this position</h3>
+                <form onSubmit={handleApplySubmit}>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Cover Letter (Optional)
+                    </label>
+                    <textarea
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 min-h-[150px]"
+                      placeholder="Tell the employer why you're a great fit for this role..."
+                      value={coverLetter}
+                      onChange={(e) => setCoverLetter(e.target.value)}
+                    />
+                  </div>
+                  <div className="flex space-x-3">
+                    <Button
+                      type="submit"
+                      fullWidth
+                      isLoading={isSubmitting}
+                    >
+                      Submit Application
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setIsApplying(false)}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </form>
               </div>
-            </div>
-          </div>
-
-          {/* Job Description */}
-          <div className="mt-8">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Job Description
-            </h3>
-            <p className="text-gray-600 whitespace-pre-line">{job.description}</p>
-          </div>
-
-          {/* Responsibilities */}
-          <div className="mt-8">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Key Responsibilities
-            </h3>
-            <ul className="list-disc list-inside space-y-2 text-gray-600">
-              {job.responsibilities.map((responsibility, index) => (
-                <li key={index}>{responsibility}</li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Requirements */}
-          <div className="mt-8">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Requirements
-            </h3>
-            <ul className="list-disc list-inside space-y-2 text-gray-600">
-              {job.requirements.map((requirement, index) => (
-                <li key={index}>{requirement}</li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Benefits */}
-          <div className="mt-8">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Benefits</h3>
-            <ul className="list-disc list-inside space-y-2 text-gray-600">
-              {job.benefits.map((benefit, index) => (
-                <li key={index}>{benefit}</li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Skills */}
-          <div className="mt-8">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Required Skills
-            </h3>
-            <div className="flex flex-wrap gap-2">
-              {job.skills.map((skill) => (
-                <span
-                  key={skill}
-                  className="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-sm font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10"
+            ) : (
+              <>
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">Job Summary</h3>
+                <div className="space-y-4 mb-6">
+                  {job.deadline && (
+                    <div className="flex items-start">
+                      <Calendar className="h-5 w-5 text-gray-500 mr-3 mt-0.5" />
+                      <div>
+                        <p className="text-sm font-medium text-gray-700">Application Deadline</p>
+                        <p className="text-sm text-gray-600">{formatDate(job.deadline)}</p>
+                      </div>
+                    </div>
+                  )}
+                  <div className="flex items-start">
+                    <Clock className="h-5 w-5 text-gray-500 mr-3 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-medium text-gray-700">Posted Date</p>
+                      <p className="text-sm text-gray-600">{formatDate(job.postedAt)}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start">
+                    <Briefcase className="h-5 w-5 text-gray-500 mr-3 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-medium text-gray-700">Job Type</p>
+                      <p className="text-sm text-gray-600">{job.type}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start">
+                    <MapPin className="h-5 w-5 text-gray-500 mr-3 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-medium text-gray-700">Location</p>
+                      <p className="text-sm text-gray-600">{job.location}</p>
+                    </div>
+                  </div>
+                  {job.salary && (
+                    <div className="flex items-start">
+                      <DollarSign className="h-5 w-5 text-gray-500 mr-3 mt-0.5" />
+                      <div>
+                        <p className="text-sm font-medium text-gray-700">Salary Range</p>
+                        <p className="text-sm text-gray-600">```{formatSalary(job.salary.min, job.salary.max, job.salary.currency)}```</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <Button 
+                  fullWidth
+                  onClick={handleApplyClick}
+                  className="mb-3"
                 >
-                  {skill}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Apply Button */}
-          <div className="mt-8 flex justify-center">
-            <Button variant="blue" className="w-full md:w-auto">
-              Apply for this position
-            </Button>
+                  Apply Now
+                </Button>
+                <div className="flex space-x-2">
+                  <Button 
+                    variant="outline" 
+                    className="flex-1"
+                    leftIcon={<BookmarkPlus className="h-4 w-4" />}>
+                    Save
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="flex-1"
+                    leftIcon={<Share2 className="h-4 w-4" />}>
+                    Share
+                  </Button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
