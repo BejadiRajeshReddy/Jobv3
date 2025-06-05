@@ -7,6 +7,7 @@ import NotFoundPage from "./pages/NotFoundpage.jsx";
 import Login from "./pages/Login.jsx";
 import RegisterPage from "./pages/Register.jsx";
 import UnauthorizedPage from "./pages/UnauthorizedPage.jsx";
+import JobDetailPage from "./pages/JobDetailPage.jsx";
 
 function App() {
   return (
@@ -17,10 +18,10 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/jobs" element={<JobPage />} />
-            {/* <Route path="/jobs/:id" element={<JobDetailPage />} /> */}
+            <Route path="/jobs/:id" element={<JobDetailPage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<RegisterPage />} />
-            {/* <Route path="*" element={<NotFoundPage />} /> */}
+            <Route path="/404" element={<NotFoundPage />} />
             <Route path="*" element={<UnauthorizedPage />} />
           </Routes>
         </main>
