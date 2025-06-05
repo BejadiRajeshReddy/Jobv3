@@ -1,6 +1,6 @@
 import { Briefcase, Menu, X } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import { Button } from "../ui/Button";
 import { useState } from "react";
 import Logo from "../ui/Logo";
 import AnimatedBriefcase from "../ui/Logo";
