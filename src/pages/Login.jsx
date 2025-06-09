@@ -41,6 +41,9 @@ const Login = () => {
       const { password: _, ...userWithoutPassword } = user;
       localStorage.setItem("currentUser", JSON.stringify(userWithoutPassword));
       
+      // Dispatch custom event to notify navbar and other components
+      window.dispatchEvent(new Event('userStateChanged'));
+      
       // Redirect to the return URL or default based on user role
       if (returnTo && returnTo !== '/jobs') {
         navigate(returnTo);

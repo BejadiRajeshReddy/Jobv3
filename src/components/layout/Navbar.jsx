@@ -8,28 +8,50 @@ import AnimatedBriefcase from "../ui/Logo";
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if user is logged in
-    const user = localStorage.getItem("currentUser");
-    if (user) {
-      setCurrentUser(JSON.parse(user));
-    }
-
-    // Listen for storage changes (when user logs in/out in another tab)
-    const handleStorageChange = () => {
-      const user = localStorage.getItem("currentUser");
-      if (user) {
-        setCurrentUser(JSON.parse(user));
-      } else {
+    // Function to check and update user state
+    const checkUserState = () => {
+      try {
+        const user = localStorage.getItem("currentUser");
+        if (user) {
+          setCurrentUser(JSON.parse(user));
+        } else {
+          setCurrentUser(null);
+        }
+      } catch (error) {
+        console.error("Error parsing user data:", error);
         setCurrentUser(null);
+      } finally {
+        setIsLoading(false);
       }
     };
 
+    // Check user state immediately
+    checkUserState();
+
+    // Listen for storage changes (when user logs in/out in another tab)
+    const handleStorageChange = (e) => {
+      if (e.key === 'currentUser') {
+        checkUserState();
+      }
+    };
+
+    // Listen for custom events (when user logs in/out in same tab)
+    const handleUserChange = () => {
+      checkUserState();
+    };
+
     window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    window.addEventListener('userStateChanged', handleUserChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('userStateChanged', handleUserChange);
+    };
   }, []);
 
   const handleClick = () => {
@@ -42,9 +64,58 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem("currentUser");
     setCurrentUser(null);
+    
+    // Dispatch custom event to notify other components
+    window.dispatchEvent(new Event('userStateChanged'));
+    
     navigate("/");
     setMobileMenuOpen(false);
   };
+
+  // Don't render auth buttons while loading
+  if (isLoading) {
+    return (
+      <nav className="bg-gray-50 sticky top-0 z-50 shadow-sm rounded-md">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center">
+              <Link to="/" className="flex items-center" onClick={handleClick}>
+                <AnimatedBriefcase />
+                <span className="ml-4 text-xl font-bold text-gray-900 hover:scale-120 transition ease-in-out duration-500">
+                  JobHub
+                </span>
+              </Link>
+              <div className="hidden md:flex md:ml-6 md:space-x-4">
+                <Link
+                  to="/jobs" onClick={handleClick}
+                  className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-700 rounded-md transition  hover:scale-110"
+                >
+                  Browse Jobs
+                </Link>
+                <Link
+                  to="/post-job" onClick={handleClick}
+                  className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-700 rounded-md transition hover:scale-110"
+                >
+                  Post a Job
+                </Link>
+              </div>
+            </div>
+            <div className="flex items-center">
+              <div className="hidden md:flex md:items-center md:space-x-4">
+                <div className="animate-pulse bg-gray-200 h-9 w-20 rounded"></div>
+              </div>
+              <button
+                onClick={toggleMobileMenu}
+                className="ml-2 md:hidden p-2 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              >
+                <Menu className="h-6 w-6 text-gray-700" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    );
+  }
 
   return (
     <nav className="bg-gray-50 sticky top-0 z-50 shadow-sm rounded-md">
