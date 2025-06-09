@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import {
   Mail,
   Lock,
@@ -22,6 +22,11 @@ const Register = () => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Get return URL from query params
+  const searchParams = new URLSearchParams(location.search);
+  const returnTo = searchParams.get('returnTo') || '/jobs';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -97,7 +102,13 @@ const Register = () => {
 
       const { password: _, ...userWithoutPassword } = newUser;
       localStorage.setItem("currentUser", JSON.stringify(userWithoutPassword));
-      navigate(role === "candidate" ? "/jobs" : "/dashboard");
+      
+      // Redirect to the return URL or default based on user role
+      if (returnTo && returnTo !== '/jobs') {
+        navigate(returnTo);
+      } else {
+        navigate(role === "candidate" ? "/jobs" : "/dashboard");
+      }
     } catch (err) {
       setError(err.message || "Failed to register");
     } finally {
@@ -114,7 +125,7 @@ const Register = () => {
         <p className="mt-2 text-center text-sm text-gray-600">
           Or{" "}
           <Link
-            to="/login"
+            to={`/login${returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ''}`}
             className="font-medium text-blue-600 hover:text-blue-500"
           >
             sign in to existing account
@@ -132,9 +143,6 @@ const Register = () => {
           )}
           {/* Role Selection */}
           <div className="mb-4">
-            {/* <label className="block text-sm font-medium text-gray-700 mb-1">
-              I am a:
-            </label> */}
             <div className="grid grid-cols-2 gap-3">
               <div
                 className={`border rounded-md p-3 cursor-pointer transition-all flex items-center justify-center ${
@@ -344,9 +352,9 @@ const Register = () => {
                 variant="blue"
                 type="submit"
                 className="w-full"
-                isLoading={isLoading}
+                disabled={isLoading}
               >
-                Create account
+                {isLoading ? "Creating account..." : "Create account"}
               </Button>
             </div>
           </form>

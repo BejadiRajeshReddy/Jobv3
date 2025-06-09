@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { Mail, Lock, AlertCircle } from "lucide-react";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/Button";
@@ -10,6 +10,11 @@ const Login = () => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Get return URL from query params
+  const searchParams = new URLSearchParams(location.search);
+  const returnTo = searchParams.get('returnTo') || '/jobs';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,23 +40,19 @@ const Login = () => {
 
       const { password: _, ...userWithoutPassword } = user;
       localStorage.setItem("currentUser", JSON.stringify(userWithoutPassword));
-      navigate(user.role === "recruiter" ? "/dashboard" : "/jobs");
+      
+      // Redirect to the return URL or default based on user role
+      if (returnTo && returnTo !== '/jobs') {
+        navigate(returnTo);
+      } else {
+        navigate(user.role === "recruiter" ? "/dashboard" : "/jobs");
+      }
     } catch (err) {
       setError(err.message || "Failed to log in");
     } finally {
       setIsLoading(false);
     }
   };
-
-  //   const handleDemoLogin = (type) => {
-  //     if (type === "candidate") {
-  //       setEmail("candidate@example.com");
-  //       setPassword("password");
-  //     } else {
-  //       setEmail("recruiter@example.com");
-  //       setPassword("password");
-  //     }
-  //   };
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center pb-15 px-10 sm:px-6 lg:px-8">
@@ -62,7 +63,7 @@ const Login = () => {
         <p className="mt-2 text-center text-sm text-gray-600">
           Or{" "}
           <Link
-            to="/register"
+            to={`/register${returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ''}`}
             className="font-medium text-blue-600 hover:text-blue-500"
           >
             create a new account
@@ -100,7 +101,6 @@ const Login = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-10 block w-full"
-                  //   placeholder="you@example.com"
                 />
               </div>
             </div>
@@ -125,7 +125,6 @@ const Login = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="pl-10 block w-full"
-                  // placeholder="••••••••"
                 />
               </div>
             </div>
@@ -167,40 +166,6 @@ const Login = () => {
               </Button>
             </div>
           </form>
-
-          {/* <div className="mt-6">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300" />
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">
-                  Demo accounts
-                </span>
-              </div>
-            </div>
-
-            <div className="mt-6 grid grid-cols-2 gap-3">
-              <div>
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  onClick={() => handleDemoLogin("candidate")}
-                >
-                  Candidate Demo
-                </Button>
-              </div>
-              <div>
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  onClick={() => handleDemoLogin("recruiter")}
-                >
-                  Recruiter Demo
-                </Button>
-              </div>
-            </div>
-          </div> */}
         </div>
       </div>
     </div>

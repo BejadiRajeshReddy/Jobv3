@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import {
   MapPin,
@@ -47,10 +47,32 @@ const JobDetailPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasApplied, setHasApplied] = useState(false);
   const [alreadyApplied] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    // Check if user is logged in
+    const user = localStorage.getItem("currentUser");
+    if (user) {
+      setCurrentUser(JSON.parse(user));
+    }
+  }, []);
 
   const job = jobs.find((j) => j.id === parseInt(id));
 
   const handleApplyClick = () => {
+    // Check if user is logged in
+    if (!currentUser) {
+      // Redirect to login page with return URL
+      navigate(`/login?returnTo=/jobs/${id}`);
+      return;
+    }
+    
+    // Check if user is a job seeker (not recruiter)
+    if (currentUser.role === "recruiter") {
+      alert("Recruiters cannot apply for jobs. Please log in with a job seeker account.");
+      return;
+    }
+    
     setIsApplying(true);
   };
 
@@ -315,9 +337,9 @@ const JobDetailPage = () => {
                     <Button
                       type="submit"
                       className="cursor-pointer"
-                      isLoading={isSubmitting}
+                      disabled={isSubmitting}
                     >
-                      Submit Application
+                      {isSubmitting ? "Submitting..." : "Submit Application"}
                     </Button>
                     <Button
                       type="button"
@@ -396,9 +418,38 @@ const JobDetailPage = () => {
                     </div>
                   )}
                 </div>
-                <Button fullWidth onClick={handleApplyClick} className="mb-3">
-                  Apply Now
-                </Button>
+                
+                {/* Login prompt for non-logged in users */}
+                {!currentUser ? (
+                  <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-md">
+                    <p className="text-sm text-blue-700 mb-3">
+                      Please log in to apply for this job
+                    </p>
+                    <div className="flex space-x-2">
+                      <Link to={`/login?returnTo=/jobs/${id}`} className="flex-1">
+                        <Button variant="blue" fullWidth>
+                          Login to Apply
+                        </Button>
+                      </Link>
+                      <Link to="/register" className="flex-1">
+                        <Button variant="outline" fullWidth>
+                          Sign Up
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                ) : currentUser.role === "recruiter" ? (
+                  <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
+                    <p className="text-sm text-yellow-700">
+                      Recruiters cannot apply for jobs. Please log in with a job seeker account.
+                    </p>
+                  </div>
+                ) : (
+                  <Button fullWidth onClick={handleApplyClick} className="mb-3">
+                    Apply Now
+                  </Button>
+                )}
+                
                 <div className="flex space-x-2">
                   <Button
                     variant="outline"
