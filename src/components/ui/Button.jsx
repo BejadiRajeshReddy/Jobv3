@@ -46,6 +46,8 @@ function Button({
   leftIcon, 
   children, 
   fullWidth,
+  isLoading,
+  disabled,
   ...props 
 }) {
   const Comp = asChild ? Slot : "button";
@@ -57,6 +59,7 @@ function Button({
         buttonVariants({ variant, size, className }),
         fullWidth && "w-full"
       )}
+      disabled={disabled || isLoading}
       {...props}
     >
       {leftIcon}
