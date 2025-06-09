@@ -12,6 +12,7 @@ import {
   BookmarkPlus,
   Share2,
   Calendar,
+  Upload,
 } from "lucide-react";
 import { Button } from "../components/ui/Button";
 import { jobs } from "../components/job/JobList";
@@ -42,6 +43,7 @@ const JobDetailPage = () => {
   const navigate = useNavigate();
   const [isApplying, setIsApplying] = useState(false);
   const [coverLetter, setCoverLetter] = useState("");
+  const [resume, setResume] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasApplied, setHasApplied] = useState(false);
   const [alreadyApplied] = useState(false);
@@ -52,8 +54,34 @@ const JobDetailPage = () => {
     setIsApplying(true);
   };
 
+  const handleResumeChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Validate file type
+      const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+      if (!allowedTypes.includes(file.type)) {
+        alert('Please upload a PDF or Word document');
+        return;
+      }
+      
+      // Validate file size (5MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('File size must be less than 5MB');
+        return;
+      }
+      
+      setResume(file);
+    }
+  };
+
   const handleApplySubmit = async (e) => {
     e.preventDefault();
+    
+    if (!resume) {
+      alert('Please upload your resume');
+      return;
+    }
+    
     setIsSubmitting(true);
 
     // Simulate API call
@@ -234,6 +262,44 @@ const JobDetailPage = () => {
                   Apply for this position
                 </h3>
                 <form onSubmit={handleApplySubmit}>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Resume *
+                    </label>
+                    <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-gray-400 transition-colors">
+                      <div className="space-y-1 text-center">
+                        <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                        <div className="flex text-sm text-gray-600">
+                          <label
+                            htmlFor="resume-upload"
+                            className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500"
+                          >
+                            <span>Upload your resume</span>
+                            <input
+                              id="resume-upload"
+                              name="resume-upload"
+                              type="file"
+                              className="sr-only"
+                              accept=".pdf,.doc,.docx"
+                              onChange={handleResumeChange}
+                              required
+                            />
+                          </label>
+                          <p className="pl-1">or drag and drop</p>
+                        </div>
+                        <p className="text-xs text-gray-500">
+                          PDF, DOC, DOCX up to 5MB
+                        </p>
+                      </div>
+                    </div>
+                    {resume && (
+                      <div className="mt-2 text-sm text-green-600 flex items-center">
+                        <CheckCircle2 className="h-4 w-4 mr-1" />
+                        {resume.name} ({(resume.size / 1024 / 1024).toFixed(2)} MB)
+                      </div>
+                    )}
+                  </div>
+                  
                   <div className="mb-4">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Cover Letter (Optional)
