@@ -1,25 +1,52 @@
-import { Briefcase, Menu, X } from "lucide-react";
+import { Briefcase, Menu, X, User, LogOut } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../ui/Button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Logo from "../ui/Logo";
 import AnimatedBriefcase from "../ui/Logo";
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
   const navigate = useNavigate();
 
- const handleClick = () => {
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth',
-  });
-};
+  useEffect(() => {
+    // Check if user is logged in
+    const user = localStorage.getItem("currentUser");
+    if (user) {
+      setCurrentUser(JSON.parse(user));
+    }
 
+    // Listen for storage changes (when user logs in/out in another tab)
+    const handleStorageChange = () => {
+      const user = localStorage.getItem("currentUser");
+      if (user) {
+        setCurrentUser(JSON.parse(user));
+      } else {
+        setCurrentUser(null);
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
+  const handleClick = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("currentUser");
+    setCurrentUser(null);
+    navigate("/");
+    setMobileMenuOpen(false);
+  };
 
   return (
-    
     <nav className="bg-gray-50 sticky top-0 z-50 shadow-sm rounded-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
@@ -27,7 +54,6 @@ const Navbar = () => {
           <div className="flex items-center">
             <Link to="/" className="flex items-center" onClick={handleClick}>
               <AnimatedBriefcase />
-              {/* <Briefcase className="h-8 w-8 text-blue-600" /> */}
               <span className="ml-4 text-xl font-bold text-gray-900 hover:scale-120 transition ease-in-out duration-500">
                 JobHub
               </span>
@@ -52,12 +78,33 @@ const Navbar = () => {
           <div className="flex items-center">
             {/* desktop auth */}
             <div className="hidden md:flex md:items-center md:space-x-4">
-              <Link to="/login" onClick={handleClick}>
-                <Button variant="blue">Login</Button>
-              </Link>
-              <Link to="/register" onClick={handleClick}>
-                <Button variant="danger">Register</Button>
-              </Link>
+              {currentUser ? (
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-2">
+                    <User className="h-5 w-5 text-gray-600" />
+                    <span className="text-sm font-medium text-gray-700">
+                      {currentUser.name}
+                    </span>
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    onClick={handleLogout}
+                    className="flex items-center space-x-2"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    <span>Logout</span>
+                  </Button>
+                </div>
+              ) : (
+                <>
+                  <Link to="/login" onClick={handleClick}>
+                    <Button variant="blue">Login</Button>
+                  </Link>
+                  <Link to="/register" onClick={handleClick}>
+                    <Button variant="danger">Register</Button>
+                  </Link>
+                </>
+              )}
             </div>
             {/* mobile menu button */}
             <button
@@ -92,26 +139,44 @@ const Navbar = () => {
             >
               Post a Job
             </Link>
-            <div className="flex flex-col  space-y-2 mt-4 px-4">
-              <Button
-                onClick={() => {
-                  navigate("/login");
-                  toggleMobileMenu();
-                }}
-                variant="blue"
-              >
-                Login
-              </Button>
-              <Button
-                variant="danger"
-                onClick={() => {
-                  navigate("/register");
-                  toggleMobileMenu();
-                }}
-              >
-                Register
-              </Button>
-            </div>
+            
+            {currentUser ? (
+              <div className="px-3 py-2 space-y-3">
+                <div className="flex items-center space-x-2 text-gray-700">
+                  <User className="h-5 w-5" />
+                  <span className="font-medium">{currentUser.name}</span>
+                </div>
+                <Button
+                  onClick={handleLogout}
+                  variant="outline"
+                  className="w-full flex items-center justify-center space-x-2"
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span>Logout</span>
+                </Button>
+              </div>
+            ) : (
+              <div className="flex flex-col space-y-2 mt-4 px-4">
+                <Button
+                  onClick={() => {
+                    navigate("/login");
+                    toggleMobileMenu();
+                  }}
+                  variant="blue"
+                >
+                  Login
+                </Button>
+                <Button
+                  variant="danger"
+                  onClick={() => {
+                    navigate("/register");
+                    toggleMobileMenu();
+                  }}
+                >
+                  Register
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       )}
