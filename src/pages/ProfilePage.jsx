@@ -172,7 +172,7 @@ const ProfilePage = () => {
   const completeness = getProfileCompleteness();
 
   return (
-    <div className="min-h-screen w-1/2 bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen mx-20 bg-gradient-to-br from-gray-50 to-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header Section */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden mb-8">
