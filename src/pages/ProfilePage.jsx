@@ -173,7 +173,7 @@ const ProfilePage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-6 sm:px-24 lg:px-24 py-6 sm:py-10">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-6 sm:py-10">
         {/* Header Section */}
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 overflow-hidden mb-8 sm:mb-10">
           {/* Cover Photo */}
@@ -187,99 +187,161 @@ const ProfilePage = () => {
           </div>
 
           {/* Profile Info */}
-          <div className="relative px-6 sm:px-8 lg:px-12 pb-6 sm:pb-8">
-            <div className="flex flex-col sm:flex-row sm:items-end sm:space-x-8">
-              {/* Profile Picture */}
-              <div className="relative -mt-12 sm:-mt-16 mb-6 sm:mb-0 flex justify-center sm:justify-start">
-                <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-xl sm:rounded-2xl bg-white p-1 shadow-lg">
-                  <div className="w-full h-full rounded-lg sm:rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center text-white text-2xl sm:text-4xl font-bold">
-                    {currentUser.name?.charAt(0)?.toUpperCase() || 'U'}
-                  </div>
-                </div>
-                {isEditing && (
-                  <button className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 bg-blue-600 rounded-full p-1.5 sm:p-2 text-white shadow-lg hover:bg-blue-700 transition-colors">
-                    <Camera className="h-3 w-3 sm:h-4 sm:w-4" />
-                  </button>
-                )}
-              </div>
-
-              {/* Name and Title */}
-              <div className="flex-1 min-w-0 text-center sm:text-left">
-                {isEditing ? (
-                  <div className="space-y-4">
-                    <Input
-                      value={editData.name || ""}
-                      onChange={(e) => setEditData({ ...editData, name: e.target.value })}
-                      className="text-xl sm:text-2xl font-bold border-2 border-blue-200 focus:border-blue-500 text-center sm:text-left"
-                      placeholder="Your name"
-                    />
-                    <Input
-                      value={editData.title || ""}
-                      onChange={(e) => setEditData({ ...editData, title: e.target.value })}
-                      className="text-base sm:text-lg border-2 border-gray-200 focus:border-blue-500 text-center sm:text-left"
-                      placeholder="Your job title"
-                    />
-                  </div>
-                ) : (
-                  <>
-                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-                      {currentUser.name}
-                    </h1>
-                    <p className="text-lg sm:text-xl text-gray-600 mb-2">
-                      {currentUser.title || (currentUser.role === "recruiter" ? "Recruiter" : "Job Seeker")}
-                    </p>
-                  </>
-                )}
-                
-                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 sm:gap-6 text-xs sm:text-sm text-gray-500">
-                  {currentUser.location && (
-                    <div className="flex items-center">
-                      <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                      <span className="truncate">{currentUser.location}</span>
-                    </div>
-                  )}
-                  {currentUser.email && (
-                    <div className="flex items-center">
-                      <Mail className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                      <span className="truncate">{currentUser.email}</span>
-                    </div>
-                  )}
-                  {currentUser.company?.email && (
-                    <div className="flex items-center">
-                      <Mail className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                      <span className="truncate">{currentUser.company.email}</span>
-                    </div>
-                  )}
-                  {currentUser.phoneNumber && (
-                    <div className="flex items-center">
-                      <Phone className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                      <span className="truncate">{currentUser.phoneNumber}</span>
-                    </div>
-                  )}
+          <div className="relative px-6 sm:px-8 lg:px-12 pb-8 sm:pb-10">
+            {/* Profile Picture */}
+            <div className="relative -mt-12 sm:-mt-16 mb-8 sm:mb-10 flex justify-center sm:justify-start">
+              <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-xl sm:rounded-2xl bg-white p-1 shadow-lg">
+                <div className="w-full h-full rounded-lg sm:rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center text-white text-2xl sm:text-4xl font-bold">
+                  {currentUser.name?.charAt(0)?.toUpperCase() || 'U'}
                 </div>
               </div>
+              {isEditing && (
+                <button className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 bg-blue-600 rounded-full p-1.5 sm:p-2 text-white shadow-lg hover:bg-blue-700 transition-colors">
+                  <Camera className="h-3 w-3 sm:h-4 sm:w-4" />
+                </button>
+              )}
+            </div>
 
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mt-6 sm:mt-0 w-full sm:w-auto">
-                {isEditing ? (
-                  <>
-                    <Button onClick={handleSave} className="bg-green-600 hover:bg-green-700 w-full sm:w-auto">
-                      <Save className="h-4 w-4 mr-2" />
-                      Save Changes
-                    </Button>
-                    <Button variant="outline" onClick={handleCancel} className="w-full sm:w-auto">
-                      <X className="h-4 w-4 mr-2" />
-                      Cancel
-                    </Button>
-                  </>
-                ) : (
-                  <Button onClick={() => setIsEditing(true)} variant="blue" className="w-full sm:w-auto">
+            {/* Edit Mode Layout */}
+            {isEditing ? (
+              <div className="space-y-8">
+                {/* Name and Title Inputs */}
+                <div className="bg-gray-50 rounded-xl p-6 sm:p-8">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-6">Basic Information</h3>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Full Name *
+                      </label>
+                      <Input
+                        value={editData.name || ""}
+                        onChange={(e) => setEditData({ ...editData, name: e.target.value })}
+                        className="text-base"
+                        placeholder="Your full name"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Job Title
+                      </label>
+                      <Input
+                        value={editData.title || ""}
+                        onChange={(e) => setEditData({ ...editData, title: e.target.value })}
+                        className="text-base"
+                        placeholder="Your job title"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Contact Information */}
+                <div className="bg-gray-50 rounded-xl p-6 sm:p-8">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-6">Contact Information</h3>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <MapPin className="h-4 w-4 inline mr-1" />
+                        Location
+                      </label>
+                      <Input
+                        value={editData.location || ""}
+                        onChange={(e) => setEditData({ ...editData, location: e.target.value })}
+                        placeholder="Your location"
+                        className="text-base"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <Phone className="h-4 w-4 inline mr-1" />
+                        Phone Number
+                      </label>
+                      <Input
+                        value={editData.phoneNumber || ""}
+                        onChange={(e) => setEditData({ ...editData, phoneNumber: e.target.value })}
+                        placeholder="Your phone number"
+                        className="text-base"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bio Section */}
+                <div className="bg-gray-50 rounded-xl p-6 sm:p-8">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-6">About You</h3>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Bio / Summary
+                    </label>
+                    <textarea
+                      value={editData.bio || ""}
+                      onChange={(e) => setEditData({ ...editData, bio: e.target.value })}
+                      className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[120px] text-base resize-none"
+                      placeholder="Tell us about yourself, your experience, and what you're looking for..."
+                    />
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
+                  <Button onClick={handleSave} className="bg-green-600 hover:bg-green-700 flex-1 sm:flex-none px-8 py-3">
+                    <Save className="h-4 w-4 mr-2" />
+                    Save Changes
+                  </Button>
+                  <Button variant="outline" onClick={handleCancel} className="flex-1 sm:flex-none px-8 py-3">
+                    <X className="h-4 w-4 mr-2" />
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              /* Display Mode Layout */
+              <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
+                {/* Name and Title */}
+                <div className="flex-1 text-center lg:text-left">
+                  <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">
+                    {currentUser.name}
+                  </h1>
+                  <p className="text-xl sm:text-2xl text-gray-600 mb-6">
+                    {currentUser.title || (currentUser.role === "recruiter" ? "Recruiter" : "Job Seeker")}
+                  </p>
+                  
+                  <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6 text-sm text-gray-500">
+                    {currentUser.location && (
+                      <div className="flex items-center">
+                        <MapPin className="h-4 w-4 mr-2" />
+                        <span>{currentUser.location}</span>
+                      </div>
+                    )}
+                    {currentUser.email && (
+                      <div className="flex items-center">
+                        <Mail className="h-4 w-4 mr-2" />
+                        <span>{currentUser.email}</span>
+                      </div>
+                    )}
+                    {currentUser.company?.email && (
+                      <div className="flex items-center">
+                        <Mail className="h-4 w-4 mr-2" />
+                        <span>{currentUser.company.email}</span>
+                      </div>
+                    )}
+                    {currentUser.phoneNumber && (
+                      <div className="flex items-center">
+                        <Phone className="h-4 w-4 mr-2" />
+                        <span>{currentUser.phoneNumber}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Action Button */}
+                <div className="flex justify-center lg:justify-end">
+                  <Button onClick={() => setIsEditing(true)} variant="blue" className="px-8 py-3">
                     <Edit3 className="h-4 w-4 mr-2" />
                     Edit Profile
                   </Button>
-                )}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
 
@@ -405,16 +467,7 @@ const ProfilePage = () => {
                       <MapPin className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 mr-4 flex-shrink-0" />
                       <div className="min-w-0 flex-1">
                         <div className="text-xs sm:text-sm text-gray-500">Location</div>
-                        {isEditing ? (
-                          <Input
-                            value={editData.location || ""}
-                            onChange={(e) => setEditData({ ...editData, location: e.target.value })}
-                            placeholder="Your location"
-                            className="mt-1 text-sm"
-                          />
-                        ) : (
-                          <div className="font-medium text-sm sm:text-base truncate">{currentUser.location || "Not provided"}</div>
-                        )}
+                        <div className="font-medium text-sm sm:text-base truncate">{currentUser.location || "Not provided"}</div>
                       </div>
                     </div>
                     <div className="flex items-center p-4 sm:p-6 bg-gray-50 rounded-lg">
@@ -505,8 +558,8 @@ const ProfilePage = () => {
                       <div key={exp.id || index} className="bg-gray-50 rounded-lg p-6 sm:p-8 border border-gray-200">
                         {isEditing ? (
                           <div className="space-y-6">
-                            <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start space-y-6 lg:space-y-0">
-                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 flex-1 lg:mr-6">
+                            <div className="flex flex-col xl:flex-row xl:justify-between xl:items-start space-y-6 xl:space-y-0 xl:space-x-6">
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1">
                                 <Input
                                   value={exp.title || ""}
                                   onChange={(e) => updateExperience(index, "title", e.target.value)}
@@ -531,7 +584,7 @@ const ProfilePage = () => {
                                     value={exp.startDate || ""}
                                     onChange={(e) => updateExperience(index, "startDate", e.target.value)}
                                     placeholder="Start Date"
-                                    className="text-sm"
+                                    className="text-sm flex-1"
                                   />
                                   <Input
                                     type="date"
@@ -539,7 +592,7 @@ const ProfilePage = () => {
                                     onChange={(e) => updateExperience(index, "endDate", e.target.value)}
                                     placeholder="End Date"
                                     disabled={exp.current}
-                                    className="text-sm"
+                                    className="text-sm flex-1"
                                   />
                                 </div>
                               </div>
@@ -547,7 +600,7 @@ const ProfilePage = () => {
                                 onClick={() => removeExperience(index)}
                                 variant="outline"
                                 size="sm"
-                                className="text-red-600 hover:text-red-700 w-full sm:w-auto lg:w-auto"
+                                className="text-red-600 hover:text-red-700 w-full xl:w-auto"
                               >
                                 <Trash2 className="h-4 w-4" />
                               </Button>
@@ -625,8 +678,8 @@ const ProfilePage = () => {
                       <div key={edu.id || index} className="bg-gray-50 rounded-lg p-6 sm:p-8 border border-gray-200">
                         {isEditing ? (
                           <div className="space-y-6">
-                            <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start space-y-6 lg:space-y-0">
-                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 flex-1 lg:mr-6">
+                            <div className="flex flex-col xl:flex-row xl:justify-between xl:items-start space-y-6 xl:space-y-0 xl:space-x-6">
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1">
                                 <Input
                                   value={edu.degree || ""}
                                   onChange={(e) => updateEducation(index, "degree", e.target.value)}
@@ -671,7 +724,7 @@ const ProfilePage = () => {
                                 onClick={() => removeEducation(index)}
                                 variant="outline"
                                 size="sm"
-                                className="text-red-600 hover:text-red-700 w-full sm:w-auto lg:w-auto"
+                                className="text-red-600 hover:text-red-700 w-full xl:w-auto"
                               >
                                 <Trash2 className="h-4 w-4" />
                               </Button>
