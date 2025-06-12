@@ -303,7 +303,7 @@ const ProfilePage = () => {
                   style={{ width: `${completeness}%` }}
                 ></div>
               </div>
-              <div className="grid grid-cols-4 gap-1 text-xs">
+              <div className="grid grid-cols-4  text-xs">
                 {!currentUser.bio && (
                   <div className="flex items-center text-gray-600">
                     <AlertCircle className="h-3 w-3 mr-1 text-orange-500 flex-shrink-0" />
