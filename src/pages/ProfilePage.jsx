@@ -173,7 +173,7 @@ const ProfilePage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-24 py-6 sm:py-10">
+      <div className="max-w-7xl mx-auto px-6 sm:px-24 lg:px-24 py-6 sm:py-10">
         {/* Header Section */}
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 overflow-hidden mb-8 sm:mb-10">
           {/* Cover Photo */}
