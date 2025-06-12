@@ -285,7 +285,7 @@ const ProfilePage = () => {
 
         {/* Profile Completion Card */}
         {completeness < 100 && (
-          <Card className="mb-6 sm:mb-8 border-l-4 border-l-blue-500 bg-blue-50/50">
+          <Card className=" border-l-4 border-l-blue-500 bg-blue-50/50">
             <CardContent className="p-4 sm:p-6">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 space-y-2 sm:space-y-0">
                 <div className="text-center sm:text-left">
