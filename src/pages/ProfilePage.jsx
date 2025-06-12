@@ -173,7 +173,7 @@ const ProfilePage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-30 px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+      <div className="max-w-7xl mx-10 px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         {/* Header Section */}
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 overflow-hidden mb-6 sm:mb-8">
           {/* Cover Photo */}
@@ -303,7 +303,7 @@ const ProfilePage = () => {
                   style={{ width: `${completeness}%` }}
                 ></div>
               </div>
-              <div className="grid grid-cols-4  text-xs">
+              <div className="grid grid-cols-2 gap-1 text-xs">
                 {!currentUser.bio && (
                   <div className="flex items-center text-gray-600">
                     <AlertCircle className="h-3 w-3 mr-1 text-orange-500 flex-shrink-0" />
