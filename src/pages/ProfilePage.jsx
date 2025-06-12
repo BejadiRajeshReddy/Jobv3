@@ -172,108 +172,108 @@ const ProfilePage = () => {
   const completeness = getProfileCompleteness();
 
   return (
-    <div className="min-h-screen mx-30 my-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         {/* Header Section */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden mb-8">
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 overflow-hidden mb-6 sm:mb-8">
           {/* Cover Photo */}
-          <div className="h-48 bg-gradient-to-r from-blue-400 to-blue-500 relative">
+          <div className="h-32 sm:h-48 bg-gradient-to-r from-blue-400 to-blue-500 relative">
             <div className="absolute inset-0 bg-black/20"></div>
             {isEditing && (
-              <button className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm rounded-lg p-2 text-white hover:bg-white/30 transition-colors">
-                <Camera className="h-5 w-5" />
+              <button className="absolute top-2 right-2 sm:top-4 sm:right-4 bg-white/20 backdrop-blur-sm rounded-lg p-2 text-white hover:bg-white/30 transition-colors">
+                <Camera className="h-4 w-4 sm:h-5 sm:w-5" />
               </button>
             )}
           </div>
 
           {/* Profile Info */}
-          <div className="relative px-6 pb-6">
+          <div className="relative px-4 sm:px-6 pb-4 sm:pb-6">
             <div className="flex flex-col sm:flex-row sm:items-end sm:space-x-6">
               {/* Profile Picture */}
-              <div className="relative -mt-16 mb-4 sm:mb-0">
-                <div className="w-32 h-32 rounded-2xl bg-white p-1 shadow-lg">
-                  <div className="w-full h-full rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center text-white text-4xl font-bold">
+              <div className="relative -mt-12 sm:-mt-16 mb-4 sm:mb-0 flex justify-center sm:justify-start">
+                <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-xl sm:rounded-2xl bg-white p-1 shadow-lg">
+                  <div className="w-full h-full rounded-lg sm:rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center text-white text-2xl sm:text-4xl font-bold">
                     {currentUser.name?.charAt(0)?.toUpperCase() || 'U'}
                   </div>
                 </div>
                 {isEditing && (
-                  <button className="absolute bottom-2 right-2 bg-blue-600 rounded-full p-2 text-white shadow-lg hover:bg-blue-700 transition-colors">
-                    <Camera className="h-4 w-4" />
+                  <button className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 bg-blue-600 rounded-full p-1.5 sm:p-2 text-white shadow-lg hover:bg-blue-700 transition-colors">
+                    <Camera className="h-3 w-3 sm:h-4 sm:w-4" />
                   </button>
                 )}
               </div>
 
               {/* Name and Title */}
-              <div className="flex-1 min-w-0">
+              <div className="flex-1 min-w-0 text-center sm:text-left">
                 {isEditing ? (
                   <div className="space-y-3">
                     <Input
                       value={editData.name || ""}
                       onChange={(e) => setEditData({ ...editData, name: e.target.value })}
-                      className="text-2xl font-bold border-2 border-blue-200 focus:border-blue-500"
+                      className="text-xl sm:text-2xl font-bold border-2 border-blue-200 focus:border-blue-500 text-center sm:text-left"
                       placeholder="Your name"
                     />
                     <Input
                       value={editData.title || ""}
                       onChange={(e) => setEditData({ ...editData, title: e.target.value })}
-                      className="text-lg border-2 border-gray-200 focus:border-blue-500"
+                      className="text-base sm:text-lg border-2 border-gray-200 focus:border-blue-500 text-center sm:text-left"
                       placeholder="Your job title"
                     />
                   </div>
                 ) : (
                   <>
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
                       {currentUser.name}
                     </h1>
-                    <p className="text-xl text-gray-600 mb-2">
+                    <p className="text-lg sm:text-xl text-gray-600 mb-2">
                       {currentUser.title || (currentUser.role === "recruiter" ? "Recruiter" : "Job Seeker")}
                     </p>
                   </>
                 )}
                 
-                <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
+                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-4 text-xs sm:text-sm text-gray-500">
                   {currentUser.location && (
                     <div className="flex items-center">
-                      <MapPin className="h-4 w-4 mr-1" />
-                      {currentUser.location}
+                      <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                      <span className="truncate">{currentUser.location}</span>
                     </div>
                   )}
                   {currentUser.email && (
                     <div className="flex items-center">
-                      <Mail className="h-4 w-4 mr-1" />
-                      {currentUser.email}
+                      <Mail className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                      <span className="truncate">{currentUser.email}</span>
                     </div>
                   )}
                   {currentUser.company?.email && (
                     <div className="flex items-center">
-                      <Mail className="h-4 w-4 mr-1" />
-                      {currentUser.company.email}
+                      <Mail className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                      <span className="truncate">{currentUser.company.email}</span>
                     </div>
                   )}
                   {currentUser.phoneNumber && (
                     <div className="flex items-center">
-                      <Phone className="h-4 w-4 mr-1" />
-                      {currentUser.phoneNumber}
+                      <Phone className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                      <span className="truncate">{currentUser.phoneNumber}</span>
                     </div>
                   )}
                 </div>
               </div>
 
               {/* Action Buttons */}
-              <div className="flex space-x-3 mt-4 sm:mt-0">
+              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 mt-4 sm:mt-0 w-full sm:w-auto">
                 {isEditing ? (
                   <>
-                    <Button onClick={handleSave} className="bg-green-600 hover:bg-green-700">
+                    <Button onClick={handleSave} className="bg-green-600 hover:bg-green-700 w-full sm:w-auto">
                       <Save className="h-4 w-4 mr-2" />
                       Save Changes
                     </Button>
-                    <Button variant="outline" onClick={handleCancel}>
+                    <Button variant="outline" onClick={handleCancel} className="w-full sm:w-auto">
                       <X className="h-4 w-4 mr-2" />
                       Cancel
                     </Button>
                   </>
                 ) : (
-                  <Button onClick={() => setIsEditing(true)} variant="blue">
+                  <Button onClick={() => setIsEditing(true)} variant="blue" className="w-full sm:w-auto">
                     <Edit3 className="h-4 w-4 mr-2" />
                     Edit Profile
                   </Button>
@@ -285,14 +285,14 @@ const ProfilePage = () => {
 
         {/* Profile Completion Card */}
         {completeness < 100 && (
-          <Card className="mb-8 border-l-4 border-l-blue-500 bg-blue-50/50">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div>
+          <Card className="mb-6 sm:mb-8 border-l-4 border-l-blue-500 bg-blue-50/50">
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 space-y-2 sm:space-y-0">
+                <div className="text-center sm:text-left">
                   <h3 className="text-lg font-semibold text-gray-900">Complete Your Profile</h3>
                   <p className="text-gray-600">Increase your visibility to employers</p>
                 </div>
-                <div className="text-right">
+                <div className="text-center sm:text-right">
                   <div className="text-2xl font-bold text-blue-600">{completeness}%</div>
                   <div className="text-sm text-gray-500">Complete</div>
                 </div>
@@ -303,29 +303,29 @@ const ProfilePage = () => {
                   style={{ width: `${completeness}%` }}
                 ></div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
                 {!currentUser.bio && (
                   <div className="flex items-center text-gray-600">
-                    <AlertCircle className="h-4 w-4 mr-2 text-orange-500" />
-                    Add a bio
+                    <AlertCircle className="h-4 w-4 mr-2 text-orange-500 flex-shrink-0" />
+                    <span>Add a bio</span>
                   </div>
                 )}
                 {(!currentUser.skills || currentUser.skills.length === 0) && (
                   <div className="flex items-center text-gray-600">
-                    <AlertCircle className="h-4 w-4 mr-2 text-orange-500" />
-                    Add skills
+                    <AlertCircle className="h-4 w-4 mr-2 text-orange-500 flex-shrink-0" />
+                    <span>Add skills</span>
                   </div>
                 )}
                 {(!currentUser.experience || currentUser.experience.length === 0) && currentUser.role !== "recruiter" && (
                   <div className="flex items-center text-gray-600">
-                    <AlertCircle className="h-4 w-4 mr-2 text-orange-500" />
-                    Add work experience
+                    <AlertCircle className="h-4 w-4 mr-2 text-orange-500 flex-shrink-0" />
+                    <span>Add work experience</span>
                   </div>
                 )}
                 {(!currentUser.education || currentUser.education.length === 0) && (
                   <div className="flex items-center text-gray-600">
-                    <AlertCircle className="h-4 w-4 mr-2 text-orange-500" />
-                    Add education
+                    <AlertCircle className="h-4 w-4 mr-2 text-orange-500 flex-shrink-0" />
+                    <span>Add education</span>
                   </div>
                 )}
               </div>
@@ -334,9 +334,9 @@ const ProfilePage = () => {
         )}
 
         {/* Navigation Tabs */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-8">
-          <div className="border-b border-gray-200">
-            <nav className="flex space-x-8 px-6" aria-label="Tabs">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-6 sm:mb-8">
+          <div className="border-b border-gray-200 overflow-x-auto">
+            <nav className="flex space-x-4 sm:space-x-8 px-4 sm:px-6 min-w-max" aria-label="Tabs">
               {[
                 { id: "overview", name: "Overview", icon: User },
                 { id: "experience", name: "Experience", icon: Briefcase },
@@ -353,14 +353,15 @@ const ProfilePage = () => {
                   } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center transition-colors`}
                 >
                   <tab.icon className="h-4 w-4 mr-2" />
-                  {tab.name}
+                  <span className="hidden sm:inline">{tab.name}</span>
+                  <span className="sm:hidden">{tab.name.slice(0, 4)}</span>
                 </button>
               ))}
             </nav>
           </div>
 
           {/* Tab Content */}
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             {activeTab === "overview" && (
               <div className="space-y-6">
                 {/* Bio Section */}
@@ -370,11 +371,11 @@ const ProfilePage = () => {
                     <textarea
                       value={editData.bio || ""}
                       onChange={(e) => setEditData({ ...editData, bio: e.target.value })}
-                      className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[120px]"
+                      className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[120px] text-sm sm:text-base"
                       placeholder="Tell us about yourself, your experience, and what you're looking for..."
                     />
                   ) : (
-                    <p className="text-gray-700 leading-relaxed">
+                    <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
                       {currentUser.bio || "No bio added yet. Click 'Edit Profile' to add information about yourself."}
                     </p>
                   )}
@@ -383,44 +384,44 @@ const ProfilePage = () => {
                 {/* Contact Information */}
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Contact Information</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="flex items-center p-4 bg-gray-50 rounded-lg">
-                      <Mail className="h-5 w-5 text-gray-400 mr-3" />
-                      <div>
-                        <div className="text-sm text-gray-500">Email</div>
-                        <div className="font-medium">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="flex items-center p-3 sm:p-4 bg-gray-50 rounded-lg">
+                      <Mail className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 mr-3 flex-shrink-0" />
+                      <div className="min-w-0 flex-1">
+                        <div className="text-xs sm:text-sm text-gray-500">Email</div>
+                        <div className="font-medium text-sm sm:text-base truncate">
                           {currentUser.email || currentUser.company?.email || "Not provided"}
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center p-4 bg-gray-50 rounded-lg">
-                      <Phone className="h-5 w-5 text-gray-400 mr-3" />
-                      <div>
-                        <div className="text-sm text-gray-500">Phone</div>
-                        <div className="font-medium">{currentUser.phoneNumber || "Not provided"}</div>
+                    <div className="flex items-center p-3 sm:p-4 bg-gray-50 rounded-lg">
+                      <Phone className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 mr-3 flex-shrink-0" />
+                      <div className="min-w-0 flex-1">
+                        <div className="text-xs sm:text-sm text-gray-500">Phone</div>
+                        <div className="font-medium text-sm sm:text-base truncate">{currentUser.phoneNumber || "Not provided"}</div>
                       </div>
                     </div>
-                    <div className="flex items-center p-4 bg-gray-50 rounded-lg">
-                      <MapPin className="h-5 w-5 text-gray-400 mr-3" />
-                      <div>
-                        <div className="text-sm text-gray-500">Location</div>
+                    <div className="flex items-center p-3 sm:p-4 bg-gray-50 rounded-lg">
+                      <MapPin className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 mr-3 flex-shrink-0" />
+                      <div className="min-w-0 flex-1">
+                        <div className="text-xs sm:text-sm text-gray-500">Location</div>
                         {isEditing ? (
                           <Input
                             value={editData.location || ""}
                             onChange={(e) => setEditData({ ...editData, location: e.target.value })}
                             placeholder="Your location"
-                            className="mt-1"
+                            className="mt-1 text-sm"
                           />
                         ) : (
-                          <div className="font-medium">{currentUser.location || "Not provided"}</div>
+                          <div className="font-medium text-sm sm:text-base truncate">{currentUser.location || "Not provided"}</div>
                         )}
                       </div>
                     </div>
-                    <div className="flex items-center p-4 bg-gray-50 rounded-lg">
-                      <Calendar className="h-5 w-5 text-gray-400 mr-3" />
-                      <div>
-                        <div className="text-sm text-gray-500">Member Since</div>
-                        <div className="font-medium">
+                    <div className="flex items-center p-3 sm:p-4 bg-gray-50 rounded-lg">
+                      <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 mr-3 flex-shrink-0" />
+                      <div className="min-w-0 flex-1">
+                        <div className="text-xs sm:text-sm text-gray-500">Member Since</div>
+                        <div className="font-medium text-sm sm:text-base truncate">
                           {new Date(currentUser.createdAt).toLocaleDateString()}
                         </div>
                       </div>
@@ -432,36 +433,36 @@ const ProfilePage = () => {
                 {currentUser.role === "recruiter" && currentUser.company && (
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Company Information</h3>
-                    <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 border border-blue-200">
-                      <div className="flex items-start space-x-4">
-                        <div className="w-16 h-16 bg-white rounded-lg flex items-center justify-center shadow-sm">
-                          <Building className="h-8 w-8 text-blue-600" />
+                    <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4 sm:p-6 border border-blue-200">
+                      <div className="flex flex-col sm:flex-row sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white rounded-lg flex items-center justify-center shadow-sm mx-auto sm:mx-0 flex-shrink-0">
+                          <Building className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600" />
                         </div>
-                        <div className="flex-1">
-                          <h4 className="text-xl font-semibold text-gray-900 mb-2">
+                        <div className="flex-1 text-center sm:text-left">
+                          <h4 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
                             {currentUser.company.name}
                           </h4>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                            <div className="flex items-center text-gray-600">
-                              <Building className="h-4 w-4 mr-2" />
-                              {currentUser.company.industry}
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 text-xs sm:text-sm">
+                            <div className="flex items-center justify-center sm:justify-start text-gray-600">
+                              <Building className="h-3 w-3 sm:h-4 sm:w-4 mr-2 flex-shrink-0" />
+                              <span className="truncate">{currentUser.company.industry}</span>
                             </div>
-                            <div className="flex items-center text-gray-600">
-                              <MapPin className="h-4 w-4 mr-2" />
-                              {currentUser.company.location}
+                            <div className="flex items-center justify-center sm:justify-start text-gray-600">
+                              <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mr-2 flex-shrink-0" />
+                              <span className="truncate">{currentUser.company.location}</span>
                             </div>
-                            <div className="flex items-center text-gray-600">
-                              <Mail className="h-4 w-4 mr-2" />
-                              {currentUser.company.email}
+                            <div className="flex items-center justify-center sm:justify-start text-gray-600">
+                              <Mail className="h-3 w-3 sm:h-4 sm:w-4 mr-2 flex-shrink-0" />
+                              <span className="truncate">{currentUser.company.email}</span>
                             </div>
                             {currentUser.company.website && (
-                              <div className="flex items-center text-gray-600">
-                                <Globe className="h-4 w-4 mr-2" />
+                              <div className="flex items-center justify-center sm:justify-start text-gray-600">
+                                <Globe className="h-3 w-3 sm:h-4 sm:w-4 mr-2 flex-shrink-0" />
                                 <a 
                                   href={currentUser.company.website} 
                                   target="_blank" 
                                   rel="noopener noreferrer"
-                                  className="text-blue-600 hover:text-blue-800"
+                                  className="text-blue-600 hover:text-blue-800 truncate"
                                 >
                                   Company Website
                                 </a>
@@ -478,10 +479,10 @@ const ProfilePage = () => {
 
             {activeTab === "experience" && (
               <div className="space-y-6">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
                   <h3 className="text-lg font-semibold text-gray-900">Work Experience</h3>
                   {isEditing && (
-                    <Button onClick={addExperience} variant="outline" size="sm">
+                    <Button onClick={addExperience} variant="outline" size="sm" className="w-full sm:w-auto">
                       <Plus className="h-4 w-4 mr-2" />
                       Add Experience
                     </Button>
@@ -489,9 +490,9 @@ const ProfilePage = () => {
                 </div>
 
                 {(!editData.experience || editData.experience.length === 0) ? (
-                  <div className="text-center py-12 bg-gray-50 rounded-lg">
-                    <Briefcase className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-500">No work experience added yet.</p>
+                  <div className="text-center py-8 sm:py-12 bg-gray-50 rounded-lg">
+                    <Briefcase className="h-8 w-8 sm:h-12 sm:w-12 text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-500 text-sm sm:text-base">No work experience added yet.</p>
                     {isEditing && (
                       <Button onClick={addExperience} variant="blue" className="mt-4">
                         Add Your First Experience
@@ -501,25 +502,28 @@ const ProfilePage = () => {
                 ) : (
                   <div className="space-y-4">
                     {editData.experience.map((exp, index) => (
-                      <div key={exp.id || index} className="bg-gray-50 rounded-lg p-6 border border-gray-200">
+                      <div key={exp.id || index} className="bg-gray-50 rounded-lg p-4 sm:p-6 border border-gray-200">
                         {isEditing ? (
                           <div className="space-y-4">
-                            <div className="flex justify-between items-start">
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
+                            <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start space-y-4 lg:space-y-0">
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 flex-1 lg:mr-4">
                                 <Input
                                   value={exp.title || ""}
                                   onChange={(e) => updateExperience(index, "title", e.target.value)}
                                   placeholder="Job Title"
+                                  className="text-sm"
                                 />
                                 <Input
                                   value={exp.company || ""}
                                   onChange={(e) => updateExperience(index, "company", e.target.value)}
                                   placeholder="Company"
+                                  className="text-sm"
                                 />
                                 <Input
                                   value={exp.location || ""}
                                   onChange={(e) => updateExperience(index, "location", e.target.value)}
                                   placeholder="Location"
+                                  className="text-sm"
                                 />
                                 <div className="flex space-x-2">
                                   <Input
@@ -527,6 +531,7 @@ const ProfilePage = () => {
                                     value={exp.startDate || ""}
                                     onChange={(e) => updateExperience(index, "startDate", e.target.value)}
                                     placeholder="Start Date"
+                                    className="text-sm"
                                   />
                                   <Input
                                     type="date"
@@ -534,6 +539,7 @@ const ProfilePage = () => {
                                     onChange={(e) => updateExperience(index, "endDate", e.target.value)}
                                     placeholder="End Date"
                                     disabled={exp.current}
+                                    className="text-sm"
                                   />
                                 </div>
                               </div>
@@ -541,7 +547,7 @@ const ProfilePage = () => {
                                 onClick={() => removeExperience(index)}
                                 variant="outline"
                                 size="sm"
-                                className="ml-4 text-red-600 hover:text-red-700"
+                                className="text-red-600 hover:text-red-700 w-full sm:w-auto lg:w-auto"
                               >
                                 <Trash2 className="h-4 w-4" />
                               </Button>
@@ -559,18 +565,18 @@ const ProfilePage = () => {
                               value={exp.description || ""}
                               onChange={(e) => updateExperience(index, "description", e.target.value)}
                               placeholder="Describe your role and achievements..."
-                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[100px]"
+                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[100px] text-sm"
                             />
                           </div>
                         ) : (
                           <div>
-                            <div className="flex items-start justify-between mb-3">
-                              <div>
-                                <h4 className="text-lg font-semibold text-gray-900">{exp.title}</h4>
-                                <p className="text-blue-600 font-medium">{exp.company}</p>
-                                <p className="text-gray-500 text-sm">{exp.location}</p>
+                            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-3 space-y-2 sm:space-y-0">
+                              <div className="text-center sm:text-left">
+                                <h4 className="text-base sm:text-lg font-semibold text-gray-900">{exp.title}</h4>
+                                <p className="text-blue-600 font-medium text-sm sm:text-base">{exp.company}</p>
+                                <p className="text-gray-500 text-xs sm:text-sm">{exp.location}</p>
                               </div>
-                              <div className="text-right text-sm text-gray-500">
+                              <div className="text-center sm:text-right text-xs sm:text-sm text-gray-500">
                                 {exp.startDate && (
                                   <div>
                                     {new Date(exp.startDate).toLocaleDateString()} - {" "}
@@ -580,7 +586,7 @@ const ProfilePage = () => {
                               </div>
                             </div>
                             {exp.description && (
-                              <p className="text-gray-700 leading-relaxed">{exp.description}</p>
+                              <p className="text-gray-700 leading-relaxed text-sm sm:text-base">{exp.description}</p>
                             )}
                           </div>
                         )}
@@ -593,10 +599,10 @@ const ProfilePage = () => {
 
             {activeTab === "education" && (
               <div className="space-y-6">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
                   <h3 className="text-lg font-semibold text-gray-900">Education</h3>
                   {isEditing && (
-                    <Button onClick={addEducation} variant="outline" size="sm">
+                    <Button onClick={addEducation} variant="outline" size="sm" className="w-full sm:w-auto">
                       <Plus className="h-4 w-4 mr-2" />
                       Add Education
                     </Button>
@@ -604,9 +610,9 @@ const ProfilePage = () => {
                 </div>
 
                 {(!editData.education || editData.education.length === 0) ? (
-                  <div className="text-center py-12 bg-gray-50 rounded-lg">
-                    <GraduationCap className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-500">No education details added yet.</p>
+                  <div className="text-center py-8 sm:py-12 bg-gray-50 rounded-lg">
+                    <GraduationCap className="h-8 w-8 sm:h-12 sm:w-12 text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-500 text-sm sm:text-base">No education details added yet.</p>
                     {isEditing && (
                       <Button onClick={addEducation} variant="blue" className="mt-4">
                         Add Your Education
@@ -616,36 +622,41 @@ const ProfilePage = () => {
                 ) : (
                   <div className="space-y-4">
                     {editData.education.map((edu, index) => (
-                      <div key={edu.id || index} className="bg-gray-50 rounded-lg p-6 border border-gray-200">
+                      <div key={edu.id || index} className="bg-gray-50 rounded-lg p-4 sm:p-6 border border-gray-200">
                         {isEditing ? (
                           <div className="space-y-4">
-                            <div className="flex justify-between items-start">
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
+                            <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start space-y-4 lg:space-y-0">
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 flex-1 lg:mr-4">
                                 <Input
                                   value={edu.degree || ""}
                                   onChange={(e) => updateEducation(index, "degree", e.target.value)}
                                   placeholder="Degree"
+                                  className="text-sm"
                                 />
                                 <Input
                                   value={edu.institution || ""}
                                   onChange={(e) => updateEducation(index, "institution", e.target.value)}
                                   placeholder="Institution"
+                                  className="text-sm"
                                 />
                                 <Input
                                   value={edu.location || ""}
                                   onChange={(e) => updateEducation(index, "location", e.target.value)}
                                   placeholder="Location"
+                                  className="text-sm"
                                 />
                                 <Input
                                   value={edu.gpa || ""}
                                   onChange={(e) => updateEducation(index, "gpa", e.target.value)}
                                   placeholder="GPA (optional)"
+                                  className="text-sm"
                                 />
                                 <Input
                                   type="date"
                                   value={edu.startDate || ""}
                                   onChange={(e) => updateEducation(index, "startDate", e.target.value)}
                                   placeholder="Start Date"
+                                  className="text-sm"
                                 />
                                 <Input
                                   type="date"
@@ -653,13 +664,14 @@ const ProfilePage = () => {
                                   onChange={(e) => updateEducation(index, "endDate", e.target.value)}
                                   placeholder="End Date"
                                   disabled={edu.current}
+                                  className="text-sm"
                                 />
                               </div>
                               <Button
                                 onClick={() => removeEducation(index)}
                                 variant="outline"
                                 size="sm"
-                                className="ml-4 text-red-600 hover:text-red-700"
+                                className="text-red-600 hover:text-red-700 w-full sm:w-auto lg:w-auto"
                               >
                                 <Trash2 className="h-4 w-4" />
                               </Button>
@@ -676,16 +688,16 @@ const ProfilePage = () => {
                           </div>
                         ) : (
                           <div>
-                            <div className="flex items-start justify-between mb-3">
-                              <div>
-                                <h4 className="text-lg font-semibold text-gray-900">{edu.degree}</h4>
-                                <p className="text-blue-600 font-medium">{edu.institution}</p>
-                                <p className="text-gray-500 text-sm">{edu.location}</p>
+                            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-3 space-y-2 sm:space-y-0">
+                              <div className="text-center sm:text-left">
+                                <h4 className="text-base sm:text-lg font-semibold text-gray-900">{edu.degree}</h4>
+                                <p className="text-blue-600 font-medium text-sm sm:text-base">{edu.institution}</p>
+                                <p className="text-gray-500 text-xs sm:text-sm">{edu.location}</p>
                                 {edu.gpa && (
-                                  <p className="text-gray-600 text-sm">GPA: {edu.gpa}</p>
+                                  <p className="text-gray-600 text-xs sm:text-sm">GPA: {edu.gpa}</p>
                                 )}
                               </div>
-                              <div className="text-right text-sm text-gray-500">
+                              <div className="text-center sm:text-right text-xs sm:text-sm text-gray-500">
                                 {edu.startDate && (
                                   <div>
                                     {new Date(edu.startDate).toLocaleDateString()} - {" "}
@@ -705,10 +717,10 @@ const ProfilePage = () => {
 
             {activeTab === "skills" && (
               <div className="space-y-6">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
                   <h3 className="text-lg font-semibold text-gray-900">Skills</h3>
                   {isEditing && (
-                    <Button onClick={addSkill} variant="outline" size="sm">
+                    <Button onClick={addSkill} variant="outline" size="sm" className="w-full sm:w-auto">
                       <Plus className="h-4 w-4 mr-2" />
                       Add Skill
                     </Button>
@@ -716,9 +728,9 @@ const ProfilePage = () => {
                 </div>
 
                 {(!editData.skills || editData.skills.length === 0) ? (
-                  <div className="text-center py-12 bg-gray-50 rounded-lg">
-                    <Award className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-500">No skills added yet.</p>
+                  <div className="text-center py-8 sm:py-12 bg-gray-50 rounded-lg">
+                    <Award className="h-8 w-8 sm:h-12 sm:w-12 text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-500 text-sm sm:text-base">No skills added yet.</p>
                     {isEditing && (
                       <Button onClick={addSkill} variant="blue" className="mt-4">
                         Add Your Skills
@@ -726,19 +738,19 @@ const ProfilePage = () => {
                     )}
                   </div>
                 ) : (
-                  <div className="flex flex-wrap gap-3">
+                  <div className="flex flex-wrap gap-2 sm:gap-3">
                     {editData.skills.map((skill, index) => (
                       <div
                         key={index}
-                        className="inline-flex items-center bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium"
+                        className="inline-flex items-center bg-blue-100 text-blue-800 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium"
                       >
-                        {skill}
+                        <span className="truncate max-w-[120px] sm:max-w-none">{skill}</span>
                         {isEditing && (
                           <button
                             onClick={() => removeSkill(index)}
-                            className="ml-2 text-blue-600 hover:text-blue-800"
+                            className="ml-2 text-blue-600 hover:text-blue-800 flex-shrink-0"
                           >
-                            <X className="h-4 w-4" />
+                            <X className="h-3 w-3 sm:h-4 sm:w-4" />
                           </button>
                         )}
                       </div>
@@ -751,12 +763,12 @@ const ProfilePage = () => {
         </div>
 
         {/* Social Links & Resume Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
           {/* Social Links */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center">
-                <ExternalLink className="h-5 w-5 mr-2" />
+              <CardTitle className="flex items-center text-base sm:text-lg">
+                <ExternalLink className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                 Social Links
               </CardTitle>
             </CardHeader>
@@ -764,27 +776,30 @@ const ProfilePage = () => {
               {isEditing ? (
                 <div className="space-y-4">
                   <div className="flex items-center space-x-3">
-                    <Linkedin className="h-5 w-5 text-blue-600" />
+                    <Linkedin className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 flex-shrink-0" />
                     <Input
                       value={editData.linkedinUrl || ""}
                       onChange={(e) => setEditData({ ...editData, linkedinUrl: e.target.value })}
                       placeholder="LinkedIn profile URL"
+                      className="text-sm"
                     />
                   </div>
                   <div className="flex items-center space-x-3">
-                    <Github className="h-5 w-5 text-gray-800" />
+                    <Github className="h-4 w-4 sm:h-5 sm:w-5 text-gray-800 flex-shrink-0" />
                     <Input
                       value={editData.githubUrl || ""}
                       onChange={(e) => setEditData({ ...editData, githubUrl: e.target.value })}
                       placeholder="GitHub profile URL"
+                      className="text-sm"
                     />
                   </div>
                   <div className="flex items-center space-x-3">
-                    <Globe className="h-5 w-5 text-green-600" />
+                    <Globe className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 flex-shrink-0" />
                     <Input
                       value={editData.portfolioUrl || ""}
                       onChange={(e) => setEditData({ ...editData, portfolioUrl: e.target.value })}
                       placeholder="Portfolio website URL"
+                      className="text-sm"
                     />
                   </div>
                 </div>
@@ -795,16 +810,16 @@ const ProfilePage = () => {
                       href={currentUser.linkedinUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center text-blue-600 hover:text-blue-800"
+                      className="flex items-center text-blue-600 hover:text-blue-800 text-sm sm:text-base"
                     >
-                      <Linkedin className="h-5 w-5 mr-3" />
-                      LinkedIn Profile
-                      <ExternalLink className="h-4 w-4 ml-2" />
+                      <Linkedin className="h-4 w-4 sm:h-5 sm:w-5 mr-3 flex-shrink-0" />
+                      <span className="truncate">LinkedIn Profile</span>
+                      <ExternalLink className="h-3 w-3 sm:h-4 sm:w-4 ml-2 flex-shrink-0" />
                     </a>
                   ) : (
-                    <div className="flex items-center text-gray-400">
-                      <Linkedin className="h-5 w-5 mr-3" />
-                      No LinkedIn profile added
+                    <div className="flex items-center text-gray-400 text-sm sm:text-base">
+                      <Linkedin className="h-4 w-4 sm:h-5 sm:w-5 mr-3 flex-shrink-0" />
+                      <span>No LinkedIn profile added</span>
                     </div>
                   )}
                   
@@ -813,16 +828,16 @@ const ProfilePage = () => {
                       href={currentUser.githubUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center text-gray-800 hover:text-gray-600"
+                      className="flex items-center text-gray-800 hover:text-gray-600 text-sm sm:text-base"
                     >
-                      <Github className="h-5 w-5 mr-3" />
-                      GitHub Profile
-                      <ExternalLink className="h-4 w-4 ml-2" />
+                      <Github className="h-4 w-4 sm:h-5 sm:w-5 mr-3 flex-shrink-0" />
+                      <span className="truncate">GitHub Profile</span>
+                      <ExternalLink className="h-3 w-3 sm:h-4 sm:w-4 ml-2 flex-shrink-0" />
                     </a>
                   ) : (
-                    <div className="flex items-center text-gray-400">
-                      <Github className="h-5 w-5 mr-3" />
-                      No GitHub profile added
+                    <div className="flex items-center text-gray-400 text-sm sm:text-base">
+                      <Github className="h-4 w-4 sm:h-5 sm:w-5 mr-3 flex-shrink-0" />
+                      <span>No GitHub profile added</span>
                     </div>
                   )}
                   
@@ -831,16 +846,16 @@ const ProfilePage = () => {
                       href={currentUser.portfolioUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center text-green-600 hover:text-green-800"
+                      className="flex items-center text-green-600 hover:text-green-800 text-sm sm:text-base"
                     >
-                      <Globe className="h-5 w-5 mr-3" />
-                      Portfolio Website
-                      <ExternalLink className="h-4 w-4 ml-2" />
+                      <Globe className="h-4 w-4 sm:h-5 sm:w-5 mr-3 flex-shrink-0" />
+                      <span className="truncate">Portfolio Website</span>
+                      <ExternalLink className="h-3 w-3 sm:h-4 sm:w-4 ml-2 flex-shrink-0" />
                     </a>
                   ) : (
-                    <div className="flex items-center text-gray-400">
-                      <Globe className="h-5 w-5 mr-3" />
-                      No portfolio website added
+                    <div className="flex items-center text-gray-400 text-sm sm:text-base">
+                      <Globe className="h-4 w-4 sm:h-5 sm:w-5 mr-3 flex-shrink-0" />
+                      <span>No portfolio website added</span>
                     </div>
                   )}
                 </div>
@@ -852,25 +867,25 @@ const ProfilePage = () => {
           {currentUser.role !== "recruiter" && (
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Upload className="h-5 w-5 mr-2" />
+                <CardTitle className="flex items-center text-base sm:text-lg">
+                  <Upload className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                   Resume
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400 transition-colors">
-                  <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-600 mb-2">Upload your resume</p>
-                  <p className="text-sm text-gray-500 mb-4">PDF, DOC, DOCX up to 5MB</p>
-                  <Button variant="outline">
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 sm:p-8 text-center hover:border-gray-400 transition-colors">
+                  <Upload className="h-8 w-8 sm:h-12 sm:w-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-600 mb-2 text-sm sm:text-base">Upload your resume</p>
+                  <p className="text-xs sm:text-sm text-gray-500 mb-4">PDF, DOC, DOCX up to 5MB</p>
+                  <Button variant="outline" className="w-full sm:w-auto">
                     Choose File
                   </Button>
                 </div>
                 {currentUser.resumeUrl && (
                   <div className="mt-4 p-3 bg-green-50 rounded-lg flex items-center justify-between">
-                    <div className="flex items-center text-green-700">
-                      <CheckCircle className="h-5 w-5 mr-2" />
-                      Resume uploaded
+                    <div className="flex items-center text-green-700 text-sm">
+                      <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 mr-2 flex-shrink-0" />
+                      <span>Resume uploaded</span>
                     </div>
                     <Button variant="outline" size="sm">
                       View
