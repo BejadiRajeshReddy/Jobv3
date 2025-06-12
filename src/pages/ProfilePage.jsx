@@ -25,6 +25,7 @@ import {
   Camera,
   CheckCircle,
   AlertCircle,
+  Image as ImageIcon,
 } from "lucide-react";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/input";
@@ -35,6 +36,9 @@ const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({});
   const [activeTab, setActiveTab] = useState("overview");
+  const [profilePhoto, setProfilePhoto] = useState(null);
+  const [coverPhoto, setCoverPhoto] = useState(null);
+  const [resumeFile, setResumeFile] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -68,6 +72,95 @@ const ProfilePage = () => {
   const handleCancel = () => {
     setEditData(currentUser);
     setIsEditing(false);
+    setProfilePhoto(null);
+    setCoverPhoto(null);
+    setResumeFile(null);
+  };
+
+  // Photo upload handlers
+  const handleProfilePhotoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Validate file type
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+      if (!allowedTypes.includes(file.type)) {
+        alert('Please upload a valid image file (JPEG, PNG, WebP)');
+        return;
+      }
+      
+      // Validate file size (5MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Image size must be less than 5MB');
+        return;
+      }
+      
+      // Create preview URL
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const photoUrl = e.target.result;
+        setProfilePhoto(photoUrl);
+        setEditData({ ...editData, profilePhoto: photoUrl });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleCoverPhotoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Validate file type
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+      if (!allowedTypes.includes(file.type)) {
+        alert('Please upload a valid image file (JPEG, PNG, WebP)');
+        return;
+      }
+      
+      // Validate file size (10MB limit for cover photos)
+      if (file.size > 10 * 1024 * 1024) {
+        alert('Image size must be less than 10MB');
+        return;
+      }
+      
+      // Create preview URL
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const photoUrl = e.target.result;
+        setCoverPhoto(photoUrl);
+        setEditData({ ...editData, coverPhoto: photoUrl });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleResumeChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Validate file type
+      const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+      if (!allowedTypes.includes(file.type)) {
+        alert('Please upload a PDF or Word document');
+        return;
+      }
+      
+      // Validate file size (5MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('File size must be less than 5MB');
+        return;
+      }
+      
+      setResumeFile(file);
+      setEditData({ ...editData, resumeFileName: file.name, resumeSize: file.size });
+    }
+  };
+
+  const removeProfilePhoto = () => {
+    setProfilePhoto(null);
+    setEditData({ ...editData, profilePhoto: null });
+  };
+
+  const removeCoverPhoto = () => {
+    setCoverPhoto(null);
+    setEditData({ ...editData, coverPhoto: null });
   };
 
   const addSkill = () => {
@@ -177,12 +270,38 @@ const ProfilePage = () => {
         {/* Header Section */}
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 overflow-hidden mb-8 sm:mb-10">
           {/* Cover Photo */}
-          <div className="h-32 sm:h-48 bg-gradient-to-r from-blue-400 to-blue-500 relative">
+          <div className="h-32 sm:h-48 relative overflow-hidden">
+            {coverPhoto || currentUser.coverPhoto ? (
+              <img 
+                src={coverPhoto || currentUser.coverPhoto} 
+                alt="Cover" 
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full bg-gradient-to-r from-blue-400 to-blue-500"></div>
+            )}
             <div className="absolute inset-0 bg-black/20"></div>
+            
             {isEditing && (
-              <button className="absolute top-4 right-6 sm:top-6 sm:right-8 bg-white/20 backdrop-blur-sm rounded-lg p-2 text-white hover:bg-white/30 transition-colors">
-                <Camera className="h-4 w-4 sm:h-5 sm:w-5" />
-              </button>
+              <div className="absolute top-4 right-6 sm:top-6 sm:right-8 flex space-x-2">
+                <label className="bg-white/20 backdrop-blur-sm rounded-lg p-2 text-white hover:bg-white/30 transition-colors cursor-pointer">
+                  <Camera className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleCoverPhotoChange}
+                    className="hidden"
+                  />
+                </label>
+                {(coverPhoto || currentUser.coverPhoto) && (
+                  <button
+                    onClick={removeCoverPhoto}
+                    className="bg-red-500/80 backdrop-blur-sm rounded-lg p-2 text-white hover:bg-red-600/80 transition-colors"
+                  >
+                    <X className="h-4 w-4 sm:h-5 sm:w-5" />
+                  </button>
+                )}
+              </div>
             )}
           </div>
 
@@ -191,14 +310,39 @@ const ProfilePage = () => {
             {/* Profile Picture */}
             <div className="relative -mt-12 sm:-mt-16 mb-8 sm:mb-10 flex justify-center sm:justify-start">
               <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-xl sm:rounded-2xl bg-white p-1 shadow-lg">
-                <div className="w-full h-full rounded-lg sm:rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center text-white text-2xl sm:text-4xl font-bold">
-                  {currentUser.name?.charAt(0)?.toUpperCase() || 'U'}
-                </div>
+                {profilePhoto || currentUser.profilePhoto ? (
+                  <img 
+                    src={profilePhoto || currentUser.profilePhoto} 
+                    alt="Profile" 
+                    className="w-full h-full rounded-lg sm:rounded-xl object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full rounded-lg sm:rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center text-white text-2xl sm:text-4xl font-bold">
+                    {currentUser.name?.charAt(0)?.toUpperCase() || 'U'}
+                  </div>
+                )}
               </div>
+              
               {isEditing && (
-                <button className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 bg-blue-600 rounded-full p-1.5 sm:p-2 text-white shadow-lg hover:bg-blue-700 transition-colors">
-                  <Camera className="h-3 w-3 sm:h-4 sm:w-4" />
-                </button>
+                <div className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 flex space-x-1">
+                  <label className="bg-blue-600 rounded-full p-1.5 sm:p-2 text-white shadow-lg hover:bg-blue-700 transition-colors cursor-pointer">
+                    <Camera className="h-3 w-3 sm:h-4 sm:w-4" />
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleProfilePhotoChange}
+                      className="hidden"
+                    />
+                  </label>
+                  {(profilePhoto || currentUser.profilePhoto) && (
+                    <button
+                      onClick={removeProfilePhoto}
+                      className="bg-red-500 rounded-full p-1.5 sm:p-2 text-white shadow-lg hover:bg-red-600 transition-colors"
+                    >
+                      <X className="h-3 w-3 sm:h-4 sm:w-4" />
+                    </button>
+                  )}
+                </div>
               )}
             </div>
 
@@ -266,7 +410,15 @@ const ProfilePage = () => {
                 </div>
 
                 {/* Bio Section */}
-
+                <div className="bg-gray-50 rounded-xl p-6 sm:p-8">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-6">About</h3>
+                  <textarea
+                    value={editData.bio || ""}
+                    onChange={(e) => setEditData({ ...editData, bio: e.target.value })}
+                    className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[120px] text-sm sm:text-base"
+                    placeholder="Tell us about yourself, your experience, and what you're looking for..."
+                  />
+                </div>
 
                 {/* Action Buttons */}
                 <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
@@ -416,18 +568,9 @@ const ProfilePage = () => {
                 {/* Bio Section */}
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">About</h3>
-                  {isEditing ? (
-                    <textarea
-                      value={editData.bio || ""}
-                      onChange={(e) => setEditData({ ...editData, bio: e.target.value })}
-                      className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[120px] text-sm sm:text-base"
-                      placeholder="Tell us about yourself, your experience, and what you're looking for..."
-                    />
-                  ) : (
-                    <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
-                      {currentUser.bio || "No bio added yet. Click 'Edit Profile' to add information about yourself."}
-                    </p>
-                  )}
+                  <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
+                    {currentUser.bio || "No bio added yet. Click 'Edit Profile' to add information about yourself."}
+                  </p>
                 </div>
 
                 {/* Contact Information */}
@@ -913,23 +1056,79 @@ const ProfilePage = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="px-6 sm:px-8">
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 sm:p-10 text-center hover:border-gray-400 transition-colors">
-                  <Upload className="h-8 w-8 sm:h-12 sm:w-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-600 mb-2 text-sm sm:text-base">Upload your resume</p>
-                  <p className="text-xs sm:text-sm text-gray-500 mb-4">PDF, DOC, DOCX up to 5MB</p>
-                  <Button variant="outline" className="w-full sm:w-auto">
-                    Choose File
-                  </Button>
-                </div>
-                {currentUser.resumeUrl && (
-                  <div className="mt-6 p-4 bg-green-50 rounded-lg flex items-center justify-between">
-                    <div className="flex items-center text-green-700 text-sm">
-                      <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 mr-2 flex-shrink-0" />
-                      <span>Resume uploaded</span>
+                {resumeFile || currentUser.resumeFileName ? (
+                  <div className="space-y-4">
+                    <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center text-green-700">
+                          <CheckCircle className="h-5 w-5 mr-3 flex-shrink-0" />
+                          <div>
+                            <p className="font-medium text-sm">
+                              {resumeFile?.name || currentUser.resumeFileName || "Resume uploaded"}
+                            </p>
+                            <p className="text-xs text-green-600">
+                              {resumeFile ? 
+                                `${(resumeFile.size / 1024 / 1024).toFixed(2)} MB` : 
+                                currentUser.resumeSize ? `${(currentUser.resumeSize / 1024 / 1024).toFixed(2)} MB` : ''
+                              }
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex space-x-2">
+                          <Button variant="outline" size="sm">
+                            View
+                          </Button>
+                          {isEditing && (
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => {
+                                setResumeFile(null);
+                                setEditData({ ...editData, resumeFileName: null, resumeSize: null });
+                              }}
+                              className="text-red-600 hover:text-red-700"
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                    <Button variant="outline" size="sm">
-                      View
-                    </Button>
+                    
+                    {isEditing && (
+                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
+                        <Upload className="h-8 w-8 text-gray-400 mx-auto mb-3" />
+                        <p className="text-gray-600 mb-2 text-sm">Replace resume</p>
+                        <label className="cursor-pointer">
+                          <Button variant="outline" size="sm" asChild>
+                            <span>Choose New File</span>
+                          </Button>
+                          <input
+                            type="file"
+                            accept=".pdf,.doc,.docx"
+                            onChange={handleResumeChange}
+                            className="hidden"
+                          />
+                        </label>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 sm:p-10 text-center hover:border-gray-400 transition-colors">
+                    <Upload className="h-8 w-8 sm:h-12 sm:w-12 text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-600 mb-2 text-sm sm:text-base">Upload your resume</p>
+                    <p className="text-xs sm:text-sm text-gray-500 mb-4">PDF, DOC, DOCX up to 5MB</p>
+                    <label className="cursor-pointer">
+                      <Button variant="outline" className="w-full sm:w-auto" asChild>
+                        <span>Choose File</span>
+                      </Button>
+                      <input
+                        type="file"
+                        accept=".pdf,.doc,.docx"
+                        onChange={handleResumeChange}
+                        className="hidden"
+                      />
+                    </label>
                   </div>
                 )}
               </CardContent>
