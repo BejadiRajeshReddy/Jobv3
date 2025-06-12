@@ -353,8 +353,8 @@ const ProfilePage = () => {
                   } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center transition-colors`}
                 >
                   <tab.icon className="h-4 w-4 mr-2" />
-                  <span className="hidden ">{tab.name}</span>
-                  <span className="sm:hidden">{tab.name.slice(0, 4)}</span>
+                  <span className="hidden sm:inline">{tab.name}</span>
+                 
                 </button>
               ))}
             </nav>
