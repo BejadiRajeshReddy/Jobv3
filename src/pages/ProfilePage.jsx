@@ -192,7 +192,7 @@ const ProfilePage = () => {
               {/* Profile Picture */}
               <div className="relative -mt-16 mb-4 sm:mb-0">
                 <div className="w-32 h-32 rounded-2xl bg-white p-1 shadow-lg">
-                  <div className="w-full h-full rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-4xl font-bold">
+                  <div className="w-full h-full rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center text-white text-4xl font-bold">
                     {currentUser.name?.charAt(0)?.toUpperCase() || 'U'}
                   </div>
                 </div>
