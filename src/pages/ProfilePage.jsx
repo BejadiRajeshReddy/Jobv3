@@ -266,20 +266,7 @@ const ProfilePage = () => {
                 </div>
 
                 {/* Bio Section */}
-                <div className="bg-gray-50 rounded-xl p-6 sm:p-8">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-6">About You</h3>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Bio / Summary
-                    </label>
-                    <textarea
-                      value={editData.bio || ""}
-                      onChange={(e) => setEditData({ ...editData, bio: e.target.value })}
-                      className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[120px] text-base resize-none"
-                      placeholder="Tell us about yourself, your experience, and what you're looking for..."
-                    />
-                  </div>
-                </div>
+
 
                 {/* Action Buttons */}
                 <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
