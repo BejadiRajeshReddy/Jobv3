@@ -187,7 +187,7 @@ const ProfilePage = () => {
           </div>
 
           {/* Profile Info */}
-          <div className="relative px-4 mx-30 sm:px-6 pb-4 sm:pb-6">
+          <div className="relative px-4  sm:px-6 pb-4 sm:pb-6">
             <div className="flex flex-col sm:flex-row sm:items-end sm:space-x-6">
               {/* Profile Picture */}
               <div className="relative -mt-12 sm:-mt-16 mb-4 sm:mb-0 flex justify-center sm:justify-start">
