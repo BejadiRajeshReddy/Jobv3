@@ -354,7 +354,7 @@ const ProfilePage = () => {
                 >
                   <tab.icon className="h-4 w-4 mr-2" />
                   <span className="hidden sm:inline">{tab.name}</span>
-                 
+                  <span className="sm:hidden">{tab.name.slice(0, 4)}</span>
                 </button>
               ))}
             </nav>
