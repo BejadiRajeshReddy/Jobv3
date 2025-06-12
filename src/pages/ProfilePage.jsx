@@ -6,1512 +6,884 @@ import {
   Phone,
   MapPin,
   Calendar,
-  Edit2,
-  Save,
-  X,
-  AlertCircle,
-  Plus,
-  Trash2,
-  Upload,
   Briefcase,
   GraduationCap,
   Award,
+  Upload,
+  Edit3,
+  Save,
+  X,
+  Plus,
+  Trash2,
+  ExternalLink,
+  Building,
+  DollarSign,
+  Clock,
+  Globe,
   Github,
   Linkedin,
-  Globe,
-  FileText,
-  CheckCircle2,
-  AlertTriangle,
-  Link as LinkIcon,
+  Camera,
+  CheckCircle,
+  AlertCircle,
 } from "lucide-react";
-import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/Button";
-import { Progress } from "../components/ui/progress";
+import { Input } from "../components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 
 const ProfilePage = () => {
-  const [user, setUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
-  const [profileImage, setProfileImage] = useState(null);
-  const [profileCompletion, setProfileCompletion] = useState(0);
+  const [editData, setEditData] = useState({});
+  const [activeTab, setActiveTab] = useState("overview");
   const navigate = useNavigate();
 
-  // Basic Information
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [gender, setGender] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState("");
-  const [location, setLocation] = useState("");
-  const [willingToRelocate, setWillingToRelocate] = useState(false);
-  const [currentJobTitle, setCurrentJobTitle] = useState("");
-
-  // Career Preferences
-  const [preferredRoles, setPreferredRoles] = useState([]);
-  const [newPreferredRole, setNewPreferredRole] = useState("");
-  const [preferredLocations, setPreferredLocations] = useState([]);
-  const [newPreferredLocation, setNewPreferredLocation] = useState("");
-  const [employmentType, setEmploymentType] = useState("");
-  const [expectedSalary, setExpectedSalary] = useState("");
-  const [availableFrom, setAvailableFrom] = useState("");
-  const [remoteWorkPreference, setRemoteWorkPreference] = useState("");
-
-  // Education
-  const [education, setEducation] = useState([]);
-
-  // Work Experience
-  const [workExperience, setWorkExperience] = useState([]);
-  const [isFresher, setIsFresher] = useState(false);
-
-  // Skills
-  const [skills, setSkills] = useState([]);
-  const [newSkill, setNewSkill] = useState("");
-  const [skillProficiency, setSkillProficiency] = useState("");
-
-  // Certifications
-  const [certifications, setCertifications] = useState([]);
-
-  // Projects
-  const [projects, setProjects] = useState([]);
-
-  // Resume
-  const [resume, setResume] = useState(null);
-  const [resumeTitle, setResumeTitle] = useState("");
-
-  // Social Links
-  const [socialLinks, setSocialLinks] = useState({
-    linkedin: "",
-    github: "",
-    portfolio: "",
-    hackerrank: "",
-    leetcode: "",
-  });
-
   useEffect(() => {
-    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-    if (!currentUser) {
+    const user = localStorage.getItem("currentUser");
+    if (!user) {
       navigate("/login");
       return;
     }
-
-    setUser(currentUser);
-    setName(currentUser.name || "");
-    setEmail(currentUser.email || "");
-    setPhoneNumber(currentUser.phoneNumber || "");
-    setGender(currentUser.gender || "");
-    setDateOfBirth(currentUser.dateOfBirth || "");
-    setLocation(currentUser.location || "");
-    setWillingToRelocate(currentUser.willingToRelocate || false);
-    setCurrentJobTitle(currentUser.currentJobTitle || "");
-    setProfileImage(currentUser.profileImage || null);
     
-    setPreferredRoles(currentUser.preferredRoles || []);
-    setPreferredLocations(currentUser.preferredLocations || []);
-    setEmploymentType(currentUser.employmentType || "");
-    setExpectedSalary(currentUser.expectedSalary || "");
-    setAvailableFrom(currentUser.availableFrom || "");
-    setRemoteWorkPreference(currentUser.remoteWorkPreference || "");
-    
-    setEducation(currentUser.education || []);
-    setWorkExperience(currentUser.workExperience || []);
-    setIsFresher(currentUser.isFresher || false);
-    setSkills(currentUser.skills || []);
-    setCertifications(currentUser.certifications || []);
-    setProjects(currentUser.projects || []);
-    setResume(currentUser.resume || null);
-    setResumeTitle(currentUser.resumeTitle || "");
-    setSocialLinks(currentUser.socialLinks || {
-      linkedin: "",
-      github: "",
-      portfolio: "",
-      hackerrank: "",
-      leetcode: "",
-    });
-
-    calculateProfileCompletion(currentUser);
-    setIsLoading(false);
+    const userData = JSON.parse(user);
+    setCurrentUser(userData);
+    setEditData(userData);
   }, [navigate]);
 
-  const calculateProfileCompletion = (userData) => {
-    const totalFields = 20; // Approximate count of all possible fields
-    let completedFields = 0;
-
-    // Basic Information
-    if (userData.name) completedFields++;
-    if (userData.email) completedFields++;
-    if (userData.phoneNumber) completedFields++;
-    if (userData.gender) completedFields++;
-    if (userData.dateOfBirth) completedFields++;
-    if (userData.location) completedFields++;
-    if (userData.currentJobTitle || userData.isFresher) completedFields++;
+  const handleSave = () => {
+    localStorage.setItem("currentUser", JSON.stringify(editData));
+    setCurrentUser(editData);
+    setIsEditing(false);
     
-    // Career Preferences
-    if (userData.preferredRoles && userData.preferredRoles.length > 0) completedFields++;
-    if (userData.preferredLocations && userData.preferredLocations.length > 0) completedFields++;
-    if (userData.employmentType) completedFields++;
-    if (userData.expectedSalary) completedFields++;
-    if (userData.availableFrom) completedFields++;
-    if (userData.remoteWorkPreference) completedFields++;
-
-    // Education, Work Experience, Skills, Certifications, Projects, Resume, Social Links
-    if (userData.education && userData.education.length > 0) completedFields++;
-    if (userData.workExperience && userData.workExperience.length > 0 || userData.isFresher) completedFields++;
-    if (userData.skills && userData.skills.length > 0) completedFields++;
-    if (userData.certifications && userData.certifications.length > 0) completedFields++;
-    if (userData.projects && userData.projects.length > 0) completedFields++;
-    if (userData.resume) completedFields++;
-    if (userData.socialLinks && Object.values(userData.socialLinks).some(link => link)) completedFields++;
-
-    const completion = (completedFields / totalFields) * 100;
-    setProfileCompletion(Math.round(completion));
+    // Update in users array as well
+    const users = JSON.parse(localStorage.getItem("users") || "[]");
+    const updatedUsers = users.map(user => 
+      user.id === editData.id ? editData : user
+    );
+    localStorage.setItem("users", JSON.stringify(updatedUsers));
+    
+    // Dispatch event to update navbar
+    window.dispatchEvent(new Event('userStateChanged'));
   };
 
-  const handleProfileImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfileImage(reader.result);
-      };
-      reader.readAsDataURL(file);
+  const handleCancel = () => {
+    setEditData(currentUser);
+    setIsEditing(false);
+  };
+
+  const addSkill = () => {
+    const newSkill = prompt("Enter a skill:");
+    if (newSkill && newSkill.trim()) {
+      setEditData({
+        ...editData,
+        skills: [...(editData.skills || []), newSkill.trim()]
+      });
     }
   };
 
-  // Career Preferences Handlers
-  const handleAddPreferredRole = () => {
-    if (newPreferredRole.trim() && !preferredRoles.includes(newPreferredRole.trim())) {
-      setPreferredRoles([...preferredRoles, newPreferredRole.trim()]);
-      setNewPreferredRole("");
-    }
+  const removeSkill = (index) => {
+    const updatedSkills = editData.skills.filter((_, i) => i !== index);
+    setEditData({ ...editData, skills: updatedSkills });
   };
 
-  const handleRemovePreferredRole = (roleToRemove) => {
-    setPreferredRoles(preferredRoles.filter(role => role !== roleToRemove));
-  };
-
-  const handleAddPreferredLocation = () => {
-    if (newPreferredLocation.trim() && !preferredLocations.includes(newPreferredLocation.trim())) {
-      setPreferredLocations([...preferredLocations, newPreferredLocation.trim()]);
-      setNewPreferredLocation("");
-    }
-  };
-
-  const handleRemovePreferredLocation = (locationToRemove) => {
-    setPreferredLocations(preferredLocations.filter(loc => loc !== locationToRemove));
-  };
-
-  // Education Handlers
-  const handleAddEducation = () => {
-    setEducation([
-      ...education,
-      {
-        degree: "",
-        specialization: "",
-        university: "",
-        yearOfPassing: "",
-        grades: "",
-      },
-    ]);
-  };
-
-  const handleRemoveEducation = (index) => {
-    setEducation(education.filter((_, i) => i !== index));
-  };
-
-  const handleEducationChange = (index, field, value) => {
-    const newEducation = [...education];
-    newEducation[index] = { ...newEducation[index], [field]: value };
-    setEducation(newEducation);
-  };
-
-  // Work Experience Handlers
-  const handleAddWorkExperience = () => {
-    setWorkExperience([
-      ...workExperience,
-      {
-        jobTitle: "",
-        companyName: "",
-        durationFrom: "",
-        durationTo: "",
-        employmentType: "",
-        responsibilities: "",
-      },
-    ]);
-  };
-
-  const handleRemoveWorkExperience = (index) => {
-    setWorkExperience(workExperience.filter((_, i) => i !== index));
-  };
-
-  const handleWorkExperienceChange = (index, field, value) => {
-    const newWorkExperience = [...workExperience];
-    newWorkExperience[index] = { ...newWorkExperience[index], [field]: value };
-    setWorkExperience(newWorkExperience);
-  };
-
-  // Skills Handlers
-  const handleAddSkill = () => {
-    if (newSkill.trim()) {
-      setSkills([...skills, { name: newSkill.trim(), proficiency: skillProficiency }]);
-      setNewSkill("");
-      setSkillProficiency("");
-    }
-  };
-
-  const handleRemoveSkill = (index) => {
-    setSkills(skills.filter((_, i) => i !== index));
-  };
-
-  // Certifications Handlers
-  const handleAddCertification = () => {
-    setCertifications([
-      ...certifications,
-      {
-        name: "",
-        issuingOrganization: "",
-        validity: "",
-        certificateFile: null,
-      },
-    ]);
-  };
-
-  const handleRemoveCertification = (index) => {
-    setCertifications(certifications.filter((_, i) => i !== index));
-  };
-
-  const handleCertificationChange = (index, field, value) => {
-    const newCertifications = [...certifications];
-    newCertifications[index] = { ...newCertifications[index], [field]: value };
-    setCertifications(newCertifications);
-  };
-
-  const handleCertificateFileUpload = (index, file) => {
-    const newCertifications = [...certifications];
-    newCertifications[index].certificateFile = file;
-    setCertifications(newCertifications);
-  };
-
-  // Projects Handlers
-  const handleAddProject = () => {
-    setProjects([
-      ...projects,
-      {
-        title: "",
-        description: "",
-        technologiesUsed: "",
-        githubLink: "",
-        liveLink: "",
-      },
-    ]);
-  };
-
-  const handleRemoveProject = (index) => {
-    setProjects(projects.filter((_, i) => i !== index));
-  };
-
-  const handleProjectChange = (index, field, value) => {
-    const newProjects = [...projects];
-    newProjects[index] = { ...newProjects[index], [field]: value };
-    setProjects(newProjects);
-  };
-
-  // Resume Handlers
-  const handleResumeUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) { // 5MB limit
-        setError("Resume file size exceeds 5MB limit.");
-        return;
-      }
-      setResume(file);
-      setResumeTitle(file.name);
-    }
-  };
-
-  const handleSave = async () => {
-    setError("");
-    setSuccess("");
-    setIsLoading(true);
-
-    try {
-      const users = JSON.parse(localStorage.getItem("users") || "[]");
-      const userIndex = users.findIndex((u) => u.id === user.id);
-
-      if (userIndex === -1) {
-        throw new Error("User not found");
-      }
-
-      const updatedUser = {
-        ...users[userIndex],
-        name,
-        phoneNumber,
-        gender,
-        dateOfBirth,
-        location,
-        willingToRelocate,
-        currentJobTitle,
-        profileImage,
-        preferredRoles,
-        preferredLocations,
-        employmentType,
-        expectedSalary,
-        availableFrom,
-        remoteWorkPreference,
-        education,
-        workExperience,
-        isFresher,
-        skills,
-        certifications,
-        projects,
-        resume: resume ? { name: resume.name, size: resume.size, type: resume.type, data: await fileToBase64(resume) } : null, // Store resume as base64
-        resumeTitle,
-        socialLinks,
-      };
-
-      users[userIndex] = updatedUser;
-      localStorage.setItem("users", JSON.stringify(users));
-
-      const { password: _, ...userWithoutPassword } = updatedUser;
-      localStorage.setItem("currentUser", JSON.stringify(userWithoutPassword));
-      
-      window.dispatchEvent(new Event('userStateChanged'));
-      
-      setUser(userWithoutPassword);
-      setSuccess("Profile updated successfully");
-      setIsEditing(false);
-      calculateProfileCompletion(updatedUser);
-    } catch (err) {
-      setError(err.message || "Failed to update profile");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Utility function to convert file to Base64
-  const fileToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
+  const addExperience = () => {
+    const newExp = {
+      id: Date.now(),
+      title: "",
+      company: "",
+      location: "",
+      startDate: "",
+      endDate: "",
+      current: false,
+      description: ""
+    };
+    setEditData({
+      ...editData,
+      experience: [...(editData.experience || []), newExp]
     });
   };
 
-  if (isLoading) {
+  const updateExperience = (index, field, value) => {
+    const updatedExp = editData.experience.map((exp, i) => 
+      i === index ? { ...exp, [field]: value } : exp
+    );
+    setEditData({ ...editData, experience: updatedExp });
+  };
+
+  const removeExperience = (index) => {
+    const updatedExp = editData.experience.filter((_, i) => i !== index);
+    setEditData({ ...editData, experience: updatedExp });
+  };
+
+  const addEducation = () => {
+    const newEdu = {
+      id: Date.now(),
+      degree: "",
+      institution: "",
+      location: "",
+      startDate: "",
+      endDate: "",
+      current: false,
+      gpa: ""
+    };
+    setEditData({
+      ...editData,
+      education: [...(editData.education || []), newEdu]
+    });
+  };
+
+  const updateEducation = (index, field, value) => {
+    const updatedEdu = editData.education.map((edu, i) => 
+      i === index ? { ...edu, [field]: value } : edu
+    );
+    setEditData({ ...editData, education: updatedEdu });
+  };
+
+  const removeEducation = (index) => {
+    const updatedEdu = editData.education.filter((_, i) => i !== index);
+    setEditData({ ...editData, education: updatedEdu });
+  };
+
+  const getProfileCompleteness = () => {
+    if (!currentUser) return 0;
+    
+    const fields = [
+      currentUser.name,
+      currentUser.email || currentUser.company?.email,
+      currentUser.phoneNumber,
+      currentUser.location,
+      currentUser.bio,
+      currentUser.skills?.length > 0,
+      currentUser.experience?.length > 0 || currentUser.company,
+      currentUser.education?.length > 0
+    ];
+    
+    const completed = fields.filter(Boolean).length;
+    return Math.round((completed / fields.length) * 100);
+  };
+
+  if (!currentUser) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading profile...</p>
-        </div>
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
       </div>
     );
   }
 
+  const completeness = getProfileCompleteness();
+
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header Section */}
-        <div className="bg-white shadow rounded-lg overflow-hidden">
-          <div className="relative h-32 bg-gradient-to-r from-blue-500 to-blue-600">
-            <div className="absolute -bottom-16 left-8">
-              <div className="relative">
-                <div className="h-32 w-32 rounded-full border-4 border-white bg-white overflow-hidden">
-                  {profileImage ? (
-                    <img
-                      src={profileImage}
-                      alt={name}
-                      className="h-full w-full object-cover"
-                    />
-                  ) : (
-                    <div className="h-full w-full bg-gray-200 flex items-center justify-center">
-                      <User className="h-16 w-16 text-gray-400" />
-                    </div>
-                  )}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden mb-8">
+          {/* Cover Photo */}
+          <div className="h-48 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 relative">
+            <div className="absolute inset-0 bg-black/20"></div>
+            {isEditing && (
+              <button className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm rounded-lg p-2 text-white hover:bg-white/30 transition-colors">
+                <Camera className="h-5 w-5" />
+              </button>
+            )}
+          </div>
+
+          {/* Profile Info */}
+          <div className="relative px-6 pb-6">
+            <div className="flex flex-col sm:flex-row sm:items-end sm:space-x-6">
+              {/* Profile Picture */}
+              <div className="relative -mt-16 mb-4 sm:mb-0">
+                <div className="w-32 h-32 rounded-2xl bg-white p-1 shadow-lg">
+                  <div className="w-full h-full rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-4xl font-bold">
+                    {currentUser.name?.charAt(0)?.toUpperCase() || 'U'}
+                  </div>
                 </div>
                 {isEditing && (
-                  <label
-                    htmlFor="profile-image-upload"
-                    className="absolute bottom-0 right-0 bg-blue-500 text-white p-2 rounded-full cursor-pointer hover:bg-blue-600"
-                  >
-                    <Upload className="h-4 w-4" />
-                    <input
-                      id="profile-image-upload"
-                      type="file"
-                      className="hidden"
-                      accept="image/*"
-                      onChange={handleProfileImageUpload}
-                    />
-                  </label>
+                  <button className="absolute bottom-2 right-2 bg-blue-600 rounded-full p-2 text-white shadow-lg hover:bg-blue-700 transition-colors">
+                    <Camera className="h-4 w-4" />
+                  </button>
                 )}
               </div>
-            </div>
-          </div>
 
-          <div className="pt-20 pb-6 px-8">
-            <div className="flex justify-between items-start">
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">{name}</h1>
-                <p className="text-lg text-gray-600 mt-1">{currentJobTitle || (isFresher ? "Fresher" : "")}</p>
-                <div className="flex items-center text-gray-500 mt-2">
-                  <MapPin className="h-4 w-4 mr-1" />
-                  <span>{location || "Add location"}</span>
-                </div>
-              </div>
-              <Button
-                variant={isEditing ? "danger" : "blue"}
-                onClick={() => setIsEditing(!isEditing)}
-                disabled={isLoading}
-              >
+              {/* Name and Title */}
+              <div className="flex-1 min-w-0">
                 {isEditing ? (
-                  <>
-                    <X className="h-4 w-4 mr-2" />
-                    Cancel
-                  </>
+                  <div className="space-y-3">
+                    <Input
+                      value={editData.name || ""}
+                      onChange={(e) => setEditData({ ...editData, name: e.target.value })}
+                      className="text-2xl font-bold border-2 border-blue-200 focus:border-blue-500"
+                      placeholder="Your name"
+                    />
+                    <Input
+                      value={editData.title || ""}
+                      onChange={(e) => setEditData({ ...editData, title: e.target.value })}
+                      className="text-lg border-2 border-gray-200 focus:border-blue-500"
+                      placeholder="Your job title"
+                    />
+                  </div>
                 ) : (
                   <>
-                    <Edit2 className="h-4 w-4 mr-2" />
-                    Edit Profile
+                    <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                      {currentUser.name}
+                    </h1>
+                    <p className="text-xl text-gray-600 mb-2">
+                      {currentUser.title || (currentUser.role === "recruiter" ? "Recruiter" : "Job Seeker")}
+                    </p>
                   </>
                 )}
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        {/* Profile Completion */}
-        <div className="mt-6 bg-white shadow rounded-lg p-6">
-          <div className="flex items-center justify-between mb-2">
-            <h2 className="text-lg font-medium text-gray-900">Profile Completion</h2>
-            <span className="text-sm font-medium text-blue-600">{profileCompletion}%</span>
-          </div>
-          <Progress value={profileCompletion} className="h-2" />
-          {profileCompletion < 100 && (
-            <div className="mt-4">
-              <h3 className="text-sm font-medium text-gray-700 mb-2">Suggestions to complete your profile:</h3>
-              <ul className="space-y-2">
-                {!name && (
-                  <li className="flex items-center text-sm text-gray-600">
-                    <AlertTriangle className="h-4 w-4 text-yellow-500 mr-2" />
-                    Add your full name
-                  </li>
-                )}
-                {!currentJobTitle && !isFresher && (
-                  <li className="flex items-center text-sm text-gray-600">
-                    <AlertTriangle className="h-4 w-4 text-yellow-500 mr-2" />
-                    Add your current job title or mark as Fresher
-                  </li>
-                )}
-                {!location && (
-                  <li className="flex items-center text-sm text-gray-600">
-                    <AlertTriangle className="h-4 w-4 text-yellow-500 mr-2" />
-                    Add your location
-                  </li>
-                )}
-                {preferredRoles.length === 0 && (
-                  <li className="flex items-center text-sm text-gray-600">
-                    <AlertTriangle className="h-4 w-4 text-yellow-500 mr-2" />
-                    Add your preferred job roles
-                  </li>
-                )}
-                {education.length === 0 && (
-                  <li className="flex items-center text-sm text-gray-600">
-                    <AlertTriangle className="h-4 w-4 text-yellow-500 mr-2" />
-                    Add your education details
-                  </li>
-                )}
-                {!isFresher && workExperience.length === 0 && (
-                  <li className="flex items-center text-sm text-gray-600">
-                    <AlertTriangle className="h-4 w-4 text-yellow-500 mr-2" />
-                    Add your work experience
-                  </li>
-                )}
-                {skills.length === 0 && (
-                  <li className="flex items-center text-sm text-gray-600">
-                    <AlertTriangle className="h-4 w-4 text-yellow-500 mr-2" />
-                    Add your skills
-                  </li>
-                )}
-                {!resume && (
-                  <li className="flex items-center text-sm text-gray-600">
-                    <AlertTriangle className="h-4 w-4 text-yellow-500 mr-2" />
-                    Upload your resume
-                  </li>
-                )}
-              </ul>
-            </div>
-          )}
-        </div>
-
-        {/* Basic Information */}
-        <div className="mt-6 bg-white shadow rounded-lg">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-medium text-gray-900">Basic Information</h2>
-          </div>
-          <div className="p-6 space-y-6">
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Full Name
-                </label>
-                <div className="mt-1 relative rounded-md shadow-sm">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <User className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <Input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    disabled={!isEditing}
-                    className="pl-10"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Email
-                </label>
-                <div className="mt-1 relative rounded-md shadow-sm">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Mail className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <Input
-                    type="email"
-                    value={email}
-                    disabled={true}
-                    className="pl-10 bg-gray-50"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Mobile Number
-                </label>
-                <div className="mt-1 relative rounded-md shadow-sm">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Phone className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <Input
-                    type="tel"
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                    disabled={!isEditing}
-                    className="pl-10"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Gender
-                </label>
-                <div className="mt-1">
-                  <select
-                    value={gender}
-                    onChange={(e) => setGender(e.target.value)}
-                    disabled={!isEditing}
-                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2"
-                  >
-                    <option value="">Select gender</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
-                    <option value="prefer_not_to_say">Prefer not to say</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Date of Birth
-                </label>
-                <div className="mt-1 relative rounded-md shadow-sm">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Calendar className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <Input
-                    type="date"
-                    value={dateOfBirth}
-                    onChange={(e) => setDateOfBirth(e.target.value)}
-                    disabled={!isEditing}
-                    className="pl-10"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Current Location
-                </label>
-                <div className="mt-1 relative rounded-md shadow-sm">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <MapPin className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <Input
-                    type="text"
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                    disabled={!isEditing}
-                    placeholder="City, State, Country"
-                    className="pl-10"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Current Job Title
-                </label>
-                <div className="mt-1 relative rounded-md shadow-sm">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Briefcase className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <Input
-                    type="text"
-                    value={currentJobTitle}
-                    onChange={(e) => setCurrentJobTitle(e.target.value)}
-                    disabled={!isEditing}
-                    placeholder="e.g., Software Engineer"
-                    className="pl-10"
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  id="willing-to-relocate"
-                  checked={willingToRelocate}
-                  onChange={(e) => setWillingToRelocate(e.target.checked)}
-                  disabled={!isEditing}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                />
-                <label
-                  htmlFor="willing-to-relocate"
-                  className="ml-2 block text-sm text-gray-700"
-                >
-                  Willing to relocate
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Career Preferences */}
-        <div className="mt-6 bg-white shadow rounded-lg">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-medium text-gray-900">Career Preferences</h2>
-          </div>
-          <div className="p-6 space-y-6">
-            {/* Preferred Job Roles */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Preferred Job Roles
-              </label>
-              <div className="flex flex-wrap gap-2 mb-2">
-                {preferredRoles.map((role, index) => (
-                  <div
-                    key={index}
-                    className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm flex items-center"
-                  >
-                    {role}
-                    {isEditing && (
-                      <button
-                        onClick={() => handleRemovePreferredRole(role)}
-                        className="ml-2 text-blue-600 hover:text-blue-800"
-                      >
-                        <X className="h-4 w-4" />
-                      </button>
-                    )}
-                  </div>
-                ))}
-              </div>
-              {isEditing && (
-                <div className="flex gap-2">
-                  <Input
-                    type="text"
-                    value={newPreferredRole}
-                    onChange={(e) => setNewPreferredRole(e.target.value)}
-                    placeholder="e.g., Software Engineer, Data Scientist"
-                    className="flex-1"
-                  />
-                  <Button
-                    variant="blue"
-                    onClick={handleAddPreferredRole}
-                    disabled={!newPreferredRole.trim()}
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
-              )}
-            </div>
-
-            {/* Preferred Locations */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Preferred Locations
-              </label>
-              <div className="flex flex-wrap gap-2 mb-2">
-                {preferredLocations.map((loc, index) => (
-                  <div
-                    key={index}
-                    className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm flex items-center"
-                  >
-                    {loc}
-                    {isEditing && (
-                      <button
-                        onClick={() => handleRemovePreferredLocation(loc)}
-                        className="ml-2 text-green-600 hover:text-green-800"
-                      >
-                        <X className="h-4 w-4" />
-                      </button>
-                    )}
-                  </div>
-                ))}
-              </div>
-              {isEditing && (
-                <div className="flex gap-2">
-                  <Input
-                    type="text"
-                    value={newPreferredLocation}
-                    onChange={(e) => setNewPreferredLocation(e.target.value)}
-                    placeholder="e.g., Bangalore, Hyderabad"
-                    className="flex-1"
-                  />
-                  <Button
-                    variant="blue"
-                    onClick={handleAddPreferredLocation}
-                    disabled={!newPreferredLocation.trim()}
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
-              )}
-            </div>
-
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Employment Type
-                </label>
-                <div className="mt-1">
-                  <select
-                    value={employmentType}
-                    onChange={(e) => setEmploymentType(e.target.value)}
-                    disabled={!isEditing}
-                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2"
-                  >
-                    <option value="">Select employment type</option>
-                    <option value="full-time">Full-time</option>
-                    <option value="part-time">Part-time</option>
-                    <option value="internship">Internship</option>
-                    <option value="freelance">Freelance</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Expected Salary (INR per annum)
-                </label>
-                <div className="mt-1 relative rounded-md shadow-sm">
-                  <Input
-                    type="text"
-                    value={expectedSalary}
-                    onChange={(e) => setExpectedSalary(e.target.value)}
-                    disabled={!isEditing}
-                    placeholder="e.g., 800000 or Negotiable"
-                    className="pl-3"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Available From
-                </label>
-                <div className="mt-1 relative rounded-md shadow-sm">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Calendar className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <Input
-                    type="date"
-                    value={availableFrom}
-                    onChange={(e) => setAvailableFrom(e.target.value)}
-                    disabled={!isEditing}
-                    className="pl-10"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Remote Work Preference
-                </label>
-                <div className="mt-1">
-                  <select
-                    value={remoteWorkPreference}
-                    onChange={(e) => setRemoteWorkPreference(e.target.value)}
-                    disabled={!isEditing}
-                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2"
-                  >
-                    <option value="">Select preference</option>
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
-                    <option value="hybrid">Hybrid</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Education Section */}
-        <div className="mt-6 bg-white shadow rounded-lg">
-          <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-            <h2 className="text-lg font-medium text-gray-900">Education</h2>
-            {isEditing && (
-              <Button variant="blue" onClick={handleAddEducation}>
-                <Plus className="h-4 w-4 mr-2" />
-                Add Education
-              </Button>
-            )}
-          </div>
-          <div className="p-6 space-y-6">
-            {education.length === 0 && !isEditing ? (
-              <p className="text-gray-500">No education details added yet.</p>
-            ) : (
-              education.map((edu, index) => (
-                <div key={index} className="border border-gray-200 rounded-lg p-4 space-y-4">
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Degree</label>
-                      <Input
-                        type="text"
-                        value={edu.degree}
-                        onChange={(e) => handleEducationChange(index, "degree", e.target.value)}
-                        disabled={!isEditing}
-                        placeholder="e.g., B.Tech"
-                      />
+                
+                <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
+                  {currentUser.location && (
+                    <div className="flex items-center">
+                      <MapPin className="h-4 w-4 mr-1" />
+                      {currentUser.location}
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Specialization</label>
-                      <Input
-                        type="text"
-                        value={edu.specialization}
-                        onChange={(e) => handleEducationChange(index, "specialization", e.target.value)}
-                        disabled={!isEditing}
-                        placeholder="e.g., Computer Science"
-                      />
+                  )}
+                  {currentUser.email && (
+                    <div className="flex items-center">
+                      <Mail className="h-4 w-4 mr-1" />
+                      {currentUser.email}
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">University/College</label>
-                      <Input
-                        type="text"
-                        value={edu.university}
-                        onChange={(e) => handleEducationChange(index, "university", e.target.value)}
-                        disabled={!isEditing}
-                        placeholder="e.g., XYZ University"
-                      />
+                  )}
+                  {currentUser.company?.email && (
+                    <div className="flex items-center">
+                      <Mail className="h-4 w-4 mr-1" />
+                      {currentUser.company.email}
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Year of Passing</label>
-                      <Input
-                        type="text"
-                        value={edu.yearOfPassing}
-                        onChange={(e) => handleEducationChange(index, "yearOfPassing", e.target.value)}
-                        disabled={!isEditing}
-                        placeholder="e.g., 2023"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Grades/CGPA (optional)</label>
-                      <Input
-                        type="text"
-                        value={edu.grades}
-                        onChange={(e) => handleEducationChange(index, "grades", e.target.value)}
-                        disabled={!isEditing}
-                        placeholder="e.g., 8.5/10 or A+"
-                      />
-                    </div>
-                  </div>
-                  {isEditing && (
-                    <div className="flex justify-end">
-                      <Button variant="danger" onClick={() => handleRemoveEducation(index)}>
-                        <Trash2 className="h-4 w-4 mr-2" />
-                        Remove Education
-                      </Button>
+                  )}
+                  {currentUser.phoneNumber && (
+                    <div className="flex items-center">
+                      <Phone className="h-4 w-4 mr-1" />
+                      {currentUser.phoneNumber}
                     </div>
                   )}
                 </div>
-              ))
-            )}
-          </div>
-        </div>
+              </div>
 
-        {/* Work Experience Section */}
-        <div className="mt-6 bg-white shadow rounded-lg">
-          <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-            <h2 className="text-lg font-medium text-gray-900">Work Experience</h2>
-            {isEditing && !isFresher && (
-              <Button variant="blue" onClick={handleAddWorkExperience}>
-                <Plus className="h-4 w-4 mr-2" />
-                Add Experience
-              </Button>
-            )}
-          </div>
-          <div className="p-6 space-y-6">
-            <div className="flex items-center mb-4">
-              <input
-                type="checkbox"
-                id="is-fresher"
-                checked={isFresher}
-                onChange={(e) => setIsFresher(e.target.checked)}
-                disabled={!isEditing}
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <label
-                htmlFor="is-fresher"
-                className="ml-2 block text-sm text-gray-700"
-              >
-                I am a Fresher
-              </label>
+              {/* Action Buttons */}
+              <div className="flex space-x-3 mt-4 sm:mt-0">
+                {isEditing ? (
+                  <>
+                    <Button onClick={handleSave} className="bg-green-600 hover:bg-green-700">
+                      <Save className="h-4 w-4 mr-2" />
+                      Save Changes
+                    </Button>
+                    <Button variant="outline" onClick={handleCancel}>
+                      <X className="h-4 w-4 mr-2" />
+                      Cancel
+                    </Button>
+                  </>
+                ) : (
+                  <Button onClick={() => setIsEditing(true)} variant="blue">
+                    <Edit3 className="h-4 w-4 mr-2" />
+                    Edit Profile
+                  </Button>
+                )}
+              </div>
             </div>
-
-            {!isFresher ? (
-              workExperience.length === 0 && !isEditing ? (
-                <p className="text-gray-500">No work experience added yet.</p>
-              ) : (
-                workExperience.map((exp, index) => (
-                  <div key={index} className="border border-gray-200 rounded-lg p-4 space-y-4">
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">Job Title</label>
-                        <Input
-                          type="text"
-                          value={exp.jobTitle}
-                          onChange={(e) => handleWorkExperienceChange(index, "jobTitle", e.target.value)}
-                          disabled={!isEditing}
-                          placeholder="e.g., Software Engineer"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">Company Name</label>
-                        <Input
-                          type="text"
-                          value={exp.companyName}
-                          onChange={(e) => handleWorkExperienceChange(index, "companyName", e.target.value)}
-                          disabled={!isEditing}
-                          placeholder="e.g., Google"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">Duration From</label>
-                        <Input
-                          type="date"
-                          value={exp.durationFrom}
-                          onChange={(e) => handleWorkExperienceChange(index, "durationFrom", e.target.value)}
-                          disabled={!isEditing}
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">Duration To</label>
-                        <Input
-                          type="date"
-                          value={exp.durationTo}
-                          onChange={(e) => handleWorkExperienceChange(index, "durationTo", e.target.value)}
-                          disabled={!isEditing}
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">Employment Type</label>
-                        <select
-                          value={exp.employmentType}
-                          onChange={(e) => handleWorkExperienceChange(index, "employmentType", e.target.value)}
-                          disabled={!isEditing}
-                          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2"
-                        >
-                          <option value="">Select type</option>
-                          <option value="full-time">Full-time</option>
-                          <option value="internship">Internship</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Responsibilities</label>
-                      <textarea
-                        rows={3}
-                        value={exp.responsibilities}
-                        onChange={(e) => handleWorkExperienceChange(index, "responsibilities", e.target.value)}
-                        disabled={!isEditing}
-                        className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md p-2"
-                        placeholder="Describe your responsibilities..."
-                      />
-                    </div>
-                    {isEditing && (
-                      <div className="flex justify-end">
-                        <Button variant="danger" onClick={() => handleRemoveWorkExperience(index)}>
-                          <Trash2 className="h-4 w-4 mr-2" />
-                          Remove Experience
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                ))
-              )
-            ) : (
-              <p className="text-gray-500">You are marked as a Fresher. Work experience section is hidden.</p>
-            )}
           </div>
         </div>
 
-        {/* Skills Section */}
-        <div className="mt-6 bg-white shadow rounded-lg">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-medium text-gray-900">Skills</h2>
-          </div>
-          <div className="p-6 space-y-4">
-            <div className="flex flex-wrap gap-2">
-              {skills.map((skill, index) => (
-                <div
-                  key={index}
-                  className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm flex items-center"
-                >
-                  {skill.name}{skill.proficiency && ` (${skill.proficiency})`}
-                  {isEditing && (
-                    <button
-                      onClick={() => handleRemoveSkill(index)}
-                      className="ml-2 text-blue-600 hover:text-blue-800"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                  )}
+        {/* Profile Completion Card */}
+        {completeness < 100 && (
+          <Card className="mb-8 border-l-4 border-l-blue-500 bg-blue-50/50">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">Complete Your Profile</h3>
+                  <p className="text-gray-600">Increase your visibility to employers</p>
                 </div>
+                <div className="text-right">
+                  <div className="text-2xl font-bold text-blue-600">{completeness}%</div>
+                  <div className="text-sm text-gray-500">Complete</div>
+                </div>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
+                <div 
+                  className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${completeness}%` }}
+                ></div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+                {!currentUser.bio && (
+                  <div className="flex items-center text-gray-600">
+                    <AlertCircle className="h-4 w-4 mr-2 text-orange-500" />
+                    Add a bio
+                  </div>
+                )}
+                {(!currentUser.skills || currentUser.skills.length === 0) && (
+                  <div className="flex items-center text-gray-600">
+                    <AlertCircle className="h-4 w-4 mr-2 text-orange-500" />
+                    Add skills
+                  </div>
+                )}
+                {(!currentUser.experience || currentUser.experience.length === 0) && currentUser.role !== "recruiter" && (
+                  <div className="flex items-center text-gray-600">
+                    <AlertCircle className="h-4 w-4 mr-2 text-orange-500" />
+                    Add work experience
+                  </div>
+                )}
+                {(!currentUser.education || currentUser.education.length === 0) && (
+                  <div className="flex items-center text-gray-600">
+                    <AlertCircle className="h-4 w-4 mr-2 text-orange-500" />
+                    Add education
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Navigation Tabs */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-8">
+          <div className="border-b border-gray-200">
+            <nav className="flex space-x-8 px-6" aria-label="Tabs">
+              {[
+                { id: "overview", name: "Overview", icon: User },
+                { id: "experience", name: "Experience", icon: Briefcase },
+                { id: "education", name: "Education", icon: GraduationCap },
+                { id: "skills", name: "Skills", icon: Award },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`${
+                    activeTab === tab.id
+                      ? "border-blue-500 text-blue-600"
+                      : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                  } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center transition-colors`}
+                >
+                  <tab.icon className="h-4 w-4 mr-2" />
+                  {tab.name}
+                </button>
               ))}
-            </div>
-            {isEditing && (
-              <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-                <Input
-                  type="text"
-                  value={newSkill}
-                  onChange={(e) => setNewSkill(e.target.value)}
-                  placeholder="e.g., React, Node.js"
-                  className="col-span-2"
-                />
-                <select
-                  value={skillProficiency}
-                  onChange={(e) => setSkillProficiency(e.target.value)}
-                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2"
-                >
-                  <option value="">Select proficiency</option>
-                  <option value="Beginner">Beginner</option>
-                  <option value="Intermediate">Intermediate</option>
-                  <option value="Advanced">Advanced</option>
-                </select>
-                <Button
-                  variant="blue"
-                  onClick={handleAddSkill}
-                  disabled={!newSkill.trim() || !skillProficiency}
-                  className="col-span-3 sm:col-span-1"
-                >
-                  <Plus className="h-4 w-4" />
-                  Add Skill
-                </Button>
-              </div>
-            )}
+            </nav>
           </div>
-        </div>
 
-        {/* Certifications Section */}
-        <div className="mt-6 bg-white shadow rounded-lg">
-          <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-            <h2 className="text-lg font-medium text-gray-900">Certifications</h2>
-            {isEditing && (
-              <Button variant="blue" onClick={handleAddCertification}>
-                <Plus className="h-4 w-4 mr-2" />
-                Add Certification
-              </Button>
-            )}
-          </div>
-          <div className="p-6 space-y-6">
-            {certifications.length === 0 && !isEditing ? (
-              <p className="text-gray-500">No certifications added yet.</p>
-            ) : (
-              certifications.map((cert, index) => (
-                <div key={index} className="border border-gray-200 rounded-lg p-4 space-y-4">
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Certification Name</label>
-                      <Input
-                        type="text"
-                        value={cert.name}
-                        onChange={(e) => handleCertificationChange(index, "name", e.target.value)}
-                        disabled={!isEditing}
-                        placeholder="e.g., AWS Certified Developer"
-                      />
+          {/* Tab Content */}
+          <div className="p-6">
+            {activeTab === "overview" && (
+              <div className="space-y-6">
+                {/* Bio Section */}
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">About</h3>
+                  {isEditing ? (
+                    <textarea
+                      value={editData.bio || ""}
+                      onChange={(e) => setEditData({ ...editData, bio: e.target.value })}
+                      className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[120px]"
+                      placeholder="Tell us about yourself, your experience, and what you're looking for..."
+                    />
+                  ) : (
+                    <p className="text-gray-700 leading-relaxed">
+                      {currentUser.bio || "No bio added yet. Click 'Edit Profile' to add information about yourself."}
+                    </p>
+                  )}
+                </div>
+
+                {/* Contact Information */}
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Contact Information</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="flex items-center p-4 bg-gray-50 rounded-lg">
+                      <Mail className="h-5 w-5 text-gray-400 mr-3" />
+                      <div>
+                        <div className="text-sm text-gray-500">Email</div>
+                        <div className="font-medium">
+                          {currentUser.email || currentUser.company?.email || "Not provided"}
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Issuing Organization</label>
-                      <Input
-                        type="text"
-                        value={cert.issuingOrganization}
-                        onChange={(e) => handleCertificationChange(index, "issuingOrganization", e.target.value)}
-                        disabled={!isEditing}
-                        placeholder="e.g., Amazon Web Services"
-                      />
+                    <div className="flex items-center p-4 bg-gray-50 rounded-lg">
+                      <Phone className="h-5 w-5 text-gray-400 mr-3" />
+                      <div>
+                        <div className="text-sm text-gray-500">Phone</div>
+                        <div className="font-medium">{currentUser.phoneNumber || "Not provided"}</div>
+                      </div>
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Validity (optional)</label>
-                      <Input
-                        type="text"
-                        value={cert.validity}
-                        onChange={(e) => handleCertificationChange(index, "validity", e.target.value)}
-                        disabled={!isEditing}
-                        placeholder="e.g., 2 years or Lifetime"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Upload Certificate (optional)</label>
-                      <div className="mt-1 flex items-center">
-                        <label htmlFor={`certificate-upload-${index}`} className={`flex items-center justify-center p-2 border border-gray-300 rounded-md cursor-pointer bg-gray-50 hover:bg-gray-100 text-sm ${
-                          !isEditing && "opacity-50 cursor-not-allowed"
-                        }`}>
-                          <Upload className="h-4 w-4 mr-2" />
-                          {cert.certificateFile ? "Change File" : "Choose File"}
-                          <input
-                            id={`certificate-upload-${index}`}
-                            type="file"
-                            className="hidden"
-                            accept=".pdf,.jpg,.png"
-                            onChange={(e) => handleCertificateFileUpload(index, e.target.files[0])}
-                            disabled={!isEditing}
+                    <div className="flex items-center p-4 bg-gray-50 rounded-lg">
+                      <MapPin className="h-5 w-5 text-gray-400 mr-3" />
+                      <div>
+                        <div className="text-sm text-gray-500">Location</div>
+                        {isEditing ? (
+                          <Input
+                            value={editData.location || ""}
+                            onChange={(e) => setEditData({ ...editData, location: e.target.value })}
+                            placeholder="Your location"
+                            className="mt-1"
                           />
-                        </label>
-                        {cert.certificateFile && (
-                          <span className="ml-2 text-sm text-gray-600">{cert.certificateFile.name}</span>
+                        ) : (
+                          <div className="font-medium">{currentUser.location || "Not provided"}</div>
                         )}
                       </div>
                     </div>
-                  </div>
-                  {isEditing && (
-                    <div className="flex justify-end">
-                      <Button variant="danger" onClick={() => handleRemoveCertification(index)}>
-                        <Trash2 className="h-4 w-4 mr-2" />
-                        Remove Certification
-                      </Button>
+                    <div className="flex items-center p-4 bg-gray-50 rounded-lg">
+                      <Calendar className="h-5 w-5 text-gray-400 mr-3" />
+                      <div>
+                        <div className="text-sm text-gray-500">Member Since</div>
+                        <div className="font-medium">
+                          {new Date(currentUser.createdAt).toLocaleDateString()}
+                        </div>
+                      </div>
                     </div>
-                  )}
+                  </div>
                 </div>
-              ))
-            )}
-          </div>
-        </div>
 
-        {/* Projects Section */}
-        <div className="mt-6 bg-white shadow rounded-lg">
-          <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-            <h2 className="text-lg font-medium text-gray-900">Projects (Optional)</h2>
-            {isEditing && (
-              <Button variant="blue" onClick={handleAddProject}>
-                <Plus className="h-4 w-4 mr-2" />
-                Add Project
-              </Button>
-            )}
-          </div>
-          <div className="p-6 space-y-6">
-            {projects.length === 0 && !isEditing ? (
-              <p className="text-gray-500">No projects added yet.</p>
-            ) : (
-              projects.map((project, index) => (
-                <div key={index} className="border border-gray-200 rounded-lg p-4 space-y-4">
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Project Title</label>
-                      <Input
-                        type="text"
-                        value={project.title}
-                        onChange={(e) => handleProjectChange(index, "title", e.target.value)}
-                        disabled={!isEditing}
-                        placeholder="e.g., Job Portal Platform"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Technologies Used</label>
-                      <Input
-                        type="text"
-                        value={project.technologiesUsed}
-                        onChange={(e) => handleProjectChange(index, "technologiesUsed", e.target.value)}
-                        disabled={!isEditing}
-                        placeholder="e.g., React, Node.js, MongoDB"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">GitHub Link (optional)</label>
-                      <Input
-                        type="url"
-                        value={project.githubLink}
-                        onChange={(e) => handleProjectChange(index, "githubLink", e.target.value)}
-                        disabled={!isEditing}
-                        placeholder="https://github.com/your-project"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Live Link (optional)</label>
-                      <Input
-                        type="url"
-                        value={project.liveLink}
-                        onChange={(e) => handleProjectChange(index, "liveLink", e.target.value)}
-                        disabled={!isEditing}
-                        placeholder="https://your-live-project.com"
-                      />
-                    </div>
-                  </div>
+                {/* Company Information (for recruiters) */}
+                {currentUser.role === "recruiter" && currentUser.company && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Description</label>
-                    <textarea
-                      rows={3}
-                      value={project.description}
-                      onChange={(e) => handleProjectChange(index, "description", e.target.value)}
-                      disabled={!isEditing}
-                      className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md p-2"
-                      placeholder="Describe your project..."
-                    />
-                  </div>
-                  {isEditing && (
-                    <div className="flex justify-end">
-                      <Button variant="danger" onClick={() => handleRemoveProject(index)}>
-                        <Trash2 className="h-4 w-4 mr-2" />
-                        Remove Project
-                      </Button>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Company Information</h3>
+                    <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 border border-blue-200">
+                      <div className="flex items-start space-x-4">
+                        <div className="w-16 h-16 bg-white rounded-lg flex items-center justify-center shadow-sm">
+                          <Building className="h-8 w-8 text-blue-600" />
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="text-xl font-semibold text-gray-900 mb-2">
+                            {currentUser.company.name}
+                          </h4>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div className="flex items-center text-gray-600">
+                              <Building className="h-4 w-4 mr-2" />
+                              {currentUser.company.industry}
+                            </div>
+                            <div className="flex items-center text-gray-600">
+                              <MapPin className="h-4 w-4 mr-2" />
+                              {currentUser.company.location}
+                            </div>
+                            <div className="flex items-center text-gray-600">
+                              <Mail className="h-4 w-4 mr-2" />
+                              {currentUser.company.email}
+                            </div>
+                            {currentUser.company.website && (
+                              <div className="flex items-center text-gray-600">
+                                <Globe className="h-4 w-4 mr-2" />
+                                <a 
+                                  href={currentUser.company.website} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="text-blue-600 hover:text-blue-800"
+                                >
+                                  Company Website
+                                </a>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  )}
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-
-        {/* Resume Upload Section */}
-        <div className="mt-6 bg-white shadow rounded-lg">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-medium text-gray-900">Resume Upload</h2>
-          </div>
-          <div className="p-6 space-y-4">
-            {resume ? (
-              <div className="flex items-center space-x-4">
-                <FileText className="h-8 w-8 text-blue-500" />
-                <div>
-                  <p className="text-sm font-medium text-gray-900">{resumeTitle || "Resume"}</p>
-                  <p className="text-xs text-gray-500">{(resume.size / 1024 / 1024).toFixed(2)} MB</p>
-                </div>
-                {isEditing && (
-                  <Button
-                    variant="danger"
-                    onClick={() => { setResume(null); setResumeTitle(""); }}
-                    className="ml-4"
-                  >
-                    <Trash2 className="h-4 w-4 mr-2" />
-                    Remove Resume
-                  </Button>
+                  </div>
                 )}
               </div>
-            ) : (
-              <div className="flex items-center justify-center w-full">
-                <label
-                  htmlFor="resume-upload"
-                  className={`flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 ${
-                    !isEditing && "opacity-50 cursor-not-allowed"
-                  }`}
-                >
-                  <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                    <Upload className="h-8 w-8 text-gray-400 mb-2" />
-                    <p className="mb-2 text-sm text-gray-500">
-                      <span className="font-semibold">
-                        Click to upload
-                      </span>{" "}
-                      or drag and drop
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      PDF, DOC, or DOCX (MAX. 5MB)
-                    </p>
+            )}
+
+            {activeTab === "experience" && (
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold text-gray-900">Work Experience</h3>
+                  {isEditing && (
+                    <Button onClick={addExperience} variant="outline" size="sm">
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Experience
+                    </Button>
+                  )}
+                </div>
+
+                {(!editData.experience || editData.experience.length === 0) ? (
+                  <div className="text-center py-12 bg-gray-50 rounded-lg">
+                    <Briefcase className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-500">No work experience added yet.</p>
+                    {isEditing && (
+                      <Button onClick={addExperience} variant="blue" className="mt-4">
+                        Add Your First Experience
+                      </Button>
+                    )}
                   </div>
-                  <input
-                    id="resume-upload"
-                    type="file"
-                    className="hidden"
-                    accept=".pdf,.doc,.docx"
-                    onChange={handleResumeUpload}
-                    disabled={!isEditing}
-                  />
-                </label>
+                ) : (
+                  <div className="space-y-4">
+                    {editData.experience.map((exp, index) => (
+                      <div key={exp.id || index} className="bg-gray-50 rounded-lg p-6 border border-gray-200">
+                        {isEditing ? (
+                          <div className="space-y-4">
+                            <div className="flex justify-between items-start">
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
+                                <Input
+                                  value={exp.title || ""}
+                                  onChange={(e) => updateExperience(index, "title", e.target.value)}
+                                  placeholder="Job Title"
+                                />
+                                <Input
+                                  value={exp.company || ""}
+                                  onChange={(e) => updateExperience(index, "company", e.target.value)}
+                                  placeholder="Company"
+                                />
+                                <Input
+                                  value={exp.location || ""}
+                                  onChange={(e) => updateExperience(index, "location", e.target.value)}
+                                  placeholder="Location"
+                                />
+                                <div className="flex space-x-2">
+                                  <Input
+                                    type="date"
+                                    value={exp.startDate || ""}
+                                    onChange={(e) => updateExperience(index, "startDate", e.target.value)}
+                                    placeholder="Start Date"
+                                  />
+                                  <Input
+                                    type="date"
+                                    value={exp.endDate || ""}
+                                    onChange={(e) => updateExperience(index, "endDate", e.target.value)}
+                                    placeholder="End Date"
+                                    disabled={exp.current}
+                                  />
+                                </div>
+                              </div>
+                              <Button
+                                onClick={() => removeExperience(index)}
+                                variant="outline"
+                                size="sm"
+                                className="ml-4 text-red-600 hover:text-red-700"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                            <div className="flex items-center">
+                              <input
+                                type="checkbox"
+                                checked={exp.current || false}
+                                onChange={(e) => updateExperience(index, "current", e.target.checked)}
+                                className="mr-2"
+                              />
+                              <label className="text-sm text-gray-600">I currently work here</label>
+                            </div>
+                            <textarea
+                              value={exp.description || ""}
+                              onChange={(e) => updateExperience(index, "description", e.target.value)}
+                              placeholder="Describe your role and achievements..."
+                              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[100px]"
+                            />
+                          </div>
+                        ) : (
+                          <div>
+                            <div className="flex items-start justify-between mb-3">
+                              <div>
+                                <h4 className="text-lg font-semibold text-gray-900">{exp.title}</h4>
+                                <p className="text-blue-600 font-medium">{exp.company}</p>
+                                <p className="text-gray-500 text-sm">{exp.location}</p>
+                              </div>
+                              <div className="text-right text-sm text-gray-500">
+                                {exp.startDate && (
+                                  <div>
+                                    {new Date(exp.startDate).toLocaleDateString()} - {" "}
+                                    {exp.current ? "Present" : exp.endDate ? new Date(exp.endDate).toLocaleDateString() : "Present"}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            {exp.description && (
+                              <p className="text-gray-700 leading-relaxed">{exp.description}</p>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {activeTab === "education" && (
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold text-gray-900">Education</h3>
+                  {isEditing && (
+                    <Button onClick={addEducation} variant="outline" size="sm">
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Education
+                    </Button>
+                  )}
+                </div>
+
+                {(!editData.education || editData.education.length === 0) ? (
+                  <div className="text-center py-12 bg-gray-50 rounded-lg">
+                    <GraduationCap className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-500">No education details added yet.</p>
+                    {isEditing && (
+                      <Button onClick={addEducation} variant="blue" className="mt-4">
+                        Add Your Education
+                      </Button>
+                    )}
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {editData.education.map((edu, index) => (
+                      <div key={edu.id || index} className="bg-gray-50 rounded-lg p-6 border border-gray-200">
+                        {isEditing ? (
+                          <div className="space-y-4">
+                            <div className="flex justify-between items-start">
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
+                                <Input
+                                  value={edu.degree || ""}
+                                  onChange={(e) => updateEducation(index, "degree", e.target.value)}
+                                  placeholder="Degree"
+                                />
+                                <Input
+                                  value={edu.institution || ""}
+                                  onChange={(e) => updateEducation(index, "institution", e.target.value)}
+                                  placeholder="Institution"
+                                />
+                                <Input
+                                  value={edu.location || ""}
+                                  onChange={(e) => updateEducation(index, "location", e.target.value)}
+                                  placeholder="Location"
+                                />
+                                <Input
+                                  value={edu.gpa || ""}
+                                  onChange={(e) => updateEducation(index, "gpa", e.target.value)}
+                                  placeholder="GPA (optional)"
+                                />
+                                <Input
+                                  type="date"
+                                  value={edu.startDate || ""}
+                                  onChange={(e) => updateEducation(index, "startDate", e.target.value)}
+                                  placeholder="Start Date"
+                                />
+                                <Input
+                                  type="date"
+                                  value={edu.endDate || ""}
+                                  onChange={(e) => updateEducation(index, "endDate", e.target.value)}
+                                  placeholder="End Date"
+                                  disabled={edu.current}
+                                />
+                              </div>
+                              <Button
+                                onClick={() => removeEducation(index)}
+                                variant="outline"
+                                size="sm"
+                                className="ml-4 text-red-600 hover:text-red-700"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                            <div className="flex items-center">
+                              <input
+                                type="checkbox"
+                                checked={edu.current || false}
+                                onChange={(e) => updateEducation(index, "current", e.target.checked)}
+                                className="mr-2"
+                              />
+                              <label className="text-sm text-gray-600">I currently study here</label>
+                            </div>
+                          </div>
+                        ) : (
+                          <div>
+                            <div className="flex items-start justify-between mb-3">
+                              <div>
+                                <h4 className="text-lg font-semibold text-gray-900">{edu.degree}</h4>
+                                <p className="text-blue-600 font-medium">{edu.institution}</p>
+                                <p className="text-gray-500 text-sm">{edu.location}</p>
+                                {edu.gpa && (
+                                  <p className="text-gray-600 text-sm">GPA: {edu.gpa}</p>
+                                )}
+                              </div>
+                              <div className="text-right text-sm text-gray-500">
+                                {edu.startDate && (
+                                  <div>
+                                    {new Date(edu.startDate).toLocaleDateString()} - {" "}
+                                    {edu.current ? "Present" : edu.endDate ? new Date(edu.endDate).toLocaleDateString() : "Present"}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {activeTab === "skills" && (
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold text-gray-900">Skills</h3>
+                  {isEditing && (
+                    <Button onClick={addSkill} variant="outline" size="sm">
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Skill
+                    </Button>
+                  )}
+                </div>
+
+                {(!editData.skills || editData.skills.length === 0) ? (
+                  <div className="text-center py-12 bg-gray-50 rounded-lg">
+                    <Award className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-500">No skills added yet.</p>
+                    {isEditing && (
+                      <Button onClick={addSkill} variant="blue" className="mt-4">
+                        Add Your Skills
+                      </Button>
+                    )}
+                  </div>
+                ) : (
+                  <div className="flex flex-wrap gap-3">
+                    {editData.skills.map((skill, index) => (
+                      <div
+                        key={index}
+                        className="inline-flex items-center bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium"
+                      >
+                        {skill}
+                        {isEditing && (
+                          <button
+                            onClick={() => removeSkill(index)}
+                            className="ml-2 text-blue-600 hover:text-blue-800"
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </div>
         </div>
 
-        {/* Social Links Section */}
-        <div className="mt-6 bg-white shadow rounded-lg">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-medium text-gray-900">Social Links</h2>
-          </div>
-          <div className="p-6 space-y-6">
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  LinkedIn URL
-                </label>
-                <div className="mt-1 relative rounded-md shadow-sm">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Linkedin className="h-5 w-5 text-gray-400" />
+        {/* Social Links & Resume Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Social Links */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <ExternalLink className="h-5 w-5 mr-2" />
+                Social Links
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {isEditing ? (
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-3">
+                    <Linkedin className="h-5 w-5 text-blue-600" />
+                    <Input
+                      value={editData.linkedinUrl || ""}
+                      onChange={(e) => setEditData({ ...editData, linkedinUrl: e.target.value })}
+                      placeholder="LinkedIn profile URL"
+                    />
                   </div>
-                  <Input
-                    type="url"
-                    value={socialLinks.linkedin}
-                    onChange={(e) =>
-                      setSocialLinks({
-                        ...socialLinks,
-                        linkedin: e.target.value,
-                      })
-                    }
-                    disabled={!isEditing}
-                    placeholder="https://linkedin.com/in/username"
-                    className="pl-10"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  GitHub URL
-                </label>
-                <div className="mt-1 relative rounded-md shadow-sm">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Github className="h-5 w-5 text-gray-400" />
+                  <div className="flex items-center space-x-3">
+                    <Github className="h-5 w-5 text-gray-800" />
+                    <Input
+                      value={editData.githubUrl || ""}
+                      onChange={(e) => setEditData({ ...editData, githubUrl: e.target.value })}
+                      placeholder="GitHub profile URL"
+                    />
                   </div>
-                  <Input
-                    type="url"
-                    value={socialLinks.github}
-                    onChange={(e) =>
-                      setSocialLinks({
-                        ...socialLinks,
-                        github: e.target.value,
-                      })
-                    }
-                    disabled={!isEditing}
-                    placeholder="https://github.com/username"
-                    className="pl-10"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Portfolio/Personal Website
-                </label>
-                <div className="mt-1 relative rounded-md shadow-sm">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Globe className="h-5 w-5 text-gray-400" />
+                  <div className="flex items-center space-x-3">
+                    <Globe className="h-5 w-5 text-green-600" />
+                    <Input
+                      value={editData.portfolioUrl || ""}
+                      onChange={(e) => setEditData({ ...editData, portfolioUrl: e.target.value })}
+                      placeholder="Portfolio website URL"
+                    />
                   </div>
-                  <Input
-                    type="url"
-                    value={socialLinks.portfolio}
-                    onChange={(e) =>
-                      setSocialLinks({
-                        ...socialLinks,
-                        portfolio: e.target.value,
-                      })
-                    }
-                    disabled={!isEditing}
-                    placeholder="https://your-portfolio.com"
-                    className="pl-10"
-                  />
                 </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  HackerRank URL (optional)
-                </label>
-                <div className="mt-1 relative rounded-md shadow-sm">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <LinkIcon className="h-5 w-5 text-gray-400" />
+              ) : (
+                <div className="space-y-3">
+                  {currentUser.linkedinUrl ? (
+                    <a
+                      href={currentUser.linkedinUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center text-blue-600 hover:text-blue-800"
+                    >
+                      <Linkedin className="h-5 w-5 mr-3" />
+                      LinkedIn Profile
+                      <ExternalLink className="h-4 w-4 ml-2" />
+                    </a>
+                  ) : (
+                    <div className="flex items-center text-gray-400">
+                      <Linkedin className="h-5 w-5 mr-3" />
+                      No LinkedIn profile added
+                    </div>
+                  )}
+                  
+                  {currentUser.githubUrl ? (
+                    <a
+                      href={currentUser.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center text-gray-800 hover:text-gray-600"
+                    >
+                      <Github className="h-5 w-5 mr-3" />
+                      GitHub Profile
+                      <ExternalLink className="h-4 w-4 ml-2" />
+                    </a>
+                  ) : (
+                    <div className="flex items-center text-gray-400">
+                      <Github className="h-5 w-5 mr-3" />
+                      No GitHub profile added
+                    </div>
+                  )}
+                  
+                  {currentUser.portfolioUrl ? (
+                    <a
+                      href={currentUser.portfolioUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center text-green-600 hover:text-green-800"
+                    >
+                      <Globe className="h-5 w-5 mr-3" />
+                      Portfolio Website
+                      <ExternalLink className="h-4 w-4 ml-2" />
+                    </a>
+                  ) : (
+                    <div className="flex items-center text-gray-400">
+                      <Globe className="h-5 w-5 mr-3" />
+                      No portfolio website added
+                    </div>
+                  )}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Resume Upload */}
+          {currentUser.role !== "recruiter" && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Upload className="h-5 w-5 mr-2" />
+                  Resume
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400 transition-colors">
+                  <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-600 mb-2">Upload your resume</p>
+                  <p className="text-sm text-gray-500 mb-4">PDF, DOC, DOCX up to 5MB</p>
+                  <Button variant="outline">
+                    Choose File
+                  </Button>
+                </div>
+                {currentUser.resumeUrl && (
+                  <div className="mt-4 p-3 bg-green-50 rounded-lg flex items-center justify-between">
+                    <div className="flex items-center text-green-700">
+                      <CheckCircle className="h-5 w-5 mr-2" />
+                      Resume uploaded
+                    </div>
+                    <Button variant="outline" size="sm">
+                      View
+                    </Button>
                   </div>
-                  <Input
-                    type="url"
-                    value={socialLinks.hackerrank}
-                    onChange={(e) =>
-                      setSocialLinks({
-                        ...socialLinks,
-                        hackerrank: e.target.value,
-                      })
-                    }
-                    disabled={!isEditing}
-                    placeholder="https://www.hackerrank.com/username"
-                    className="pl-10"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  LeetCode URL (optional)
-                </label>
-                <div className="mt-1 relative rounded-md shadow-sm">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <LinkIcon className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <Input
-                    type="url"
-                    value={socialLinks.leetcode}
-                    onChange={(e) =>
-                      setSocialLinks({
-                        ...socialLinks,
-                        leetcode: e.target.value,
-                      })
-                    }
-                    disabled={!isEditing}
-                    placeholder="https://leetcode.com/username"
-                    className="pl-10"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
         </div>
-
-        {/* Save Button */}
-        {isEditing && (
-          <div className="sticky bottom-0 bg-white p-4 border-t border-gray-200 shadow-lg mt-6">
-            <div className="max-w-4xl mx-auto flex justify-end">
-              <Button
-                variant="blue"
-                onClick={handleSave}
-                disabled={isLoading}
-                className="w-full sm:w-auto"
-              >
-                <Save className="h-4 w-4 mr-2" />
-                {isLoading ? "Saving..." : "Save Changes"}
-              </Button>
-            </div>
-          </div>
-        )}
-
-        {/* Alerts */}
-        {error && (
-          <div className="mt-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md flex items-start">
-            <AlertCircle className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
-            <span>{error}</span>
-          </div>
-        )}
-        {success && (
-          <div className="mt-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-md flex items-start">
-            <CheckCircle2 className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
-            <span>{success}</span>
-          </div>
-        )}
       </div>
     </div>
   );
 };
 
-export default ProfilePage; 
+export default ProfilePage;
