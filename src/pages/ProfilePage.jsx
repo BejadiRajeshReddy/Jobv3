@@ -177,7 +177,7 @@ const ProfilePage = () => {
         {/* Header Section */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden mb-8">
           {/* Cover Photo */}
-          <div className="h-48 bg-blue-500 relative">
+          <div className="h-48 bg-blue-400 relative">
             <div className="absolute inset-0 bg-black/20"></div>
             {isEditing && (
               <button className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm rounded-lg p-2 text-white hover:bg-white/30 transition-colors">
