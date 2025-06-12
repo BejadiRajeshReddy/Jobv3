@@ -157,6 +157,12 @@ const Navbar = () => {
                       {currentUser.name}
                     </span>
                   </div>
+                  <Link to="/profile" onClick={handleClick}>
+                    <Button variant="blue" className="flex items-center space-x-2">
+                      <User className="h-4 w-4" />
+                      <span>Profile</span>
+                    </Button>
+                  </Link>
                   <Button 
                     variant="outline" 
                     onClick={handleLogout}
@@ -217,6 +223,19 @@ const Navbar = () => {
                   <User className="h-5 w-5" />
                   <span className="font-medium">{currentUser.name}</span>
                 </div>
+                <Link
+                  to="/profile"
+                  onClick={toggleMobileMenu}
+                  className="w-full"
+                >
+                  <Button
+                    variant="blue"
+                    className="w-full flex items-center justify-center space-x-2"
+                  >
+                    <User className="h-4 w-4" />
+                    <span>Profile</span>
+                  </Button>
+                </Link>
                 <Button
                   onClick={handleLogout}
                   variant="outline"

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { Mail, Lock, AlertCircle } from "lucide-react";
 import { Input } from "../components/ui/input";
@@ -100,6 +100,7 @@ const Login = () => {
                   name="email"
                   type="email"
                   autoComplete="email"
+                  placeholder="Email address"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -122,6 +123,7 @@ const Login = () => {
                 <Input
                   id="password"
                   name="password"
+                  placeholder="Password"
                   type="password"
                   autoComplete="current-password"
                   required
@@ -149,12 +151,12 @@ const Login = () => {
               </div>
 
               <div className="text-sm">
-                <a
-                  href="#"
+                <Link
+                  to="/forgot-password"
                   className="font-medium text-blue-600 hover:text-blue-500"
                 >
                   Forgot your password?
-                </a>
+                </Link>
               </div>
             </div>
 

@@ -7,6 +7,7 @@ import {
   AlertCircle,
   Briefcase as BriefcaseBusiness,
   Building2,
+  Phone,
 } from "lucide-react";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/Button";
@@ -19,6 +20,7 @@ const Register = () => {
   const [role, setRole] = useState("candidate");
   const [orgName, setOrgName] = useState("");
   const [orgEmail, setOrgEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -31,7 +33,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!name || !password || !confirmPassword) {
+    if (!name || !password || !confirmPassword || !phoneNumber) {
       setError("All fields are required");
       return;
     }
@@ -48,6 +50,13 @@ const Register = () => {
 
     if (password !== confirmPassword) {
       setError("Passwords do not match");
+      return;
+    }
+
+    // Basic phone number validation
+    const phoneRegex = /^\+?[\d\s-]{10,}$/;
+    if (!phoneRegex.test(phoneNumber)) {
+      setError("Please enter a valid phone number");
       return;
     }
 
@@ -77,6 +86,7 @@ const Register = () => {
         password,
         name,
         role,
+        phoneNumber,
         createdAt: new Date().toISOString(),
         ...(role === "recruiter"
           ? {
@@ -212,6 +222,7 @@ const Register = () => {
                 <Input
                   id="name"
                   name="name"
+                  placeholder="Full name"
                   type="text"
                   autoComplete="name"
                   required
@@ -239,6 +250,7 @@ const Register = () => {
                     id="email"
                     name="email"
                     type="email"
+                    placeholder="Email address"
                     autoComplete="email"
                     required
                     value={email}
@@ -266,6 +278,7 @@ const Register = () => {
                     <Input
                       id="orgName"
                       name="orgName"
+                      placeholder="Organization Name"
                       type="text"
                       required
                       value={orgName}
@@ -289,6 +302,7 @@ const Register = () => {
                     <Input
                       id="orgEmail"
                       name="orgEmail"
+                      placeholder="Organization Email"
                       type="email"
                       required
                       value={orgEmail}
@@ -299,6 +313,32 @@ const Register = () => {
                 </div>
               </>
             )}
+
+            {/* Phone Number */}
+            <div>
+              <label
+                htmlFor="phone"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Phone Number
+              </label>
+              <div className="mt-1 relative rounded-md shadow-sm">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Phone className="h-5 w-5 text-gray-400" />
+                </div>
+                <Input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  autoComplete="tel"
+                  required
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  placeholder="Phone Number"
+                  className="pl-10 block w-full"
+                />
+              </div>
+            </div>
 
             {/* Password */}
             <div>
@@ -316,6 +356,7 @@ const Register = () => {
                   id="password"
                   name="password"
                   type="password"
+                  placeholder="Password"
                   autoComplete="new-password"
                   required
                   value={password}
@@ -340,6 +381,7 @@ const Register = () => {
                 <Input
                   id="confirm-password"
                   name="confirmPassword"
+                  placeholder="Confirm password"
                   type="password"
                   autoComplete="new-password"
                   required
