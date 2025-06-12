@@ -173,7 +173,7 @@ const ProfilePage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-10 px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         {/* Header Section */}
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 overflow-hidden mb-6 sm:mb-8">
           {/* Cover Photo */}
@@ -187,7 +187,7 @@ const ProfilePage = () => {
           </div>
 
           {/* Profile Info */}
-          <div className="relative px-4  sm:px-6 pb-4 sm:pb-6">
+          <div className="relative px-4 sm:px-6 pb-4 sm:pb-6">
             <div className="flex flex-col sm:flex-row sm:items-end sm:space-x-6">
               {/* Profile Picture */}
               <div className="relative -mt-12 sm:-mt-16 mb-4 sm:mb-0 flex justify-center sm:justify-start">
@@ -283,54 +283,54 @@ const ProfilePage = () => {
           </div>
         </div>
 
-        {/* Profile Completion Card - Made Smaller */}
+        {/* Profile Completion Card */}
         {completeness < 100 && (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 border-l-4 border-l-blue-500 mb-4 sm:mb-6">
-            <div className="p-3 sm:p-4">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3 space-y-2 sm:space-y-0">
+          <Card className="mb-6 sm:mb-8 border-l-4 border-l-blue-500 bg-blue-50/50">
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 space-y-2 sm:space-y-0">
                 <div className="text-center sm:text-left">
-                  <h3 className="text-base font-semibold text-gray-900">Complete Your Profile</h3>
-                  <p className="text-sm text-gray-600">Increase your visibility to employers</p>
+                  <h3 className="text-lg font-semibold text-gray-900">Complete Your Profile</h3>
+                  <p className="text-gray-600">Increase your visibility to employers</p>
                 </div>
                 <div className="text-center sm:text-right">
-                  <div className="text-xl font-bold text-blue-600">{completeness}%</div>
-                  <div className="text-xs text-gray-500">Complete</div>
+                  <div className="text-2xl font-bold text-blue-600">{completeness}%</div>
+                  <div className="text-sm text-gray-500">Complete</div>
                 </div>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-1.5 mb-3">
+              <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
                 <div 
-                  className="bg-blue-600 h-1.5 rounded-full transition-all duration-300"
+                  className="bg-blue-600 h-2 rounded-full transition-all duration-300"
                   style={{ width: `${completeness}%` }}
                 ></div>
               </div>
-              <div className="grid grid-cols-4 gap-1 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
                 {!currentUser.bio && (
                   <div className="flex items-center text-gray-600">
-                    <AlertCircle className="h-3 w-3 mr-1 text-orange-500 flex-shrink-0" />
+                    <AlertCircle className="h-4 w-4 mr-2 text-orange-500 flex-shrink-0" />
                     <span>Add a bio</span>
                   </div>
                 )}
                 {(!currentUser.skills || currentUser.skills.length === 0) && (
                   <div className="flex items-center text-gray-600">
-                    <AlertCircle className="h-3 w-3 mr-1 text-orange-500 flex-shrink-0" />
+                    <AlertCircle className="h-4 w-4 mr-2 text-orange-500 flex-shrink-0" />
                     <span>Add skills</span>
                   </div>
                 )}
                 {(!currentUser.experience || currentUser.experience.length === 0) && currentUser.role !== "recruiter" && (
                   <div className="flex items-center text-gray-600">
-                    <AlertCircle className="h-3 w-3 mr-1 text-orange-500 flex-shrink-0" />
+                    <AlertCircle className="h-4 w-4 mr-2 text-orange-500 flex-shrink-0" />
                     <span>Add work experience</span>
                   </div>
                 )}
                 {(!currentUser.education || currentUser.education.length === 0) && (
                   <div className="flex items-center text-gray-600">
-                    <AlertCircle className="h-3 w-3 mr-1 text-orange-500 flex-shrink-0" />
+                    <AlertCircle className="h-4 w-4 mr-2 text-orange-500 flex-shrink-0" />
                     <span>Add education</span>
                   </div>
                 )}
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         )}
 
         {/* Navigation Tabs */}
