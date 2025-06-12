@@ -285,7 +285,7 @@ const ProfilePage = () => {
 
         {/* Profile Completion Card */}
         {completeness < 100 && (
-          <Card className=" border-l-4 border-l-blue-500 bg-blue-50/50">
+          <Card className="mb-6 sm:mb-8 border-l-4 border-l-blue-500 bg-blue-50/50">
             <CardContent className="p-4 sm:p-6">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 space-y-2 sm:space-y-0">
                 <div className="text-center sm:text-left">
@@ -303,7 +303,7 @@ const ProfilePage = () => {
                   style={{ width: `${completeness}%` }}
                 ></div>
               </div>
-              <div className="grid grid-cols-1  sm:grid-cols-4 mx-10 text-sm">
+              <div className="grid grid-cols-1  sm:grid-cols-4 text-sm">
                 {!currentUser.bio && (
                   <div className="flex items-center text-gray-600">
                     <AlertCircle className="h-4 w-4 mr-2 text-orange-500 flex-shrink-0" />
