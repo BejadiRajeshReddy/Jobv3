@@ -10,6 +10,7 @@ import UnauthorizedPage from "./pages/UnauthorizedPage.jsx";
 import JobDetailPage from "./pages/JobDetailPage.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
+import RecruiterDashboard from "./pages/RecruiterDashboard.jsx";
 
 function App() {
   return (
@@ -52,6 +53,11 @@ function App() {
               path="/profile"
               element={<ProfilePage data-oid="k5u30hx" />}
               data-oid="qdczvqw"
+            />
+            <Route
+              path="/dashboard"
+              element={<RecruiterDashboard data-oid="rec_dash_1" />}
+              data-oid="rec_dash_route"
             />
             <Route
               path="/404"
