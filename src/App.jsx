@@ -9,7 +9,7 @@ import RegisterPage from "./pages/Register.jsx";
 import UnauthorizedPage from "./pages/UnauthorizedPage.jsx";
 import JobDetailPage from "./pages/JobDetailPage.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
-import ProfilePage from "./pages/ProfilePage.jsx";
+import CandidateProfile from "./pages/CandidateProfile.jsx";
 import RecruiterDashboard from "./pages/RecruiterDashboard.jsx";
 
 function App() {
@@ -51,7 +51,7 @@ function App() {
             />
             <Route
               path="/profile"
-              element={<ProfilePage data-oid="k5u30hx" />}
+              element={<CandidateProfile data-oid="k5u30hx" />}
               data-oid="qdczvqw"
             />
             <Route
