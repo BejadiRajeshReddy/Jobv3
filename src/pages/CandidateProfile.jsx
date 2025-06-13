@@ -1157,7 +1157,7 @@ const CandidateProfile = () => {
 
            
           </div>
-            <div className="bg-white w-full rounded-2xl shadow-lg border border-gray-200 p-6">
+            <div className="bg-white col-span-3 rounded-2xl shadow-lg border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                   <FileText className="w-5 h-5 text-blue-600" />
