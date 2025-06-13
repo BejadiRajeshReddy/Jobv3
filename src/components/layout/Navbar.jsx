@@ -72,6 +72,17 @@ const Navbar = () => {
     setMobileMenuOpen(false);
   };
 
+  const handlePostJobClick = () => {
+    if (currentUser?.role === "recruiter") {
+      navigate("/dashboard");
+      handleClick();
+    } else {
+      // Redirect non-recruiters to register as recruiter
+      navigate("/register");
+    }
+    setMobileMenuOpen(false);
+  };
+
   // Don't render auth buttons while loading
   if (isLoading) {
     return (
@@ -114,14 +125,13 @@ const Navbar = () => {
                 >
                   Browse Jobs
                 </Link>
-                <Link
-                  to="/post-job"
-                  onClick={handleClick}
+                <button
+                  onClick={handlePostJobClick}
                   className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-700 rounded-md transition hover:scale-110"
                   data-oid="hb0e6zn"
                 >
                   Post a Job
-                </Link>
+                </button>
               </div>
             </div>
             <div className="flex items-center" data-oid="strhjdh">
@@ -189,14 +199,13 @@ const Navbar = () => {
               >
                 Browse Jobs
               </Link>
-              <Link
-                to="/post-job"
-                onClick={handleClick}
+              <button
+                onClick={handlePostJobClick}
                 className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-700 rounded-md transition hover:scale-110"
                 data-oid="w7digy9"
               >
                 Post a Job
-              </Link>
+              </button>
             </div>
           </div>
 
@@ -224,14 +233,20 @@ const Navbar = () => {
                       {currentUser.name}
                     </span>
                   </div>
-                  <Link to="/profile" onClick={handleClick} data-oid="skpcai_">
+                  <Link 
+                    to={currentUser.role === "recruiter" ? "/dashboard" : "/profile"} 
+                    onClick={handleClick} 
+                    data-oid="skpcai_"
+                  >
                     <Button
                       variant="blue"
                       className="flex items-center space-x-2"
                       data-oid="nkxindd"
                     >
                       <User className="h-4 w-4" data-oid="di0_1d-" />
-                      <span data-oid="0zac2tg">Profile</span>
+                      <span data-oid="0zac2tg">
+                        {currentUser.role === "recruiter" ? "Dashboard" : "Profile"}
+                      </span>
                     </Button>
                   </Link>
                   <Button
@@ -290,14 +305,13 @@ const Navbar = () => {
             >
               Browse Jobs
             </Link>
-            <Link
-              to="/post-job"
-              onClick={toggleMobileMenu}
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+            <button
+              onClick={handlePostJobClick}
+              className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
               data-oid="bo1:0j5"
             >
               Post a Job
-            </Link>
+            </button>
 
             {currentUser ? (
               <div className="px-3 py-2 space-y-3" data-oid="-j2afl8">
@@ -311,7 +325,7 @@ const Navbar = () => {
                   </span>
                 </div>
                 <Link
-                  to="/profile"
+                  to={currentUser.role === "recruiter" ? "/dashboard" : "/profile"}
                   onClick={toggleMobileMenu}
                   className="w-full"
                   data-oid="65rgk26"
@@ -322,7 +336,9 @@ const Navbar = () => {
                     data-oid="0i:hnbo"
                   >
                     <User className="h-4 w-4" data-oid="jefl96-" />
-                    <span data-oid="ejl24vg">Profile</span>
+                    <span data-oid="ejl24vg">
+                      {currentUser.role === "recruiter" ? "Dashboard" : "Profile"}
+                    </span>
                   </Button>
                 </Link>
                 <Button
