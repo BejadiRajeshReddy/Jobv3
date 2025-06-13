@@ -21,6 +21,7 @@ import {
   FileText,
   Plus,
   CheckCircle2,
+  Trash2,
 } from "lucide-react";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/input";
@@ -43,7 +44,18 @@ const ProfilePage = () => {
     try {
       const userData = JSON.parse(user);
       setCurrentUser(userData);
-      setEditData(userData);
+      setEditData({
+        ...userData,
+        skills: userData.skills || [],
+        experience: userData.experience || [],
+        workExperience: userData.workExperience || [],
+        education: userData.education || [],
+        socialLinks: userData.socialLinks || {
+          linkedin: "",
+          github: "",
+          portfolio: ""
+        }
+      });
     } catch (error) {
       console.error("Error parsing user data:", error);
       navigate("/login");
@@ -56,6 +68,7 @@ const ProfilePage = () => {
       const reader = new FileReader();
       reader.onload = (e) => {
         setProfileImage(e.target.result);
+        setEditData(prev => ({ ...prev, profileImage: e.target.result }));
       };
       reader.readAsDataURL(file);
     }
@@ -83,9 +96,101 @@ const ProfilePage = () => {
   };
 
   const handleCancel = () => {
-    setEditData(currentUser);
+    setEditData({
+      ...currentUser,
+      skills: currentUser.skills || [],
+      experience: currentUser.experience || [],
+      workExperience: currentUser.workExperience || [],
+      education: currentUser.education || [],
+      socialLinks: currentUser.socialLinks || {
+        linkedin: "",
+        github: "",
+        portfolio: ""
+      }
+    });
     setIsEditing(false);
     setProfileImage(null);
+  };
+
+  // Skills management
+  const addSkill = () => {
+    setEditData(prev => ({
+      ...prev,
+      skills: [...(prev.skills || []), ""]
+    }));
+  };
+
+  const updateSkill = (index, value) => {
+    setEditData(prev => ({
+      ...prev,
+      skills: prev.skills.map((skill, i) => i === index ? value : skill)
+    }));
+  };
+
+  const removeSkill = (index) => {
+    setEditData(prev => ({
+      ...prev,
+      skills: prev.skills.filter((_, i) => i !== index)
+    }));
+  };
+
+  // Experience management
+  const addExperience = () => {
+    const newExp = {
+      title: "",
+      company: "",
+      duration: "",
+      description: ""
+    };
+    setEditData(prev => ({
+      ...prev,
+      experience: [...(prev.experience || []), newExp]
+    }));
+  };
+
+  const updateExperience = (index, field, value) => {
+    setEditData(prev => ({
+      ...prev,
+      experience: prev.experience.map((exp, i) => 
+        i === index ? { ...exp, [field]: value } : exp
+      )
+    }));
+  };
+
+  const removeExperience = (index) => {
+    setEditData(prev => ({
+      ...prev,
+      experience: prev.experience.filter((_, i) => i !== index)
+    }));
+  };
+
+  // Education management
+  const addEducation = () => {
+    const newEdu = {
+      degree: "",
+      institution: "",
+      year: ""
+    };
+    setEditData(prev => ({
+      ...prev,
+      education: [...(prev.education || []), newEdu]
+    }));
+  };
+
+  const updateEducation = (index, field, value) => {
+    setEditData(prev => ({
+      ...prev,
+      education: prev.education.map((edu, i) => 
+        i === index ? { ...edu, [field]: value } : edu
+      )
+    }));
+  };
+
+  const removeEducation = (index) => {
+    setEditData(prev => ({
+      ...prev,
+      education: prev.education.filter((_, i) => i !== index)
+    }));
   };
 
   const calculateProfileCompletion = () => {
@@ -179,6 +284,22 @@ const ProfilePage = () => {
                       }
                       className="text-lg bg-white/20 border-white/30 text-white placeholder-white/70"
                       placeholder="Your job title"
+                    />
+                    <Input
+                      value={editData.location || ""}
+                      onChange={(e) =>
+                        setEditData({ ...editData, location: e.target.value })
+                      }
+                      className="bg-white/20 border-white/30 text-white placeholder-white/70"
+                      placeholder="Your location"
+                    />
+                    <Input
+                      value={editData.phoneNumber || ""}
+                      onChange={(e) =>
+                        setEditData({ ...editData, phoneNumber: e.target.value })
+                      }
+                      className="bg-white/20 border-white/30 text-white placeholder-white/70"
+                      placeholder="Phone number"
                     />
                   </div>
                 ) : (
@@ -318,24 +439,61 @@ const ProfilePage = () => {
                   <Award className="w-5 h-5" />
                   Skills
                 </h3>
+                {isEditing && (
+                  <Button onClick={addSkill} size="sm" variant="outline">
+                    <Plus className="w-4 h-4 mr-1" />
+                    Add Skill
+                  </Button>
+                )}
               </div>
-              {currentUser.skills?.length > 0 ? (
-                <div className="flex flex-wrap gap-2">
-                  {currentUser.skills.map((skill, index) => (
-                    <span
-                      key={index}
-                      className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium"
-                    >
-                      {skill}
-                    </span>
+              
+              {isEditing ? (
+                <div className="space-y-3">
+                  {editData.skills?.map((skill, index) => (
+                    <div key={index} className="flex gap-2">
+                      <Input
+                        value={skill}
+                        onChange={(e) => updateSkill(index, e.target.value)}
+                        placeholder="Enter skill"
+                        className="flex-1"
+                      />
+                      <Button
+                        onClick={() => removeSkill(index)}
+                        size="sm"
+                        variant="outline"
+                        className="text-red-600 hover:text-red-700"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
                   ))}
+                  {(!editData.skills || editData.skills.length === 0) && (
+                    <p className="text-gray-500 text-center py-4">
+                      No skills added yet. Click "Add Skill" to get started.
+                    </p>
+                  )}
                 </div>
               ) : (
-                <div className="text-center py-8 text-gray-500">
-                  <Award className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                  <p>No skills added yet</p>
-                  <p className="text-sm">Add your skills to showcase your expertise</p>
-                </div>
+                <>
+                  {currentUser.skills?.length > 0 ? (
+                    <div className="flex flex-wrap gap-2">
+                      {currentUser.skills.map((skill, index) => (
+                        <span
+                          key={index}
+                          className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 text-gray-500">
+                      <Award className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                      <p>No skills added yet</p>
+                      <p className="text-sm">Add your skills to showcase your expertise</p>
+                    </div>
+                  )}
+                </>
               )}
             </div>
 
@@ -346,26 +504,83 @@ const ProfilePage = () => {
                   <Briefcase className="w-5 h-5" />
                   Experience
                 </h3>
+                {isEditing && (
+                  <Button onClick={addExperience} size="sm" variant="outline">
+                    <Plus className="w-4 h-4 mr-1" />
+                    Add Experience
+                  </Button>
+                )}
               </div>
-              {(currentUser.experience?.length > 0 || currentUser.workExperience?.length > 0) ? (
-                <div className="space-y-4">
-                  {(currentUser.experience || currentUser.workExperience || []).map((exp, index) => (
-                    <div key={index} className="border-l-4 border-blue-500 pl-4">
-                      <h4 className="font-semibold text-gray-900">{exp.title || exp.position}</h4>
-                      <p className="text-blue-600">{exp.company}</p>
-                      <p className="text-sm text-gray-500">{exp.duration || exp.period}</p>
-                      {exp.description && (
-                        <p className="text-gray-600 mt-2">{exp.description}</p>
-                      )}
+
+              {isEditing ? (
+                <div className="space-y-6">
+                  {editData.experience?.map((exp, index) => (
+                    <div key={index} className="border border-gray-200 rounded-lg p-4 space-y-3">
+                      <div className="flex justify-between items-start">
+                        <h4 className="font-medium text-gray-900">Experience {index + 1}</h4>
+                        <Button
+                          onClick={() => removeExperience(index)}
+                          size="sm"
+                          variant="outline"
+                          className="text-red-600 hover:text-red-700"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <Input
+                          value={exp.title || ""}
+                          onChange={(e) => updateExperience(index, "title", e.target.value)}
+                          placeholder="Job title"
+                        />
+                        <Input
+                          value={exp.company || ""}
+                          onChange={(e) => updateExperience(index, "company", e.target.value)}
+                          placeholder="Company name"
+                        />
+                      </div>
+                      <Input
+                        value={exp.duration || ""}
+                        onChange={(e) => updateExperience(index, "duration", e.target.value)}
+                        placeholder="Duration (e.g., Jan 2020 - Present)"
+                      />
+                      <textarea
+                        value={exp.description || ""}
+                        onChange={(e) => updateExperience(index, "description", e.target.value)}
+                        placeholder="Job description and achievements"
+                        className="w-full h-24 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                      />
                     </div>
                   ))}
+                  {(!editData.experience || editData.experience.length === 0) && (
+                    <p className="text-gray-500 text-center py-4">
+                      No experience added yet. Click "Add Experience" to get started.
+                    </p>
+                  )}
                 </div>
               ) : (
-                <div className="text-center py-8 text-gray-500">
-                  <Briefcase className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                  <p>No work experience added yet</p>
-                  <p className="text-sm">Add your work experience to build credibility</p>
-                </div>
+                <>
+                  {(currentUser.experience?.length > 0 || currentUser.workExperience?.length > 0) ? (
+                    <div className="space-y-4">
+                      {(currentUser.experience || currentUser.workExperience || []).map((exp, index) => (
+                        <div key={index} className="border-l-4 border-blue-500 pl-4">
+                          <h4 className="font-semibold text-gray-900">{exp.title || exp.position}</h4>
+                          <p className="text-blue-600">{exp.company}</p>
+                          <p className="text-sm text-gray-500">{exp.duration || exp.period}</p>
+                          {exp.description && (
+                            <p className="text-gray-600 mt-2">{exp.description}</p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 text-gray-500">
+                      <Briefcase className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                      <p>No work experience added yet</p>
+                      <p className="text-sm">Add your work experience to build credibility</p>
+                    </div>
+                  )}
+                </>
               )}
             </div>
 
@@ -376,23 +591,74 @@ const ProfilePage = () => {
                   <GraduationCap className="w-5 h-5" />
                   Education
                 </h3>
+                {isEditing && (
+                  <Button onClick={addEducation} size="sm" variant="outline">
+                    <Plus className="w-4 h-4 mr-1" />
+                    Add Education
+                  </Button>
+                )}
               </div>
-              {currentUser.education?.length > 0 ? (
+
+              {isEditing ? (
                 <div className="space-y-4">
-                  {currentUser.education.map((edu, index) => (
-                    <div key={index} className="border-l-4 border-green-500 pl-4">
-                      <h4 className="font-semibold text-gray-900">{edu.degree}</h4>
-                      <p className="text-green-600">{edu.institution}</p>
-                      <p className="text-sm text-gray-500">{edu.year}</p>
+                  {editData.education?.map((edu, index) => (
+                    <div key={index} className="border border-gray-200 rounded-lg p-4 space-y-3">
+                      <div className="flex justify-between items-start">
+                        <h4 className="font-medium text-gray-900">Education {index + 1}</h4>
+                        <Button
+                          onClick={() => removeEducation(index)}
+                          size="sm"
+                          variant="outline"
+                          className="text-red-600 hover:text-red-700"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <Input
+                          value={edu.degree || ""}
+                          onChange={(e) => updateEducation(index, "degree", e.target.value)}
+                          placeholder="Degree/Course"
+                        />
+                        <Input
+                          value={edu.institution || ""}
+                          onChange={(e) => updateEducation(index, "institution", e.target.value)}
+                          placeholder="Institution name"
+                        />
+                      </div>
+                      <Input
+                        value={edu.year || ""}
+                        onChange={(e) => updateEducation(index, "year", e.target.value)}
+                        placeholder="Year (e.g., 2020-2024)"
+                      />
                     </div>
                   ))}
+                  {(!editData.education || editData.education.length === 0) && (
+                    <p className="text-gray-500 text-center py-4">
+                      No education added yet. Click "Add Education" to get started.
+                    </p>
+                  )}
                 </div>
               ) : (
-                <div className="text-center py-8 text-gray-500">
-                  <GraduationCap className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                  <p>No education added yet</p>
-                  <p className="text-sm">Add your educational background</p>
-                </div>
+                <>
+                  {currentUser.education?.length > 0 ? (
+                    <div className="space-y-4">
+                      {currentUser.education.map((edu, index) => (
+                        <div key={index} className="border-l-4 border-green-500 pl-4">
+                          <h4 className="font-semibold text-gray-900">{edu.degree}</h4>
+                          <p className="text-green-600">{edu.institution}</p>
+                          <p className="text-sm text-gray-500">{edu.year}</p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 text-gray-500">
+                      <GraduationCap className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                      <p>No education added yet</p>
+                      <p className="text-sm">Add your educational background</p>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>
@@ -455,20 +721,83 @@ const ProfilePage = () => {
                   Social Links
                 </h3>
               </div>
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                  <Linkedin className="w-5 h-5 text-blue-600" />
-                  <span className="text-gray-500">No LinkedIn profile added</span>
+              
+              {isEditing ? (
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <Linkedin className="w-5 h-5 text-blue-600" />
+                    <Input
+                      value={editData.socialLinks?.linkedin || ""}
+                      onChange={(e) =>
+                        setEditData({
+                          ...editData,
+                          socialLinks: {
+                            ...editData.socialLinks,
+                            linkedin: e.target.value
+                          }
+                        })
+                      }
+                      placeholder="LinkedIn profile URL"
+                      className="flex-1"
+                    />
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Github className="w-5 h-5 text-gray-800" />
+                    <Input
+                      value={editData.socialLinks?.github || ""}
+                      onChange={(e) =>
+                        setEditData({
+                          ...editData,
+                          socialLinks: {
+                            ...editData.socialLinks,
+                            github: e.target.value
+                          }
+                        })
+                      }
+                      placeholder="GitHub profile URL"
+                      className="flex-1"
+                    />
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Globe className="w-5 h-5 text-green-600" />
+                    <Input
+                      value={editData.socialLinks?.portfolio || ""}
+                      onChange={(e) =>
+                        setEditData({
+                          ...editData,
+                          socialLinks: {
+                            ...editData.socialLinks,
+                            portfolio: e.target.value
+                          }
+                        })
+                      }
+                      placeholder="Portfolio website URL"
+                      className="flex-1"
+                    />
+                  </div>
                 </div>
-                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                  <Github className="w-5 h-5 text-gray-800" />
-                  <span className="text-gray-500">No GitHub profile added</span>
+              ) : (
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                    <Linkedin className="w-5 h-5 text-blue-600" />
+                    <span className="text-gray-500">
+                      {currentUser.socialLinks?.linkedin || "No LinkedIn profile added"}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                    <Github className="w-5 h-5 text-gray-800" />
+                    <span className="text-gray-500">
+                      {currentUser.socialLinks?.github || "No GitHub profile added"}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                    <Globe className="w-5 h-5 text-green-600" />
+                    <span className="text-gray-500">
+                      {currentUser.socialLinks?.portfolio || "No portfolio website added"}
+                    </span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                  <Globe className="w-5 h-5 text-green-600" />
-                  <span className="text-gray-500">No portfolio website added</span>
-                </div>
-              </div>
+              )}
             </div>
 
             {/* Resume Section */}
