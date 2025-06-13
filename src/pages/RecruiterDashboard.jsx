@@ -23,6 +23,10 @@ import {
   TrendingUp,
   FileText,
   Settings,
+  DollarSign,
+  MapPinIcon,
+  ClockIcon,
+  UserIcon,
 } from "lucide-react";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/input";
@@ -578,193 +582,270 @@ const RecruiterDashboard = () => {
           </div>
         )}
 
-        {/* Job Form Modal */}
+        {/* Optimized Job Form Modal */}
         {showJobForm && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="bg-white rounded-3xl shadow-2xl max-w-5xl w-full max-h-[95vh] overflow-y-auto">
               <div className="p-8">
-                <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-2xl font-bold text-gray-900">
-                    {editingJob ? "Edit Job" : "Post New Job"}
-                  </h2>
+                {/* Modal Header */}
+                <div className="flex items-center justify-between mb-8 pb-6 border-b border-gray-200">
+                  <div>
+                    <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                      {editingJob ? "Edit Job Posting" : "Create New Job Posting"}
+                    </h2>
+                    <p className="text-gray-600">
+                      Fill in the details below to {editingJob ? "update" : "create"} your job posting
+                    </p>
+                  </div>
                   <Button
                     onClick={resetForm}
                     variant="ghost"
-                    className="p-2"
+                    className="p-3 hover:bg-gray-100 rounded-full"
                   >
                     <X className="w-6 h-6" />
                   </Button>
                 </div>
 
-                <form onSubmit={handleJobSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div>
+                <form onSubmit={handleJobSubmit} className="space-y-8">
+                  {/* Section 1: Basic Job Information */}
+                  <div className="bg-gray-50 rounded-2xl p-6">
+                    <div className="flex items-center mb-6">
+                      <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center mr-4">
+                        <Briefcase className="w-5 h-5 text-blue-600" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-bold text-gray-900">Basic Job Information</h3>
+                        <p className="text-sm text-gray-600">Essential details about the position</p>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          Job Title *
+                        </label>
+                        <Input
+                          value={jobForm.title}
+                          onChange={(e) => setJobForm({...jobForm, title: e.target.value})}
+                          placeholder="e.g. Senior Frontend Developer"
+                          required
+                          className="text-base h-12"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          Job Type *
+                        </label>
+                        <Select value={jobForm.type} onValueChange={(value) => setJobForm({...jobForm, type: value})}>
+                          <SelectTrigger className="h-12">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="full-time">Full Time</SelectItem>
+                            <SelectItem value="part-time">Part Time</SelectItem>
+                            <SelectItem value="contract">Contract</SelectItem>
+                            <SelectItem value="internship">Internship</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    <div className="mt-6">
                       <label className="block text-sm font-semibold text-gray-700 mb-2">
-                        Job Title *
+                        Job Description *
                       </label>
-                      <Input
-                        value={jobForm.title}
-                        onChange={(e) => setJobForm({...jobForm, title: e.target.value})}
-                        placeholder="e.g. Senior Frontend Developer"
+                      <textarea
+                        value={jobForm.description}
+                        onChange={(e) => setJobForm({...jobForm, description: e.target.value})}
+                        placeholder="Provide a comprehensive description of the role, responsibilities, and what makes this position exciting..."
                         required
-                        className="text-base"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
-                        Location *
-                      </label>
-                      <Input
-                        value={jobForm.location}
-                        onChange={(e) => setJobForm({...jobForm, location: e.target.value})}
-                        placeholder="e.g. Mumbai, India or Remote"
-                        required
-                        className="text-base"
+                        rows={5}
+                        className="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-base"
                       />
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
-                        Job Type *
-                      </label>
-                      <Select value={jobForm.type} onValueChange={(value) => setJobForm({...jobForm, type: value})}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="full-time">Full Time</SelectItem>
-                          <SelectItem value="part-time">Part Time</SelectItem>
-                          <SelectItem value="contract">Contract</SelectItem>
-                          <SelectItem value="internship">Internship</SelectItem>
-                        </SelectContent>
-                      </Select>
+                  {/* Section 2: Location & Schedule */}
+                  <div className="bg-green-50 rounded-2xl p-6">
+                    <div className="flex items-center mb-6">
+                      <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center mr-4">
+                        <MapPinIcon className="w-5 h-5 text-green-600" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-bold text-gray-900">Location & Schedule</h3>
+                        <p className="text-sm text-gray-600">Where and when the work happens</p>
+                      </div>
                     </div>
+                    
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          Work Location *
+                        </label>
+                        <Input
+                          value={jobForm.location}
+                          onChange={(e) => setJobForm({...jobForm, location: e.target.value})}
+                          placeholder="e.g. Mumbai, India or Remote"
+                          required
+                          className="text-base h-12"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          Application Deadline
+                        </label>
+                        <Input
+                          type="date"
+                          value={jobForm.deadline}
+                          onChange={(e) => setJobForm({...jobForm, deadline: e.target.value})}
+                          className="text-base h-12"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Section 3: Compensation & Experience */}
+                  <div className="bg-purple-50 rounded-2xl p-6">
+                    <div className="flex items-center mb-6">
+                      <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center mr-4">
+                        <DollarSign className="w-5 h-5 text-purple-600" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-bold text-gray-900">Compensation & Experience</h3>
+                        <p className="text-sm text-gray-600">Salary range and experience requirements</p>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          Minimum Salary (₹)
+                        </label>
+                        <Input
+                          type="number"
+                          value={jobForm.salary.min}
+                          onChange={(e) => setJobForm({
+                            ...jobForm, 
+                            salary: {...jobForm.salary, min: e.target.value}
+                          })}
+                          placeholder="300000"
+                          className="text-base h-12"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          Maximum Salary (₹)
+                        </label>
+                        <Input
+                          type="number"
+                          value={jobForm.salary.max}
+                          onChange={(e) => setJobForm({
+                            ...jobForm, 
+                            salary: {...jobForm.salary, max: e.target.value}
+                          })}
+                          placeholder="500000"
+                          className="text-base h-12"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          Experience Required
+                        </label>
+                        <Input
+                          value={jobForm.experience}
+                          onChange={(e) => setJobForm({...jobForm, experience: e.target.value})}
+                          placeholder="e.g. 2-4 years"
+                          className="text-base h-12"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Section 4: Requirements & Skills */}
+                  <div className="bg-orange-50 rounded-2xl p-6">
+                    <div className="flex items-center mb-6">
+                      <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center mr-4">
+                        <UserIcon className="w-5 h-5 text-orange-600" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-bold text-gray-900">Requirements & Skills</h3>
+                        <p className="text-sm text-gray-600">What candidates need to qualify</p>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-6">
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          Job Requirements
+                        </label>
+                        <textarea
+                          value={jobForm.requirements}
+                          onChange={(e) => setJobForm({...jobForm, requirements: e.target.value})}
+                          placeholder="List the key requirements (one per line):&#10;• Bachelor's degree in Computer Science or related field&#10;• 3+ years of experience with React and JavaScript&#10;• Strong problem-solving and communication skills&#10;• Experience with modern development tools and practices"
+                          rows={6}
+                          className="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-base"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          Required Skills (comma-separated)
+                        </label>
+                        <Input
+                          value={jobForm.skills}
+                          onChange={(e) => setJobForm({...jobForm, skills: e.target.value})}
+                          placeholder="React, JavaScript, TypeScript, Node.js, Git, Agile"
+                          className="text-base h-12"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                          Separate skills with commas. These will appear as tags on your job posting.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Section 5: Benefits & Perks */}
+                  <div className="bg-indigo-50 rounded-2xl p-6">
+                    <div className="flex items-center mb-6">
+                      <div className="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center mr-4">
+                        <CheckCircle2 className="w-5 h-5 text-indigo-600" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-bold text-gray-900">Benefits & Perks</h3>
+                        <p className="text-sm text-gray-600">What makes your company attractive</p>
+                      </div>
+                    </div>
+                    
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-2">
-                        Min Salary (₹)
+                        Company Benefits
                       </label>
-                      <Input
-                        type="number"
-                        value={jobForm.salary.min}
-                        onChange={(e) => setJobForm({
-                          ...jobForm, 
-                          salary: {...jobForm.salary, min: e.target.value}
-                        })}
-                        placeholder="300000"
-                        className="text-base"
+                      <textarea
+                        value={jobForm.benefits}
+                        onChange={(e) => setJobForm({...jobForm, benefits: e.target.value})}
+                        placeholder="List the benefits and perks (one per line):&#10;• Comprehensive health insurance&#10;• Flexible working hours and remote work options&#10;• Professional development budget&#10;• Modern office with free snacks and drinks&#10;• Team building activities and company events"
+                        rows={5}
+                        className="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-base"
                       />
                     </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
-                        Max Salary (₹)
-                      </label>
-                      <Input
-                        type="number"
-                        value={jobForm.salary.max}
-                        onChange={(e) => setJobForm({
-                          ...jobForm, 
-                          salary: {...jobForm.salary, max: e.target.value}
-                        })}
-                        placeholder="500000"
-                        className="text-base"
-                      />
-                    </div>
                   </div>
 
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
-                        Experience Required
-                      </label>
-                      <Input
-                        value={jobForm.experience}
-                        onChange={(e) => setJobForm({...jobForm, experience: e.target.value})}
-                        placeholder="e.g. 2-4 years"
-                        className="text-base"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
-                        Application Deadline
-                      </label>
-                      <Input
-                        type="date"
-                        value={jobForm.deadline}
-                        onChange={(e) => setJobForm({...jobForm, deadline: e.target.value})}
-                        className="text-base"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Job Description *
-                    </label>
-                    <textarea
-                      value={jobForm.description}
-                      onChange={(e) => setJobForm({...jobForm, description: e.target.value})}
-                      placeholder="Describe the role, responsibilities, and what you're looking for..."
-                      required
-                      rows={4}
-                      className="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-base"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Requirements
-                    </label>
-                    <textarea
-                      value={jobForm.requirements}
-                      onChange={(e) => setJobForm({...jobForm, requirements: e.target.value})}
-                      placeholder="List the requirements (one per line)&#10;• Bachelor's degree in Computer Science&#10;• 3+ years of React experience&#10;• Strong problem-solving skills"
-                      rows={4}
-                      className="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-base"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Skills (comma-separated)
-                    </label>
-                    <Input
-                      value={jobForm.skills}
-                      onChange={(e) => setJobForm({...jobForm, skills: e.target.value})}
-                      placeholder="React, JavaScript, TypeScript, Node.js"
-                      className="text-base"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Benefits
-                    </label>
-                    <textarea
-                      value={jobForm.benefits}
-                      onChange={(e) => setJobForm({...jobForm, benefits: e.target.value})}
-                      placeholder="List the benefits (one per line)&#10;• Health insurance&#10;• Flexible working hours&#10;• Remote work options"
-                      rows={3}
-                      className="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-base"
-                    />
-                  </div>
-
-                  <div className="flex gap-4 pt-6">
+                  {/* Form Actions */}
+                  <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
                     <Button
                       type="submit"
-                      className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3"
+                      className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-4 text-lg font-semibold"
                     >
-                      <Save className="w-5 h-5 mr-2" />
-                      {editingJob ? "Update Job" : "Post Job"}
+                      <Save className="w-5 h-5 mr-3" />
+                      {editingJob ? "Update Job Posting" : "Publish Job Posting"}
                     </Button>
                     <Button
                       type="button"
                       onClick={resetForm}
                       variant="outline"
-                      className="flex-1 py-3"
+                      className="flex-1 py-4 text-lg font-semibold"
                     >
-                      <X className="w-5 h-5 mr-2" />
+                      <X className="w-5 h-5 mr-3" />
                       Cancel
                     </Button>
                   </div>
