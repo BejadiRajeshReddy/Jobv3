@@ -214,22 +214,19 @@
 //   CarouselNext,
 // };
 
+"use client";
 
-
-
-'use client';
-
-import { cn } from '@/lib/utils';
-import { useMotionValue, animate, motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
-import useMeasure from 'react-use-measure';
+import { cn } from "@/lib/utils";
+import { useMotionValue, animate, motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import useMeasure from "react-use-measure";
 
 export function InfiniteSlider({
   children,
   gap = 16,
   duration = 55,
   durationOnHover,
-  direction = 'horizontal',
+  direction = "horizontal",
   reverse = false,
   className,
 }) {
@@ -241,14 +238,14 @@ export function InfiniteSlider({
 
   useEffect(() => {
     let controls;
-    const size = direction === 'horizontal' ? width : height;
+    const size = direction === "horizontal" ? width : height;
     const contentSize = size + gap;
     const from = reverse ? -contentSize / 2 : 0;
     const to = reverse ? 0 : -contentSize / 2;
 
     if (isTransitioning) {
       controls = animate(translation, [translation.get(), to], {
-        ease: 'linear',
+        ease: "linear",
         duration:
           currentDuration * Math.abs((translation.get() - to) / contentSize),
         onComplete: () => {
@@ -258,10 +255,10 @@ export function InfiniteSlider({
       });
     } else {
       controls = animate(translation, [from, to], {
-        ease: 'linear',
+        ease: "linear",
         duration: currentDuration,
         repeat: Infinity,
-        repeatType: 'loop',
+        repeatType: "loop",
         repeatDelay: 0,
         onRepeat: () => {
           translation.set(from);
@@ -296,18 +293,19 @@ export function InfiniteSlider({
     : {};
 
   return (
-    <div className={cn('overflow-hidden', className)}>
+    <div className={cn("overflow-hidden", className)} data-oid="jp69t2n">
       <motion.div
         className="flex w-max"
         style={{
-          ...(direction === 'horizontal'
+          ...(direction === "horizontal"
             ? { x: translation }
             : { y: translation }),
           gap: `${gap}px`,
-          flexDirection: direction === 'horizontal' ? 'row' : 'column',
+          flexDirection: direction === "horizontal" ? "row" : "column",
         }}
         ref={ref}
         {...hoverProps}
+        data-oid="cciesrc"
       >
         {children}
         {children}
@@ -315,4 +313,3 @@ export function InfiniteSlider({
     </div>
   );
 }
-

@@ -94,7 +94,6 @@
 
 // export default Network;
 
-
 import { motion } from "framer-motion";
 import { Briefcase } from "lucide-react";
 
@@ -104,11 +103,11 @@ const AnimatedBriefcase = () => {
       whileHover={{ scale: 1.2, rotate: 5 }}
       whileTap={{ scale: 0.95 }}
       transition={{ type: "spring", stiffness: 300 }}
+      data-oid="x0s8ii-"
     >
-      <Briefcase className="h-8 w-8 text-blue-600" />
+      <Briefcase className="h-8 w-8 text-blue-600" data-oid="z_3vk40" />
     </motion.div>
   );
 };
 
 export default AnimatedBriefcase;
-

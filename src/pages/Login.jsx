@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { Mail, Lock, AlertCircle } from "lucide-react";
 import { Input } from "../components/ui/input";
@@ -14,7 +14,7 @@ const Login = () => {
 
   // Get return URL from query params
   const searchParams = new URLSearchParams(location.search);
-  const returnTo = searchParams.get('returnTo') || '/jobs';
+  const returnTo = searchParams.get("returnTo") || "/jobs";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,12 +40,12 @@ const Login = () => {
 
       const { password: _, ...userWithoutPassword } = user;
       localStorage.setItem("currentUser", JSON.stringify(userWithoutPassword));
-      
+
       // Dispatch custom event to notify navbar and other components
-      window.dispatchEvent(new Event('userStateChanged'));
-      
+      window.dispatchEvent(new Event("userStateChanged"));
+
       // Redirect to the return URL or default based on user role
-      if (returnTo && returnTo !== '/jobs') {
+      if (returnTo && returnTo !== "/jobs") {
         navigate(returnTo);
       } else {
         navigate(user.role === "recruiter" ? "/dashboard" : "/jobs");
@@ -58,42 +58,72 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center pb-15 px-10 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+    <div
+      className="min-h-screen bg-gray-50 flex flex-col justify-center pb-15 px-10 sm:px-6 lg:px-8"
+      data-oid="eib2:-x"
+    >
+      <div className="sm:mx-auto sm:w-full sm:max-w-md" data-oid="jzjtco8">
+        <h2
+          className="mt-6 text-center text-3xl font-extrabold text-gray-900"
+          data-oid="275sp8y"
+        >
           Sign in to your account
         </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
+        <p
+          className="mt-2 text-center text-sm text-gray-600"
+          data-oid="t-7ullz"
+        >
           Or{" "}
           <Link
-            to={`/register${returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ''}`}
+            to={`/register${returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ""}`}
             className="font-medium text-blue-600 hover:text-blue-500"
+            data-oid="wv2nopw"
           >
             create a new account
           </Link>
         </p>
       </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-10 px-6 shadow sm:rounded-lg sm:px-10">
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md" data-oid="y95fiq2">
+        <div
+          className="bg-white py-10 px-6 shadow sm:rounded-lg sm:px-10"
+          data-oid="oi:::ym"
+        >
           {error && (
-            <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md flex items-start">
-              <AlertCircle className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
-              <span>{error}</span>
+            <div
+              className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md flex items-start"
+              data-oid="p-jrowm"
+            >
+              <AlertCircle
+                className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
+                data-oid="1jbs1kc"
+              />
+              <span data-oid="t:xjchl">{error}</span>
             </div>
           )}
 
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            <div>
+          <form
+            className="space-y-6"
+            onSubmit={handleSubmit}
+            data-oid="kfh2:mp"
+          >
+            <div data-oid="wnk78s3">
               <label
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
+                data-oid="ny:7x:j"
               >
                 Email address
               </label>
-              <div className="mt-1 relative rounded-md shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400" />
+              <div
+                className="mt-1 relative rounded-md shadow-sm"
+                data-oid="xymv0u9"
+              >
+                <div
+                  className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+                  data-oid="ojbbw02"
+                >
+                  <Mail className="h-5 w-5 text-gray-400" data-oid="vr88qu." />
                 </div>
                 <Input
                   id="email"
@@ -105,20 +135,28 @@ const Login = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-10 block w-full"
+                  data-oid="a:y5g-j"
                 />
               </div>
             </div>
 
-            <div>
+            <div data-oid="6b8rd1b">
               <label
                 htmlFor="password"
                 className="block text-sm font-medium text-gray-700"
+                data-oid="1l8ugxq"
               >
                 Password
               </label>
-              <div className="mt-1 relative rounded-md shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
+              <div
+                className="mt-1 relative rounded-md shadow-sm"
+                data-oid="6lcy2vx"
+              >
+                <div
+                  className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+                  data-oid="cqxdn3h"
+                >
+                  <Lock className="h-5 w-5 text-gray-400" data-oid="i78cb14" />
                 </div>
                 <Input
                   id="password"
@@ -130,42 +168,51 @@ const Login = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="pl-10 block w-full"
+                  data-oid="5_908mv"
                 />
               </div>
             </div>
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
+            <div
+              className="flex items-center justify-between"
+              data-oid="8z6jdag"
+            >
+              <div className="flex items-center" data-oid="v3431bb">
                 <input
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  data-oid="5gujplr"
                 />
+
                 <label
                   htmlFor="remember-me"
                   className="ml-2 block text-sm text-gray-900"
+                  data-oid="9ouw070"
                 >
                   Remember me
                 </label>
               </div>
 
-              <div className="text-sm">
+              <div className="text-sm" data-oid="55gsmav">
                 <Link
                   to="/forgot-password"
                   className="font-medium text-blue-600 hover:text-blue-500"
+                  data-oid="vbfr4ua"
                 >
                   Forgot your password?
                 </Link>
               </div>
             </div>
 
-            <div>
+            <div data-oid="oneyyu:">
               <Button
                 variant="blue"
                 type="submit"
                 className="w-full"
                 disabled={isLoading}
+                data-oid="pp4s9w."
               >
                 {isLoading ? "Signing in..." : "Sign in"}
               </Button>

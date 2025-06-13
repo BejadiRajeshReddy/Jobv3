@@ -13,23 +13,59 @@ import ProfilePage from "./pages/ProfilePage.jsx";
 
 function App() {
   return (
-    <Router>
-      <div className="flex flex-col min-h-screen">
-        <Navbar />
-        <main className="flex-grow ">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/jobs" element={<JobPage />} />
-            <Route path="/jobs/:id" element={<JobDetailPage />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/404" element={<NotFoundPage />} />
-            <Route path="*" element={<UnauthorizedPage />} />
+    <Router data-oid="65tedse">
+      <div className="flex flex-col min-h-screen" data-oid="7qe1ack">
+        <Navbar data-oid="cyxgsf9" />
+        <main className="flex-grow " data-oid="89z3tor">
+          <Routes data-oid="ybm:g35">
+            <Route
+              path="/"
+              element={<HomePage data-oid="45okzi1" />}
+              data-oid="yeh.t.f"
+            />
+            <Route
+              path="/jobs"
+              element={<JobPage data-oid="46nksro" />}
+              data-oid="jzlejlo"
+            />
+            <Route
+              path="/jobs/:id"
+              element={<JobDetailPage data-oid="-_zlc8q" />}
+              data-oid="w8dsbv-"
+            />
+            <Route
+              path="/login"
+              element={<Login data-oid="lgo90bb" />}
+              data-oid="8db8lt."
+            />
+            <Route
+              path="/register"
+              element={<RegisterPage data-oid="som6oq:" />}
+              data-oid="ht6bv72"
+            />
+            <Route
+              path="/forgot-password"
+              element={<ForgotPassword data-oid="l6xw5jz" />}
+              data-oid="x_p:ck9"
+            />
+            <Route
+              path="/profile"
+              element={<ProfilePage data-oid="k5u30hx" />}
+              data-oid="qdczvqw"
+            />
+            <Route
+              path="/404"
+              element={<NotFoundPage data-oid="trp3th:" />}
+              data-oid="2rrlp8s"
+            />
+            <Route
+              path="*"
+              element={<UnauthorizedPage data-oid="p1g8kei" />}
+              data-oid="z5z.tti"
+            />
           </Routes>
         </main>
-        <Footer />
+        <Footer data-oid="qbhp:3:" />
       </div>
     </Router>
   );

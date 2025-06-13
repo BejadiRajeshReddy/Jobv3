@@ -35,20 +35,20 @@ const buttonVariants = cva(
       variant: "default",
       size: "default",
     },
-  }
+  },
 );
 
-function Button({ 
-  className, 
-  variant, 
-  size, 
-  asChild = false, 
-  leftIcon, 
-  children, 
+function Button({
+  className,
+  variant,
+  size,
+  asChild = false,
+  leftIcon,
+  children,
   fullWidth,
   isLoading,
   disabled,
-  ...props 
+  ...props
 }) {
   const Comp = asChild ? Slot : "button";
 
@@ -57,10 +57,11 @@ function Button({
       data-slot="button"
       className={cn(
         buttonVariants({ variant, size, className }),
-        fullWidth && "w-full"
+        fullWidth && "w-full",
       )}
       disabled={disabled || isLoading}
       {...props}
+      data-oid="9p35fne"
     >
       {leftIcon}
       {children}
