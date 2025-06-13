@@ -31,15 +31,16 @@ const ProfilePage = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [isEditing, setIsEditing] = useState({
     personal: false,
-    about: false,
     experience: false,
     education: false,
     skills: false,
     social: false,
+    resume: false,
   });
   const [editData, setEditData] = useState({});
   const [profileImage, setProfileImage] = useState(null);
   const [mainActiveTab, setMainActiveTab] = useState('overview');
+  const [resumeFile, setResumeFile] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -82,10 +83,38 @@ const ProfilePage = () => {
     }
   };
 
+  const handleResumeUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Validate file type
+      const allowedTypes = [
+        "application/pdf",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      ];
+      if (!allowedTypes.includes(file.type)) {
+        alert("Please upload a PDF or Word document");
+        return;
+      }
+
+      // Validate file size (5MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        alert("File size must be less than 5MB");
+        return;
+      }
+
+      setResumeFile(file);
+      setEditData(prev => ({ ...prev, resume: file.name }));
+    }
+  };
+
   const handleSave = (section) => {
     const updatedUser = { ...currentUser, ...editData };
     if (profileImage) {
       updatedUser.profileImage = profileImage;
+    }
+    if (resumeFile) {
+      updatedUser.resumeFile = resumeFile.name;
     }
 
     localStorage.setItem("currentUser", JSON.stringify(updatedUser));
@@ -118,6 +147,7 @@ const ProfilePage = () => {
     });
     setIsEditing(prev => ({ ...prev, [section]: false }));
     setProfileImage(null);
+    setResumeFile(null);
   };
 
   // Skills management
@@ -311,43 +341,6 @@ const ProfilePage = () => {
           </div>
         </div>
 
-         {/* Right Column */}
-          <div className="xl:col-span-1 space-y-8">
-            {/* Profile Completion */}
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-bold text-gray-900">
-                  Complete Your Profile
-                </h3>
-                <span className="text-3xl font-bold text-blue-600">
-                  {completionPercentage}%
-                </span>
-              </div>
-              <Progress value={completionPercentage} className="mb-6" />
-              <p className="text-sm text-gray-600 mb-6">
-                Increase your visibility to employers by completing your profile
-              </p>
-              <div className="space-y-4">
-                {[
-                  { label: "Add a bio", completed: !!currentUser.bio },
-                  { label: "Add skills", completed: currentUser.skills?.length > 0 },
-                  { label: "Add work experience", completed: (currentUser.experience?.length > 0 || currentUser.workExperience?.length > 0) },
-                  { label: "Add education", completed: currentUser.education?.length > 0 },
-                ].map((item, index) => (
-                  <div key={index} className="flex  items-center gap-3">
-                    {item.completed ? (
-                      <CheckCircle2 className="w-5 h-5 text-green-500" />
-                    ) : (
-                      <div className="w-5 h-5 rounded-full border-2 border-gray-300" />
-                    )}
-                    <span className={`text-sm ${item.completed ? 'text-green-700 font-medium' : 'text-gray-600'}`}>
-                      {item.label}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
         {/* Main Tab Navigation */}
         <div className="bg-white rounded-2xl shadow-lg border border-gray-200 mb-12 p-6">
           <div className="flex flex-wrap border-b border-gray-200 gap-2">
@@ -391,7 +384,7 @@ const ProfilePage = () => {
           <div className="xl:col-span-3 space-y-10">
             {mainActiveTab === 'overview' && (
               <>
-                {/* Personal & Contact Information Section */}
+                {/* Personal & Contact Information Section with About */}
                 <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
                   <div className="flex items-center justify-between mb-8">
                     <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
@@ -430,7 +423,9 @@ const ProfilePage = () => {
                       </div>
                     )}
                   </div>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  
+                  {/* Contact Information Grid */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                     <div className="flex items-start gap-4 p-5 bg-gray-50 rounded-xl">
                       <User className="w-6 h-6 text-gray-400 mt-1" />
                       <div className="flex-1">
@@ -543,67 +538,31 @@ const ProfilePage = () => {
                       </div>
                     </div>
                   </div>
-                </div>
 
-                {/* About Section */}
-                <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
-                  <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                      <User className="w-6 h-6 text-blue-600" />
-                      About
-                    </h3>
-                    {!isEditing.about ? (
-                      <Button
-                        onClick={() => setIsEditing(prev => ({ ...prev, about: true }))}
-                        size="sm"
-                        variant="outline"
-                        className="px-4 py-2"
-                      >
-                        <Edit3 className="w-4 h-4 mr-2" />
-                        Edit
-                      </Button>
-                    ) : (
-                      <div className="flex gap-3">
-                        <Button
-                          onClick={() => handleSave('about')}
-                          size="sm"
-                          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2"
-                        >
-                          <Save className="w-4 h-4 mr-2" />
-                          Save
-                        </Button>
-                        <Button
-                          onClick={() => handleCancel('about')}
-                          size="sm"
-                          variant="outline"
-                          className="px-4 py-2"
-                        >
-                          <X className="w-4 h-4 mr-2" />
-                          Cancel
-                        </Button>
+                  {/* About Section - Now integrated */}
+                  <div className="border-t border-gray-200 pt-8">
+                    <h4 className="text-lg font-semibold text-gray-900 mb-4">About</h4>
+                    {isEditing.personal ? (
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-3">
+                          Bio
+                        </label>
+                        <textarea
+                          value={editData.bio || ""}
+                          onChange={(e) =>
+                            setEditData({ ...editData, bio: e.target.value })
+                          }
+                          placeholder="Tell us about yourself, your experience, and what you're looking for..."
+                          className="w-full h-40 p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-base"
+                        />
                       </div>
+                    ) : (
+                      <p className="text-gray-600 leading-relaxed text-base">
+                        {currentUser.bio || 
+                         "No bio added yet. Click 'Edit' to add information about yourself."}
+                      </p>
                     )}
                   </div>
-                  {isEditing.about ? (
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-3">
-                        Bio
-                      </label>
-                      <textarea
-                        value={editData.bio || ""}
-                        onChange={(e) =>
-                          setEditData({ ...editData, bio: e.target.value })
-                        }
-                        placeholder="Tell us about yourself, your experience, and what you're looking for..."
-                        className="w-full h-40 p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-base"
-                      />
-                    </div>
-                  ) : (
-                    <p className="text-gray-600 leading-relaxed text-base">
-                      {currentUser.bio || 
-                       "No bio added yet. Click 'Edit' to add information about yourself."}
-                    </p>
-                  )}
                 </div>
               </>
             )}
@@ -941,7 +900,42 @@ const ProfilePage = () => {
             )}
           </div>
 
-         
+          {/* Right Column */}
+          <div className="xl:col-span-1 space-y-8">
+            {/* Profile Completion */}
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-bold text-gray-900">
+                  Complete Your Profile
+                </h3>
+                <span className="text-3xl font-bold text-blue-600">
+                  {completionPercentage}%
+                </span>
+              </div>
+              <Progress value={completionPercentage} className="mb-6" />
+              <p className="text-sm text-gray-600 mb-6">
+                Increase your visibility to employers by completing your profile
+              </p>
+              <div className="space-y-4">
+                {[
+                  { label: "Add a bio", completed: !!currentUser.bio },
+                  { label: "Add skills", completed: currentUser.skills?.length > 0 },
+                  { label: "Add work experience", completed: (currentUser.experience?.length > 0 || currentUser.workExperience?.length > 0) },
+                  { label: "Add education", completed: currentUser.education?.length > 0 },
+                ].map((item, index) => (
+                  <div key={index} className="flex items-center gap-3">
+                    {item.completed ? (
+                      <CheckCircle2 className="w-5 h-5 text-green-500" />
+                    ) : (
+                      <div className="w-5 h-5 rounded-full border-2 border-gray-300" />
+                    )}
+                    <span className={`text-sm ${item.completed ? 'text-green-700 font-medium' : 'text-gray-600'}`}>
+                      {item.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
 
             {/* Social Links */}
             <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
@@ -1061,24 +1055,112 @@ const ProfilePage = () => {
               )}
             </div>
 
-            {/* Resume Section */}
+            {/* Resume Section - Enhanced */}
             <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                   <FileText className="w-5 h-5 text-blue-600" />
                   Resume
                 </h3>
+                {currentUser.resumeFile && !isEditing.resume && (
+                  <Button
+                    onClick={() => setIsEditing(prev => ({ ...prev, resume: true }))}
+                    size="sm"
+                    variant="outline"
+                    className="px-3 py-2"
+                  >
+                    <Edit3 className="w-4 h-4 mr-1" />
+                    Update
+                  </Button>
+                )}
               </div>
-              <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-blue-400 transition-colors">
-                <Upload className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-                <p className="text-gray-600 mb-2 font-medium">Upload your resume</p>
-                <p className="text-sm text-gray-500 mb-4">
-                  PDF, DOC, DOCX up to 5MB
-                </p>
-                <Button variant="outline" className="mx-auto px-6 py-2">
-                  Choose File
-                </Button>
-              </div>
+              
+              {currentUser.resumeFile && !isEditing.resume ? (
+                <div className="bg-green-50 border border-green-200 rounded-xl p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <CheckCircle2 className="w-6 h-6 text-green-600" />
+                    <div>
+                      <p className="font-medium text-green-800">Resume uploaded</p>
+                      <p className="text-sm text-green-600">{currentUser.resumeFile}</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <Button variant="outline" size="sm" className="flex-1">
+                      <FileText className="w-4 h-4 mr-2" />
+                      View Resume
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="flex-1"
+                      onClick={() => setIsEditing(prev => ({ ...prev, resume: true }))}
+                    >
+                      <Upload className="w-4 h-4 mr-2" />
+                      Replace
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-blue-400 transition-colors">
+                    <Upload className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+                    <p className="text-gray-600 mb-2 font-medium">
+                      {isEditing.resume ? "Upload new resume" : "Upload your resume"}
+                    </p>
+                    <p className="text-sm text-gray-500 mb-4">
+                      PDF, DOC, DOCX up to 5MB
+                    </p>
+                    <label htmlFor="resumeUpload" className="cursor-pointer">
+                      <Button variant="outline" className="mx-auto px-6 py-2" asChild>
+                        <span>Choose File</span>
+                      </Button>
+                      <input
+                        id="resumeUpload"
+                        type="file"
+                        accept=".pdf,.doc,.docx"
+                        onChange={handleResumeUpload}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
+                  
+                  {resumeFile && (
+                    <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <FileText className="w-5 h-5 text-blue-600" />
+                          <div>
+                            <p className="font-medium text-blue-800">{resumeFile.name}</p>
+                            <p className="text-sm text-blue-600">
+                              {(resumeFile.size / 1024 / 1024).toFixed(2)} MB
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            onClick={() => handleSave('resume')}
+                            size="sm"
+                            className="bg-green-600 hover:bg-green-700 text-white"
+                          >
+                            <Save className="w-4 h-4 mr-1" />
+                            Save
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              setResumeFile(null);
+                              setIsEditing(prev => ({ ...prev, resume: false }));
+                            }}
+                            size="sm"
+                            variant="outline"
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
