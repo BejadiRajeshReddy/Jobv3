@@ -823,7 +823,7 @@ const RecruiterDashboard = () => {
                       <textarea
                         value={jobForm.benefits}
                         onChange={(e) => setJobForm({...jobForm, benefits: e.target.value})}
-                        placeholder="List the benefits and perks (one per line):&#10;• Comprehensive health insurance&#10;• Flexible working hours and remote work options&#10;• Professional development budget&#10;• Modern office with free snacks and drinks&#10;
+                        placeholder="List the benefits and perks (one per line):&#10;• Comprehensive health insurance&#10;• Flexible working hours and remote work options&#10;• Professional development budget&#10;• Modern office with free snacks and drinks"
                         rows={5}
                         className="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-base"
                       />
