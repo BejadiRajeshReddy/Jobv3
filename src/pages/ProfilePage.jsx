@@ -334,7 +334,7 @@ const ProfilePage = () => {
                   { label: "Add work experience", completed: (currentUser.experience?.length > 0 || currentUser.workExperience?.length > 0) },
                   { label: "Add education", completed: currentUser.education?.length > 0 },
                 ].map((item, index) => (
-                  <div key={index} className="flex items-center gap-3">
+                  <div key={index} className="flex flex-col items-center gap-3">
                     {item.completed ? (
                       <CheckCircle2 className="w-5 h-5 text-green-500" />
                     ) : (
