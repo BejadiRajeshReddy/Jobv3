@@ -125,13 +125,6 @@ const Navbar = () => {
                 >
                   Browse Jobs
                 </Link>
-                <button
-                  onClick={handlePostJobClick}
-                  className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-700 rounded-md transition hover:scale-110"
-                  data-oid="hb0e6zn"
-                >
-                  Post a Job
-                </button>
               </div>
             </div>
             <div className="flex items-center" data-oid="strhjdh">
@@ -199,13 +192,16 @@ const Navbar = () => {
               >
                 Browse Jobs
               </Link>
-              <button
-                onClick={handlePostJobClick}
-                className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-700 rounded-md transition hover:scale-110"
-                data-oid="w7digy9"
-              >
-                Post a Job
-              </button>
+              {/* Only show Post a Job for recruiters or non-logged in users */}
+              {(!currentUser || currentUser.role === "recruiter") && (
+                <button
+                  onClick={handlePostJobClick}
+                  className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-700 rounded-md transition hover:scale-110"
+                  data-oid="hb0e6zn"
+                >
+                  Post a Job
+                </button>
+              )}
             </div>
           </div>
 
@@ -305,13 +301,16 @@ const Navbar = () => {
             >
               Browse Jobs
             </Link>
-            <button
-              onClick={handlePostJobClick}
-              className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
-              data-oid="bo1:0j5"
-            >
-              Post a Job
-            </button>
+            {/* Only show Post a Job for recruiters or non-logged in users */}
+            {(!currentUser || currentUser.role === "recruiter") && (
+              <button
+                onClick={handlePostJobClick}
+                className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+                data-oid="bo1:0j5"
+              >
+                Post a Job
+              </button>
+            )}
 
             {currentUser ? (
               <div className="px-3 py-2 space-y-3" data-oid="-j2afl8">
