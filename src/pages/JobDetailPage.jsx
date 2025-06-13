@@ -48,6 +48,7 @@ const JobDetailPage = () => {
   const [hasApplied, setHasApplied] = useState(false);
   const [alreadyApplied] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const [uploadError, setUploadError] = useState("");
 
   useEffect(() => {
     // Check if user is logged in
@@ -80,44 +81,96 @@ const JobDetailPage = () => {
 
   const handleResumeChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      // Validate file type
-      const allowedTypes = [
-        "application/pdf",
-        "application/msword",
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      ];
-      if (!allowedTypes.includes(file.type)) {
-        alert("Please upload a PDF or Word document");
-        return;
-      }
-
-      // Validate file size (5MB limit)
-      if (file.size > 5 * 1024 * 1024) {
-        alert("File size must be less than 5MB");
-        return;
-      }
-
-      setResume(file);
+    setUploadError("");
+    
+    if (!file) {
+      setResume(null);
+      return;
     }
+
+    // Validate file type
+    const allowedTypes = [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ];
+    
+    if (!allowedTypes.includes(file.type)) {
+      setUploadError("Please upload a PDF or Word document (.pdf, .doc, .docx)");
+      e.target.value = ""; // Clear the input
+      setResume(null);
+      return;
+    }
+
+    // Validate file size (5MB limit)
+    const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+    if (file.size > maxSize) {
+      setUploadError("File size must be less than 5MB");
+      e.target.value = ""; // Clear the input
+      setResume(null);
+      return;
+    }
+
+    setResume(file);
+    setUploadError("");
   };
 
   const handleApplySubmit = async (e) => {
     e.preventDefault();
 
     if (!resume) {
-      alert("Please upload your resume");
+      setUploadError("Please upload your resume");
       return;
     }
 
     setIsSubmitting(true);
+    setUploadError("");
 
-    // Simulate API call
-    // await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1500));
 
-    setHasApplied(true);
-    setIsSubmitting(false);
-    setIsApplying(false);
+      // Here you would typically upload the file and submit the application
+      // For now, we'll just simulate success
+      console.log("Application submitted:", {
+        jobId: job.id,
+        userId: currentUser.id,
+        resume: resume.name,
+        coverLetter: coverLetter,
+        submittedAt: new Date().toISOString()
+      });
+
+      setHasApplied(true);
+      setIsSubmitting(false);
+      setIsApplying(false);
+    } catch (error) {
+      console.error("Error submitting application:", error);
+      setUploadError("Failed to submit application. Please try again.");
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      const file = files[0];
+      // Create a synthetic event object
+      const syntheticEvent = {
+        target: {
+          files: [file],
+          value: ""
+        }
+      };
+      handleResumeChange(syntheticEvent);
+    }
   };
 
   if (!job) {
@@ -362,13 +415,15 @@ const JobDetailPage = () => {
                 <form onSubmit={handleApplySubmit} data-oid="qg5op9r">
                   <div className="mb-4" data-oid="3:r4zc1">
                     <label
-                      className="block text-sm font-medium text-gray-700 mb-1"
+                      className="block text-sm font-medium text-gray-700 mb-2"
                       data-oid="zgsje4w"
                     >
                       Resume *
                     </label>
                     <div
                       className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-gray-400 transition-colors"
+                      onDragOver={handleDragOver}
+                      onDrop={handleDrop}
                       data-oid="x0er4fx"
                     >
                       <div className="space-y-1 text-center" data-oid="1eymf76">
@@ -393,7 +448,6 @@ const JobDetailPage = () => {
                               className="sr-only"
                               accept=".pdf,.doc,.docx"
                               onChange={handleResumeChange}
-                              required
                               data-oid="em_dsdr"
                             />
                           </label>
@@ -406,7 +460,17 @@ const JobDetailPage = () => {
                         </p>
                       </div>
                     </div>
-                    {resume && (
+                    
+                    {/* Error Message */}
+                    {uploadError && (
+                      <div className="mt-2 text-sm text-red-600 flex items-center">
+                        <span className="mr-1">⚠️</span>
+                        {uploadError}
+                      </div>
+                    )}
+                    
+                    {/* Success Message */}
+                    {resume && !uploadError && (
                       <div
                         className="mt-2 text-sm text-green-600 flex items-center"
                         data-oid="9zs-n.o"
@@ -439,8 +503,8 @@ const JobDetailPage = () => {
                   <div className="flex space-x-2" data-oid="u:4fu-y">
                     <Button
                       type="submit"
-                      className="cursor-pointer"
-                      disabled={isSubmitting}
+                      className="flex-1"
+                      disabled={isSubmitting || !resume}
                       data-oid="vvz.eqk"
                     >
                       {isSubmitting ? "Submitting..." : "Submit Application"}
@@ -449,7 +513,12 @@ const JobDetailPage = () => {
                       type="button"
                       variant="outline"
                       className="flex-1"
-                      onClick={() => setIsApplying(false)}
+                      onClick={() => {
+                        setIsApplying(false);
+                        setResume(null);
+                        setCoverLetter("");
+                        setUploadError("");
+                      }}
                       data-oid="j1-j4z."
                     >
                       Cancel
