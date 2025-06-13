@@ -1128,6 +1128,7 @@ const CandidateProfile = () => {
                     { icon: Linkedin, label: "LinkedIn", value: currentUser.socialLinks?.linkedin, color: "text-blue-600" },
                     { icon: Github, label: "GitHub", value: currentUser.socialLinks?.github, color: "text-gray-800" },
                     { icon: Globe, label: "Portfolio", value: currentUser.socialLinks?.portfolio, color: "text-green-600" },
+{ icon: Globe, label: "Portfolio", value: currentUser.socialLinks?.portfolio, color: "text-green-600" },
                   ].map((social, index) => (
                     <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                       <social.icon className={`w-5 h-5 ${social.color}`} />
