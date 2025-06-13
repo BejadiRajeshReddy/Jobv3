@@ -198,60 +198,33 @@ const ProfilePage = () => {
 
   if (isLoading) {
     return (
-      <div
-        className="min-h-screen bg-gray-50 flex items-center justify-center"
-        data-oid="gikfpqb"
-      >
-        <div className="text-center" data-oid="16dxh3d">
-          <div
-            className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"
-            data-oid="tz7p9r2"
-          ></div>
-          <p className="mt-4 text-gray-600" data-oid="3mihx1a">
-            Loading profile...
-          </p>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading profile...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div
-      className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8"
-      data-oid=":6af0v2"
-    >
-      <div className="max-w-4xl mx-auto" data-oid="k4ld1.5">
+    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto">
         {/* Header Section */}
-        <div
-          className="bg-white shadow rounded-lg overflow-hidden"
-          data-oid="k7-:kuw"
-        >
-          <div
-            className="relative h-32 bg-gradient-to-r from-blue-500 to-blue-600"
-            data-oid="lo-e4x_"
-          >
-            <div className="absolute -bottom-16 left-8" data-oid="9qrhq.k">
-              <div className="relative" data-oid="p0x.m88">
-                <div
-                  className="h-32 w-32 rounded-full border-4 border-white bg-white overflow-hidden"
-                  data-oid="fa2:vb1"
-                >
+        <div className="bg-white shadow rounded-lg overflow-hidden">
+          <div className="relative h-32 bg-gradient-to-r from-blue-500 to-blue-600">
+            <div className="absolute -bottom-16 left-8">
+              <div className="relative">
+                <div className="h-32 w-32 rounded-full border-4 border-white bg-white overflow-hidden">
                   {profile.profileImage ? (
                     <img
                       src={profile.profileImage}
                       alt={profile.name}
                       className="h-full w-full object-cover"
-                      data-oid="03pa6jo"
                     />
                   ) : (
-                    <div
-                      className="h-full w-full bg-gray-200 flex items-center justify-center"
-                      data-oid="g.sxw9m"
-                    >
-                      <User
-                        className="h-16 w-16 text-gray-400"
-                        data-oid="xqb4zjd"
-                      />
+                    <div className="h-full w-full bg-gray-200 flex items-center justify-center">
+                      <User className="h-16 w-16 text-gray-400" />
                     </div>
                   )}
                 </div>
@@ -259,16 +232,14 @@ const ProfilePage = () => {
                   <label
                     htmlFor="profile-image-upload"
                     className="absolute bottom-0 right-0 bg-blue-500 text-white p-2 rounded-full cursor-pointer hover:bg-blue-600"
-                    data-oid="0tzq7c_"
                   >
-                    <Upload className="h-4 w-4" data-oid="ksy4btb" />
+                    <Upload className="h-4 w-4" />
                     <input
                       id="profile-image-upload"
                       type="file"
                       className="hidden"
                       accept="image/*"
                       onChange={handleProfileImageUpload}
-                      data-oid="zg4kzuq"
                     />
                   </label>
                 )}
@@ -276,46 +247,34 @@ const ProfilePage = () => {
             </div>
           </div>
 
-          <div className="pt-20 pb-6 px-8" data-oid="1jdfpwc">
-            <div
-              className="flex justify-between items-start"
-              data-oid="2f9r8_w"
-            >
-              <div data-oid="sx-f9pw">
-                <h1
-                  className="text-2xl font-bold text-gray-900"
-                  data-oid="q2pc6d1"
-                >
+          <div className="pt-20 pb-6 px-8">
+            <div className="flex justify-between items-start">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">
                   {profile.name}
                 </h1>
-                <p className="text-lg text-gray-600 mt-1" data-oid="jciseb0">
+                <p className="text-lg text-gray-600 mt-1">
                   {profile.currentJobTitle ||
                     (profile.isFresher ? "Fresher" : "")}
                 </p>
-                <div
-                  className="flex items-center text-gray-500 mt-2"
-                  data-oid="48xkkl9"
-                >
-                  <MapPin className="h-4 w-4 mr-1" data-oid="lsgwm4d" />
-                  <span data-oid="jwq9bvm">
-                    {profile.location || "Add location"}
-                  </span>
+                <div className="flex items-center text-gray-500 mt-2">
+                  <MapPin className="h-4 w-4 mr-1" />
+                  <span>{profile.location || "Add location"}</span>
                 </div>
               </div>
               <Button
                 variant={isEditing ? "danger" : "blue"}
                 onClick={() => setIsEditing(!isEditing)}
                 disabled={isLoading}
-                data-oid="68.qx-m"
               >
                 {isEditing ? (
                   <>
-                    <X className="h-4 w-4 mr-2" data-oid="tw_madg" />
+                    <X className="h-4 w-4 mr-2" />
                     Cancel
                   </>
                 ) : (
                   <>
-                    <Edit2 className="h-4 w-4 mr-2" data-oid="8plqys4" />
+                    <Edit2 className="h-4 w-4 mr-2" />
                     Edit Profile
                   </>
                 )}
@@ -325,68 +284,34 @@ const ProfilePage = () => {
         </div>
 
         {/* Profile Completion */}
-        <div className="mt-6 bg-white shadow rounded-lg p-6" data-oid="xrqz0_k">
-          <div
-            className="flex items-center justify-between mb-2"
-            data-oid="e41y-s1"
-          >
-            <h2
-              className="text-lg font-medium text-gray-900"
-              data-oid="j8fzcsu"
-            >
+        <div className="mt-6 bg-white shadow rounded-lg p-6">
+          <div className="flex items-center justify-between mb-2">
+            <h2 className="text-lg font-medium text-gray-900">
               Profile Completion
             </h2>
-            <span
-              className="text-sm font-medium text-blue-600"
-              data-oid="6.47-t7"
-            >
+            <span className="text-sm font-medium text-blue-600">
               {profileCompletion}%
             </span>
           </div>
-          <Progress
-            value={profileCompletion}
-            className="h-2"
-            data-oid="up._psf"
-          />
+          <Progress value={profileCompletion} className="h-2" />
         </div>
 
         {/* Basic Information */}
-        <div className="mt-6 bg-white shadow rounded-lg" data-oid="6x7n8tv">
-          <div
-            className="px-6 py-4 border-b border-gray-200"
-            data-oid="dl5pr_."
-          >
-            <h2
-              className="text-lg font-medium text-gray-900"
-              data-oid="k9o_767"
-            >
+        <div className="mt-6 bg-white shadow rounded-lg">
+          <div className="px-6 py-4 border-b border-gray-200">
+            <h2 className="text-lg font-medium text-gray-900">
               Basic Information
             </h2>
           </div>
-          <div className="p-6 space-y-6" data-oid=":jj4-a9">
-            <div
-              className="grid grid-cols-1 gap-6 sm:grid-cols-2"
-              data-oid="q4aatfd"
-            >
-              <div data-oid="21g69r5">
-                <label
-                  className="block text-sm font-medium text-gray-700"
-                  data-oid="r9cqli9"
-                >
+          <div className="p-6 space-y-6">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
                   Full Name
                 </label>
-                <div
-                  className="mt-1 relative rounded-md shadow-sm"
-                  data-oid="rk8_17m"
-                >
-                  <div
-                    className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-                    data-oid="l.b:pqq"
-                  >
-                    <User
-                      className="h-5 w-5 text-gray-400"
-                      data-oid="phung6a"
-                    />
+                <div className="mt-1 relative rounded-md shadow-sm">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <User className="h-5 w-5 text-gray-400" />
                   </div>
                   <Input
                     type="text"
@@ -396,60 +321,34 @@ const ProfilePage = () => {
                     }
                     disabled={!isEditing}
                     className="pl-10"
-                    data-oid="yj1ufxi"
                   />
                 </div>
               </div>
 
-              <div data-oid="ywn4dyl">
-                <label
-                  className="block text-sm font-medium text-gray-700"
-                  data-oid="9yvj33_"
-                >
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
                   Email
                 </label>
-                <div
-                  className="mt-1 relative rounded-md shadow-sm"
-                  data-oid="pj91hn-"
-                >
-                  <div
-                    className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-                    data-oid="jd3:9ab"
-                  >
-                    <Mail
-                      className="h-5 w-5 text-gray-400"
-                      data-oid="9g-su:r"
-                    />
+                <div className="mt-1 relative rounded-md shadow-sm">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Mail className="h-5 w-5 text-gray-400" />
                   </div>
                   <Input
                     type="email"
                     value={profile.email}
                     disabled={true}
                     className="pl-10 bg-gray-50"
-                    data-oid="p.tm12n"
                   />
                 </div>
               </div>
 
-              <div data-oid="cyb_2hi">
-                <label
-                  className="block text-sm font-medium text-gray-700"
-                  data-oid="ia5ae20"
-                >
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
                   Mobile Number
                 </label>
-                <div
-                  className="mt-1 relative rounded-md shadow-sm"
-                  data-oid="d24nm_s"
-                >
-                  <div
-                    className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-                    data-oid="_hzhcp-"
-                  >
-                    <Phone
-                      className="h-5 w-5 text-gray-400"
-                      data-oid="grtioxt"
-                    />
+                <div className="mt-1 relative rounded-md shadow-sm">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Phone className="h-5 w-5 text-gray-400" />
                   </div>
                   <Input
                     type="tel"
@@ -462,19 +361,15 @@ const ProfilePage = () => {
                     }
                     disabled={!isEditing}
                     className="pl-10"
-                    data-oid="ly3m6yh"
                   />
                 </div>
               </div>
 
-              <div data-oid="0y-rn76">
-                <label
-                  className="block text-sm font-medium text-gray-700"
-                  data-oid="98lquli"
-                >
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
                   Gender
                 </label>
-                <div className="mt-1" data-oid="4:dauu1">
+                <div className="mt-1">
                   <select
                     value={profile.gender}
                     onChange={(e) =>
@@ -485,46 +380,23 @@ const ProfilePage = () => {
                     }
                     disabled={!isEditing}
                     className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2"
-                    data-oid=":lnl4x-"
                   >
-                    <option value="" data-oid="evdl9na">
-                      Select gender
-                    </option>
-                    <option value="male" data-oid="6ybpck2">
-                      Male
-                    </option>
-                    <option value="female" data-oid="s0rh.do">
-                      Female
-                    </option>
-                    <option value="other" data-oid="vuv8n7v">
-                      Other
-                    </option>
-                    <option value="prefer_not_to_say" data-oid="v2iyktk">
-                      Prefer not to say
-                    </option>
+                    <option value="">Select gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                    <option value="prefer_not_to_say">Prefer not to say</option>
                   </select>
                 </div>
               </div>
 
-              <div data-oid="brv52g9">
-                <label
-                  className="block text-sm font-medium text-gray-700"
-                  data-oid="k5r7cx6"
-                >
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
                   Date of Birth
                 </label>
-                <div
-                  className="mt-1 relative rounded-md shadow-sm"
-                  data-oid="yh0smw."
-                >
-                  <div
-                    className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-                    data-oid="uuqe77f"
-                  >
-                    <Calendar
-                      className="h-5 w-5 text-gray-400"
-                      data-oid="row1mxb"
-                    />
+                <div className="mt-1 relative rounded-md shadow-sm">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Calendar className="h-5 w-5 text-gray-400" />
                   </div>
                   <Input
                     type="date"
@@ -537,30 +409,17 @@ const ProfilePage = () => {
                     }
                     disabled={!isEditing}
                     className="pl-10"
-                    data-oid="vnj2sk-"
                   />
                 </div>
               </div>
 
-              <div data-oid="_kevvb7">
-                <label
-                  className="block text-sm font-medium text-gray-700"
-                  data-oid="n91c45p"
-                >
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
                   Current Location
                 </label>
-                <div
-                  className="mt-1 relative rounded-md shadow-sm"
-                  data-oid="d569w7j"
-                >
-                  <div
-                    className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-                    data-oid="41da2dn"
-                  >
-                    <MapPin
-                      className="h-5 w-5 text-gray-400"
-                      data-oid="wc_a7g7"
-                    />
+                <div className="mt-1 relative rounded-md shadow-sm">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <MapPin className="h-5 w-5 text-gray-400" />
                   </div>
                   <Input
                     type="text"
@@ -574,30 +433,17 @@ const ProfilePage = () => {
                     disabled={!isEditing}
                     placeholder="City, State, Country"
                     className="pl-10"
-                    data-oid="ngp0id1"
                   />
                 </div>
               </div>
 
-              <div data-oid="43x95ur">
-                <label
-                  className="block text-sm font-medium text-gray-700"
-                  data-oid="rxk7z1b"
-                >
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
                   Current Job Title
                 </label>
-                <div
-                  className="mt-1 relative rounded-md shadow-sm"
-                  data-oid="d2g.4t4"
-                >
-                  <div
-                    className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-                    data-oid="dika:7l"
-                  >
-                    <Briefcase
-                      className="h-5 w-5 text-gray-400"
-                      data-oid="lnirv66"
-                    />
+                <div className="mt-1 relative rounded-md shadow-sm">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Briefcase className="h-5 w-5 text-gray-400" />
                   </div>
                   <Input
                     type="text"
@@ -611,12 +457,11 @@ const ProfilePage = () => {
                     disabled={!isEditing}
                     placeholder="e.g., Software Engineer"
                     className="pl-10"
-                    data-oid="d5cx6sl"
                   />
                 </div>
               </div>
 
-              <div className="flex items-center" data-oid="uq:66ue">
+              <div className="flex items-center">
                 <input
                   type="checkbox"
                   id="willing-to-relocate"
@@ -629,13 +474,11 @@ const ProfilePage = () => {
                   }
                   disabled={!isEditing}
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                  data-oid="2mvfgqw"
                 />
 
                 <label
                   htmlFor="willing-to-relocate"
                   className="ml-2 block text-sm text-gray-700"
-                  data-oid="9xws7y5"
                 >
                   Willing to relocate
                 </label>
@@ -646,22 +489,15 @@ const ProfilePage = () => {
 
         {/* Save Button */}
         {isEditing && (
-          <div
-            className="sticky bottom-0 bg-white p-4 border-t border-gray-200 shadow-lg mt-6"
-            data-oid="4_qgvu."
-          >
-            <div
-              className="max-w-4xl mx-auto flex justify-end"
-              data-oid="vsoutux"
-            >
+          <div className="sticky bottom-0 bg-white p-4 border-t border-gray-200 shadow-lg mt-6">
+            <div className="max-w-4xl mx-auto flex justify-end">
               <Button
                 variant="blue"
                 onClick={handleSave}
                 disabled={isLoading}
                 className="w-full sm:w-auto"
-                data-oid=".:-idpx"
               >
-                <Save className="h-4 w-4 mr-2" data-oid="8o4t1cy" />
+                <Save className="h-4 w-4 mr-2" />
                 {isLoading ? "Saving..." : "Save Changes"}
               </Button>
             </div>
@@ -670,27 +506,17 @@ const ProfilePage = () => {
 
         {/* Alerts */}
         {error && (
-          <div
-            className="mt-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md flex items-start"
-            data-oid=":ksd8ay"
-          >
-            <AlertCircle
-              className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-              data-oid="5zpjn1d"
-            />
-            <span data-oid="ss-dajp">{error}</span>
+          <div className="mt-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md flex items-start">
+            <AlertCircle className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
+
+            <span>{error}</span>
           </div>
         )}
         {success && (
-          <div
-            className="mt-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-md flex items-start"
-            data-oid="0pwljly"
-          >
-            <CheckCircle2
-              className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0"
-              data-oid="n.p20ms"
-            />
-            <span data-oid="x.4_xfc">{success}</span>
+          <div className="mt-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-md flex items-start">
+            <CheckCircle2 className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
+
+            <span>{success}</span>
           </div>
         )}
       </div>
