@@ -269,15 +269,15 @@ const ProfilePage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header Section */}
-        <div className="relative bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 rounded-3xl shadow-2xl overflow-hidden mb-12">
+        <div className="relative bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 rounded-3xl shadow-2xl overflow-hidden mb-8">
           <div className="absolute inset-0 bg-black/10"></div>
-          <div className="relative px-10 py-16">
-            <div className="flex flex-col lg:flex-row items-start lg:items-center gap-10">
+          <div className="relative px-8 py-12">
+            <div className="flex flex-col lg:flex-row items-start lg:items-center gap-8">
               {/* Profile Image */}
               <div className="relative group">
-                <div className="w-40 h-40 rounded-full bg-white/20 backdrop-blur-sm border-4 border-white/30 flex items-center justify-center overflow-hidden shadow-2xl">
+                <div className="w-32 h-32 rounded-full bg-white/20 backdrop-blur-sm border-4 border-white/30 flex items-center justify-center overflow-hidden shadow-2xl">
                   {profileImage || currentUser.profileImage ? (
                     <img
                       src={profileImage || currentUser.profileImage}
@@ -285,16 +285,16 @@ const ProfilePage = () => {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <span className="text-5xl font-bold text-white">
+                    <span className="text-4xl font-bold text-white">
                       {getInitials(currentUser.name)}
                     </span>
                   )}
                 </div>
                 <label
                   htmlFor="profileImageInput"
-                  className="absolute bottom-3 right-3 w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer shadow-lg hover:bg-gray-100 transition-colors"
+                  className="absolute bottom-2 right-2 w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer shadow-lg hover:bg-gray-100 transition-colors"
                 >
-                  <Camera className="w-5 h-5 text-gray-700" />
+                  <Camera className="w-4 h-4 text-gray-700" />
                   <input
                     id="profileImageInput"
                     type="file"
@@ -308,30 +308,30 @@ const ProfilePage = () => {
               {/* Profile Info */}
               <div className="flex-1 text-white">
                 <div>
-                  <h1 className="text-4xl lg:text-5xl font-bold mb-3">
+                  <h1 className="text-3xl lg:text-4xl font-bold mb-2">
                     {currentUser.name}
                   </h1>
-                  <p className="text-2xl text-blue-100 mb-6">
+                  <p className="text-xl text-blue-100 mb-4">
                     {currentUser.jobTitle || 
                      (currentUser.role === "recruiter" ? "Recruiter" : "Job Seeker")}
                   </p>
-                  <div className="flex flex-wrap gap-8 text-blue-100">
-                    <div className="flex items-center gap-3">
-                      <Mail className="w-5 h-5" />
-                      <span className="text-base">
+                  <div className="flex flex-wrap gap-6 text-blue-100">
+                    <div className="flex items-center gap-2">
+                      <Mail className="w-4 h-4" />
+                      <span className="text-sm">
                         {currentUser.email || currentUser.company?.email}
                       </span>
                     </div>
                     {currentUser.phoneNumber && (
-                      <div className="flex items-center gap-3">
-                        <Phone className="w-5 h-5" />
-                        <span className="text-base">{currentUser.phoneNumber}</span>
+                      <div className="flex items-center gap-2">
+                        <Phone className="w-4 h-4" />
+                        <span className="text-sm">{currentUser.phoneNumber}</span>
                       </div>
                     )}
                     {currentUser.location && (
-                      <div className="flex items-center gap-3">
-                        <MapPin className="w-5 h-5" />
-                        <span className="text-base">{currentUser.location}</span>
+                      <div className="flex items-center gap-2">
+                        <MapPin className="w-4 h-4" />
+                        <span className="text-sm">{currentUser.location}</span>
                       </div>
                     )}
                   </div>
@@ -341,8 +341,8 @@ const ProfilePage = () => {
           </div>
         </div>
 
-        {/* Profile Completion Section - Now below header */}
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 mb-12">
+        {/* Profile Completion Section */}
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 mb-8">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-2xl font-bold text-gray-900">
               Complete Your Profile
@@ -377,7 +377,7 @@ const ProfilePage = () => {
         </div>
 
         {/* Main Tab Navigation */}
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 mb-12 p-6">
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 mb-8 p-6">
           <div className="flex flex-wrap border-b border-gray-200 gap-2">
             <Button
               onClick={() => setMainActiveTab('overview')}
@@ -414,192 +414,189 @@ const ProfilePage = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 xl:grid-cols-4 gap-12">
-          {/* Left Column - Main Content based on activeTab */}
-          <div className="xl:col-span-3 space-y-10">
+        <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
+          {/* Left Column - Main Content */}
+          <div className="xl:col-span-3 space-y-8">
             {mainActiveTab === 'overview' && (
-              <>
-                {/* Personal & Contact Information Section with About */}
-                <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
-                  <div className="flex items-center justify-between mb-8">
-                    <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                      <User className="w-6 h-6 text-blue-600" />
-                      Personal & Contact Information
-                    </h3>
-                    {!isEditing.personal ? (
+              <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
+                <div className="flex items-center justify-between mb-8">
+                  <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                    <User className="w-6 h-6 text-blue-600" />
+                    Personal & Contact Information
+                  </h3>
+                  {!isEditing.personal ? (
+                    <Button
+                      onClick={() => setIsEditing(prev => ({ ...prev, personal: true }))}
+                      size="sm"
+                      variant="outline"
+                      className="px-4 py-2"
+                    >
+                      <Edit3 className="w-4 h-4 mr-2" />
+                      Edit
+                    </Button>
+                  ) : (
+                    <div className="flex gap-3">
                       <Button
-                        onClick={() => setIsEditing(prev => ({ ...prev, personal: true }))}
+                        onClick={() => handleSave('personal')}
+                        size="sm"
+                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2"
+                      >
+                        <Save className="w-4 h-4 mr-2" />
+                        Save
+                      </Button>
+                      <Button
+                        onClick={() => handleCancel('personal')}
                         size="sm"
                         variant="outline"
                         className="px-4 py-2"
                       >
-                        <Edit3 className="w-4 h-4 mr-2" />
-                        Edit
+                        <X className="w-4 h-4 mr-2" />
+                        Cancel
                       </Button>
-                    ) : (
-                      <div className="flex gap-3">
-                        <Button
-                          onClick={() => handleSave('personal')}
-                          size="sm"
-                          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2"
-                        >
-                          <Save className="w-4 h-4 mr-2" />
-                          Save
-                        </Button>
-                        <Button
-                          onClick={() => handleCancel('personal')}
-                          size="sm"
-                          variant="outline"
-                          className="px-4 py-2"
-                        >
-                          <X className="w-4 h-4 mr-2" />
-                          Cancel
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                  
-                  {/* Contact Information Grid */}
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-                    <div className="flex items-start gap-4 p-5 bg-gray-50 rounded-xl">
-                      <User className="w-6 h-6 text-gray-400 mt-1" />
-                      <div className="flex-1">
-                        <label className="block text-sm font-semibold text-gray-500 mb-2">
-                          Full Name
-                        </label>
-                        {isEditing.personal ? (
-                          <Input
-                            value={editData.name || ""}
-                            onChange={(e) =>
-                              setEditData({ ...editData, name: e.target.value })
-                            }
-                            placeholder="Your full name"
-                            className="text-base"
-                          />
-                        ) : (
-                          <p className="text-gray-900 font-medium text-base">{currentUser.name || "Not provided"}</p>
-                        )}
-                      </div>
                     </div>
-                    <div className="flex items-start gap-4 p-5 bg-gray-50 rounded-xl">
-                      <Briefcase className="w-6 h-6 text-gray-400 mt-1" />
-                      <div className="flex-1">
-                        <label className="block text-sm font-semibold text-gray-500 mb-2">
-                          Job Title
-                        </label>
-                        {isEditing.personal ? (
-                          <Input
-                            value={editData.jobTitle || ""}
-                            onChange={(e) =>
-                              setEditData({ ...editData, jobTitle: e.target.value })
-                            }
-                            placeholder="Your job title"
-                            className="text-base"
-                          />
-                        ) : (
-                          <p className="text-gray-900 font-medium text-base">{currentUser.jobTitle || "Not provided"}</p>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-4 p-5 bg-gray-50 rounded-xl">
-                      <Mail className="w-6 h-6 text-gray-400 mt-1" />
-                      <div className="flex-1">
-                        <label className="block text-sm font-semibold text-gray-500 mb-2">
-                          Email
-                        </label>
-                        {isEditing.personal ? (
-                          <Input
-                            value={editData.email || currentUser.company?.email || ""}
-                            onChange={(e) =>
-                              setEditData({ ...editData, email: e.target.value })
-                            }
-                            placeholder="Your email"
-                            className="text-base"
-                          />
-                        ) : (
-                          <p className="text-gray-900 font-medium text-base">{currentUser.email || currentUser.company?.email || "Not provided"}</p>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-4 p-5 bg-gray-50 rounded-xl">
-                      <Phone className="w-6 h-6 text-gray-400 mt-1" />
-                      <div className="flex-1">
-                        <label className="block text-sm font-semibold text-gray-500 mb-2">
-                          Phone Number
-                        </label>
-                        {isEditing.personal ? (
-                          <Input
-                            value={editData.phoneNumber || ""}
-                            onChange={(e) =>
-                              setEditData({ ...editData, phoneNumber: e.target.value })
-                            }
-                            placeholder="Your phone number"
-                            className="text-base"
-                          />
-                        ) : (
-                          <p className="text-gray-900 font-medium text-base">{currentUser.phoneNumber || "Not provided"}</p>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-4 p-5 bg-gray-50 rounded-xl">
-                      <MapPin className="w-6 h-6 text-gray-400 mt-1" />
-                      <div className="flex-1">
-                        <label className="block text-sm font-semibold text-gray-500 mb-2">
-                          Location
-                        </label>
-                        {isEditing.personal ? (
-                          <Input
-                            value={editData.location || ""}
-                            onChange={(e) =>
-                              setEditData({ ...editData, location: e.target.value })
-                            }
-                            placeholder="Your location"
-                            className="text-base"
-                          />
-                        ) : (
-                          <p className="text-gray-900 font-medium text-base">{currentUser.location || "Not provided"}</p>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-4 p-5 bg-gray-50 rounded-xl">
-                      <Calendar className="w-6 h-6 text-gray-400 mt-1" />
-                      <div className="flex-1">
-                        <label className="block text-sm font-semibold text-gray-500 mb-2">
-                          Member Since
-                        </label>
-                        <p className="text-gray-900 font-medium text-base">
-                          {new Date(currentUser.createdAt).toLocaleDateString()}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* About Section - Now integrated */}
-                  <div className="border-t border-gray-200 pt-8">
-                    <h4 className="text-lg font-semibold text-gray-900 mb-4">About</h4>
-                    {isEditing.personal ? (
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-3">
-                          Bio
-                        </label>
-                        <textarea
-                          value={editData.bio || ""}
+                  )}
+                </div>
+                
+                {/* Contact Information Grid */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                  <div className="flex items-start gap-4 p-5 bg-gray-50 rounded-xl">
+                    <User className="w-6 h-6 text-gray-400 mt-1" />
+                    <div className="flex-1">
+                      <label className="block text-sm font-semibold text-gray-500 mb-2">
+                        Full Name
+                      </label>
+                      {isEditing.personal ? (
+                        <Input
+                          value={editData.name || ""}
                           onChange={(e) =>
-                            setEditData({ ...editData, bio: e.target.value })
+                            setEditData({ ...editData, name: e.target.value })
                           }
-                          placeholder="Tell us about yourself, your experience, and what you're looking for..."
-                          className="w-full h-40 p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-base"
+                          placeholder="Your full name"
+                          className="text-base"
                         />
-                      </div>
-                    ) : (
-                      <p className="text-gray-600 leading-relaxed text-base">
-                        {currentUser.bio || 
-                         "No bio added yet. Click 'Edit' to add information about yourself."}
+                      ) : (
+                        <p className="text-gray-900 font-medium text-base">{currentUser.name || "Not provided"}</p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4 p-5 bg-gray-50 rounded-xl">
+                    <Briefcase className="w-6 h-6 text-gray-400 mt-1" />
+                    <div className="flex-1">
+                      <label className="block text-sm font-semibold text-gray-500 mb-2">
+                        Job Title
+                      </label>
+                      {isEditing.personal ? (
+                        <Input
+                          value={editData.jobTitle || ""}
+                          onChange={(e) =>
+                            setEditData({ ...editData, jobTitle: e.target.value })
+                          }
+                          placeholder="Your job title"
+                          className="text-base"
+                        />
+                      ) : (
+                        <p className="text-gray-900 font-medium text-base">{currentUser.jobTitle || "Not provided"}</p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4 p-5 bg-gray-50 rounded-xl">
+                    <Mail className="w-6 h-6 text-gray-400 mt-1" />
+                    <div className="flex-1">
+                      <label className="block text-sm font-semibold text-gray-500 mb-2">
+                        Email
+                      </label>
+                      {isEditing.personal ? (
+                        <Input
+                          value={editData.email || currentUser.company?.email || ""}
+                          onChange={(e) =>
+                            setEditData({ ...editData, email: e.target.value })
+                          }
+                          placeholder="Your email"
+                          className="text-base"
+                        />
+                      ) : (
+                        <p className="text-gray-900 font-medium text-base">{currentUser.email || currentUser.company?.email || "Not provided"}</p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4 p-5 bg-gray-50 rounded-xl">
+                    <Phone className="w-6 h-6 text-gray-400 mt-1" />
+                    <div className="flex-1">
+                      <label className="block text-sm font-semibold text-gray-500 mb-2">
+                        Phone Number
+                      </label>
+                      {isEditing.personal ? (
+                        <Input
+                          value={editData.phoneNumber || ""}
+                          onChange={(e) =>
+                            setEditData({ ...editData, phoneNumber: e.target.value })
+                          }
+                          placeholder="Your phone number"
+                          className="text-base"
+                        />
+                      ) : (
+                        <p className="text-gray-900 font-medium text-base">{currentUser.phoneNumber || "Not provided"}</p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4 p-5 bg-gray-50 rounded-xl">
+                    <MapPin className="w-6 h-6 text-gray-400 mt-1" />
+                    <div className="flex-1">
+                      <label className="block text-sm font-semibold text-gray-500 mb-2">
+                        Location
+                      </label>
+                      {isEditing.personal ? (
+                        <Input
+                          value={editData.location || ""}
+                          onChange={(e) =>
+                            setEditData({ ...editData, location: e.target.value })
+                          }
+                          placeholder="Your location"
+                          className="text-base"
+                        />
+                      ) : (
+                        <p className="text-gray-900 font-medium text-base">{currentUser.location || "Not provided"}</p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4 p-5 bg-gray-50 rounded-xl">
+                    <Calendar className="w-6 h-6 text-gray-400 mt-1" />
+                    <div className="flex-1">
+                      <label className="block text-sm font-semibold text-gray-500 mb-2">
+                        Member Since
+                      </label>
+                      <p className="text-gray-900 font-medium text-base">
+                        {new Date(currentUser.createdAt).toLocaleDateString()}
                       </p>
-                    )}
+                    </div>
                   </div>
                 </div>
-              </>
+
+                {/* About Section */}
+                <div className="border-t border-gray-200 pt-8">
+                  <h4 className="text-lg font-semibold text-gray-900 mb-4">About</h4>
+                  {isEditing.personal ? (
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-3">
+                        Bio
+                      </label>
+                      <textarea
+                        value={editData.bio || ""}
+                        onChange={(e) =>
+                          setEditData({ ...editData, bio: e.target.value })
+                        }
+                        placeholder="Tell us about yourself, your experience, and what you're looking for..."
+                        className="w-full h-40 p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-base"
+                      />
+                    </div>
+                  ) : (
+                    <p className="text-gray-600 leading-relaxed text-base">
+                      {currentUser.bio || 
+                       "No bio added yet. Click 'Edit' to add information about yourself."}
+                    </p>
+                  )}
+                </div>
+              </div>
             )}
 
             {mainActiveTab === 'experience' && (
@@ -648,7 +645,7 @@ const ProfilePage = () => {
                       <Plus className="w-4 h-4 mr-2" />
                       Add Experience
                     </Button>
-                    <div className="space-y-8">
+                    <div className="space-y-6">
                       {editData.experience?.map((exp, index) => (
                         <div key={index} className="border border-gray-200 rounded-xl p-6 space-y-4">
                           <div className="flex justify-between items-start">
@@ -1055,7 +1052,7 @@ const ProfilePage = () => {
               )}
             </div>
 
-            {/* Resume Section - Now positioned below Social Links */}
+            {/* Resume Section */}
             <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
