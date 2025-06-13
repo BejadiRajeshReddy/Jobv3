@@ -519,8 +519,7 @@ const CandidateProfile = () => {
                   className="absolute -bottom-2 -right-2 w-10 h-10 bg-blue-600 hover:bg-blue-700 rounded-full border-4 border-white flex items-center justify-center transition-colors"
                 >
                   <Camera className="w-4 h-4 text-white" />
-                </button>
-               
+                </button>        
               </div>
 
               {/* User Info */}
