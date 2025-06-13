@@ -39,7 +39,7 @@ const ProfilePage = () => {
   });
   const [editData, setEditData] = useState({});
   const [profileImage, setProfileImage] = useState(null);
-  const [mainActiveTab, setMainActiveTab] = useState('overview'); // New state for main tabs
+  const [mainActiveTab, setMainActiveTab] = useState('overview');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -239,15 +239,15 @@ const ProfilePage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-12">
         {/* Header Section */}
-        <div className="relative bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 rounded-2xl shadow-xl overflow-hidden mb-8">
+        <div className="relative bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 rounded-3xl shadow-2xl overflow-hidden mb-12">
           <div className="absolute inset-0 bg-black/10"></div>
-          <div className="relative px-8 py-12">
-            <div className="flex flex-col lg:flex-row items-start lg:items-center gap-8">
+          <div className="relative px-10 py-16">
+            <div className="flex flex-col lg:flex-row items-start lg:items-center gap-10">
               {/* Profile Image */}
               <div className="relative group">
-                <div className="w-32 h-32 rounded-full bg-white/20 backdrop-blur-sm border-4 border-white/30 flex items-center justify-center overflow-hidden shadow-2xl">
+                <div className="w-40 h-40 rounded-full bg-white/20 backdrop-blur-sm border-4 border-white/30 flex items-center justify-center overflow-hidden shadow-2xl">
                   {profileImage || currentUser.profileImage ? (
                     <img
                       src={profileImage || currentUser.profileImage}
@@ -255,16 +255,16 @@ const ProfilePage = () => {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <span className="text-4xl font-bold text-white">
+                    <span className="text-5xl font-bold text-white">
                       {getInitials(currentUser.name)}
                     </span>
                   )}
                 </div>
                 <label
                   htmlFor="profileImageInput"
-                  className="absolute bottom-2 right-2 w-6 h-6 rounded-full bg-white flex items-center justify-center cursor-pointer shadow-md hover:bg-gray-300 transition-colors"
+                  className="absolute bottom-3 right-3 w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer shadow-lg hover:bg-gray-100 transition-colors"
                 >
-                  <Edit3 className="w-4 h-4 text-black" />
+                  <Camera className="w-5 h-5 text-gray-700" />
                   <input
                     id="profileImageInput"
                     type="file"
@@ -278,30 +278,30 @@ const ProfilePage = () => {
               {/* Profile Info */}
               <div className="flex-1 text-white">
                 <div>
-                  <h1 className="text-3xl lg:text-4xl font-bold mb-2">
+                  <h1 className="text-4xl lg:text-5xl font-bold mb-3">
                     {currentUser.name}
                   </h1>
-                  <p className="text-xl text-blue-100 mb-4">
+                  <p className="text-2xl text-blue-100 mb-6">
                     {currentUser.jobTitle || 
                      (currentUser.role === "recruiter" ? "Recruiter" : "Job Seeker")}
                   </p>
-                  <div className="flex flex-wrap gap-6 text-blue-100">
-                    <div className="flex items-center gap-2">
-                      <Mail className="w-4 h-4" />
-                      <span className="text-sm">
+                  <div className="flex flex-wrap gap-8 text-blue-100">
+                    <div className="flex items-center gap-3">
+                      <Mail className="w-5 h-5" />
+                      <span className="text-base">
                         {currentUser.email || currentUser.company?.email}
                       </span>
                     </div>
                     {currentUser.phoneNumber && (
-                      <div className="flex items-center gap-2">
-                        <Phone className="w-4 h-4" />
-                        <span className="text-sm">{currentUser.phoneNumber}</span>
+                      <div className="flex items-center gap-3">
+                        <Phone className="w-5 h-5" />
+                        <span className="text-base">{currentUser.phoneNumber}</span>
                       </div>
                     )}
                     {currentUser.location && (
-                      <div className="flex items-center gap-2">
-                        <MapPin className="w-4 h-4" />
-                        <span className="text-sm">{currentUser.location}</span>
+                      <div className="flex items-center gap-3">
+                        <MapPin className="w-5 h-5" />
+                        <span className="text-base">{currentUser.location}</span>
                       </div>
                     )}
                   </div>
@@ -312,53 +312,53 @@ const ProfilePage = () => {
         </div>
 
         {/* Main Tab Navigation */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-8 p-4">
-          <div className="flex border-b border-gray-200">
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 mb-12 p-6">
+          <div className="flex flex-wrap border-b border-gray-200 gap-2">
             <Button
               onClick={() => setMainActiveTab('overview')}
               variant="ghost"
-              className={`rounded-none border-b-2 ${mainActiveTab === 'overview' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-600 hover:text-blue-600'}`}
+              className={`rounded-lg px-6 py-3 border-b-2 transition-all ${mainActiveTab === 'overview' ? 'border-blue-600 text-blue-600 bg-blue-50' : 'border-transparent text-gray-600 hover:text-blue-600 hover:bg-gray-50'}`}
             >
-              <User className="w-4 h-4 mr-2" />
+              <User className="w-5 h-5 mr-3" />
               Overview
             </Button>
             <Button
               onClick={() => setMainActiveTab('experience')}
               variant="ghost"
-              className={`rounded-none border-b-2 ${mainActiveTab === 'experience' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-600 hover:text-blue-600'}`}
+              className={`rounded-lg px-6 py-3 border-b-2 transition-all ${mainActiveTab === 'experience' ? 'border-blue-600 text-blue-600 bg-blue-50' : 'border-transparent text-gray-600 hover:text-blue-600 hover:bg-gray-50'}`}
             >
-              <Briefcase className="w-4 h-4 mr-2" />
+              <Briefcase className="w-5 h-5 mr-3" />
               Experience
             </Button>
             <Button
               onClick={() => setMainActiveTab('education')}
               variant="ghost"
-              className={`rounded-none border-b-2 ${mainActiveTab === 'education' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-600 hover:text-blue-600'}`}
+              className={`rounded-lg px-6 py-3 border-b-2 transition-all ${mainActiveTab === 'education' ? 'border-blue-600 text-blue-600 bg-blue-50' : 'border-transparent text-gray-600 hover:text-blue-600 hover:bg-gray-50'}`}
             >
-              <GraduationCap className="w-4 h-4 mr-2" />
+              <GraduationCap className="w-5 h-5 mr-3" />
               Education
             </Button>
             <Button
               onClick={() => setMainActiveTab('skills')}
               variant="ghost"
-              className={`rounded-none border-b-2 ${mainActiveTab === 'skills' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-600 hover:text-blue-600'}`}
+              className={`rounded-lg px-6 py-3 border-b-2 transition-all ${mainActiveTab === 'skills' ? 'border-blue-600 text-blue-600 bg-blue-50' : 'border-transparent text-gray-600 hover:text-blue-600 hover:bg-gray-50'}`}
             >
-              <Award className="w-4 h-4 mr-2" />
+              <Award className="w-5 h-5 mr-3" />
               Skills
             </Button>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 xl:grid-cols-4 gap-12">
           {/* Left Column - Main Content based on activeTab */}
-          <div className="lg:col-span-2 space-y-8">
+          <div className="xl:col-span-3 space-y-10">
             {mainActiveTab === 'overview' && (
               <>
                 {/* Personal & Contact Information Section */}
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                  <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                      <User className="w-5 h-5" />
+                <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
+                  <div className="flex items-center justify-between mb-8">
+                    <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                      <User className="w-6 h-6 text-blue-600" />
                       Personal & Contact Information
                     </h3>
                     {!isEditing.personal ? (
@@ -366,16 +366,17 @@ const ProfilePage = () => {
                         onClick={() => setIsEditing(prev => ({ ...prev, personal: true }))}
                         size="sm"
                         variant="outline"
+                        className="px-4 py-2"
                       >
                         <Edit3 className="w-4 h-4 mr-2" />
                         Edit
                       </Button>
                     ) : (
-                      <div className="flex gap-2">
+                      <div className="flex gap-3">
                         <Button
                           onClick={() => handleSave('personal')}
                           size="sm"
-                          className="bg-green-600 hover:bg-green-700 text-white"
+                          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2"
                         >
                           <Save className="w-4 h-4 mr-2" />
                           Save
@@ -384,6 +385,7 @@ const ProfilePage = () => {
                           onClick={() => handleCancel('personal')}
                           size="sm"
                           variant="outline"
+                          className="px-4 py-2"
                         >
                           <X className="w-4 h-4 mr-2" />
                           Cancel
@@ -391,11 +393,11 @@ const ProfilePage = () => {
                       </div>
                     )}
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-                      <User className="w-5 h-5 text-gray-400 mt-0.5" />
-                      <div>
-                        <label className="block text-sm font-medium text-gray-500 mb-1">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div className="flex items-start gap-4 p-5 bg-gray-50 rounded-xl">
+                      <User className="w-6 h-6 text-gray-400 mt-1" />
+                      <div className="flex-1">
+                        <label className="block text-sm font-semibold text-gray-500 mb-2">
                           Full Name
                         </label>
                         {isEditing.personal ? (
@@ -405,16 +407,17 @@ const ProfilePage = () => {
                               setEditData({ ...editData, name: e.target.value })
                             }
                             placeholder="Your full name"
+                            className="text-base"
                           />
                         ) : (
-                          <p className="text-gray-900 font-medium">{currentUser.name || "Not provided"}</p>
+                          <p className="text-gray-900 font-medium text-base">{currentUser.name || "Not provided"}</p>
                         )}
                       </div>
                     </div>
-                    <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-                      <Briefcase className="w-5 h-5 text-gray-400 mt-0.5" />
-                      <div>
-                        <label className="block text-sm font-medium text-gray-500 mb-1">
+                    <div className="flex items-start gap-4 p-5 bg-gray-50 rounded-xl">
+                      <Briefcase className="w-6 h-6 text-gray-400 mt-1" />
+                      <div className="flex-1">
+                        <label className="block text-sm font-semibold text-gray-500 mb-2">
                           Job Title
                         </label>
                         {isEditing.personal ? (
@@ -424,16 +427,17 @@ const ProfilePage = () => {
                               setEditData({ ...editData, jobTitle: e.target.value })
                             }
                             placeholder="Your job title"
+                            className="text-base"
                           />
                         ) : (
-                          <p className="text-gray-900 font-medium">{currentUser.jobTitle || "Not provided"}</p>
+                          <p className="text-gray-900 font-medium text-base">{currentUser.jobTitle || "Not provided"}</p>
                         )}
                       </div>
                     </div>
-                    <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-                      <Mail className="w-5 h-5 text-gray-400 mt-0.5" />
-                      <div>
-                        <label className="block text-sm font-medium text-gray-500 mb-1">
+                    <div className="flex items-start gap-4 p-5 bg-gray-50 rounded-xl">
+                      <Mail className="w-6 h-6 text-gray-400 mt-1" />
+                      <div className="flex-1">
+                        <label className="block text-sm font-semibold text-gray-500 mb-2">
                           Email
                         </label>
                         {isEditing.personal ? (
@@ -443,16 +447,17 @@ const ProfilePage = () => {
                               setEditData({ ...editData, email: e.target.value })
                             }
                             placeholder="Your email"
+                            className="text-base"
                           />
                         ) : (
-                          <p className="text-gray-900 font-medium">{currentUser.email || currentUser.company?.email || "Not provided"}</p>
+                          <p className="text-gray-900 font-medium text-base">{currentUser.email || currentUser.company?.email || "Not provided"}</p>
                         )}
                       </div>
                     </div>
-                    <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-                      <Phone className="w-5 h-5 text-gray-400 mt-0.5" />
-                      <div>
-                        <label className="block text-sm font-medium text-gray-500 mb-1">
+                    <div className="flex items-start gap-4 p-5 bg-gray-50 rounded-xl">
+                      <Phone className="w-6 h-6 text-gray-400 mt-1" />
+                      <div className="flex-1">
+                        <label className="block text-sm font-semibold text-gray-500 mb-2">
                           Phone Number
                         </label>
                         {isEditing.personal ? (
@@ -462,16 +467,17 @@ const ProfilePage = () => {
                               setEditData({ ...editData, phoneNumber: e.target.value })
                             }
                             placeholder="Your phone number"
+                            className="text-base"
                           />
                         ) : (
-                          <p className="text-gray-900 font-medium">{currentUser.phoneNumber || "Not provided"}</p>
+                          <p className="text-gray-900 font-medium text-base">{currentUser.phoneNumber || "Not provided"}</p>
                         )}
                       </div>
                     </div>
-                    <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-                      <MapPin className="w-5 h-5 text-gray-400 mt-0.5" />
-                      <div>
-                        <label className="block text-sm font-medium text-gray-500 mb-1">
+                    <div className="flex items-start gap-4 p-5 bg-gray-50 rounded-xl">
+                      <MapPin className="w-6 h-6 text-gray-400 mt-1" />
+                      <div className="flex-1">
+                        <label className="block text-sm font-semibold text-gray-500 mb-2">
                           Location
                         </label>
                         {isEditing.personal ? (
@@ -481,19 +487,20 @@ const ProfilePage = () => {
                               setEditData({ ...editData, location: e.target.value })
                             }
                             placeholder="Your location"
+                            className="text-base"
                           />
                         ) : (
-                          <p className="text-gray-900 font-medium">{currentUser.location || "Not provided"}</p>
+                          <p className="text-gray-900 font-medium text-base">{currentUser.location || "Not provided"}</p>
                         )}
                       </div>
                     </div>
-                    <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-                      <Calendar className="w-5 h-5 text-gray-400 mt-0.5" />
-                      <div>
-                        <label className="block text-sm font-medium text-gray-500 mb-1">
+                    <div className="flex items-start gap-4 p-5 bg-gray-50 rounded-xl">
+                      <Calendar className="w-6 h-6 text-gray-400 mt-1" />
+                      <div className="flex-1">
+                        <label className="block text-sm font-semibold text-gray-500 mb-2">
                           Member Since
                         </label>
-                        <p className="text-gray-900 font-medium">
+                        <p className="text-gray-900 font-medium text-base">
                           {new Date(currentUser.createdAt).toLocaleDateString()}
                         </p>
                       </div>
@@ -502,10 +509,10 @@ const ProfilePage = () => {
                 </div>
 
                 {/* About Section */}
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                      <User className="w-5 h-5" />
+                <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                      <User className="w-6 h-6 text-blue-600" />
                       About
                     </h3>
                     {!isEditing.about ? (
@@ -513,16 +520,17 @@ const ProfilePage = () => {
                         onClick={() => setIsEditing(prev => ({ ...prev, about: true }))}
                         size="sm"
                         variant="outline"
+                        className="px-4 py-2"
                       >
                         <Edit3 className="w-4 h-4 mr-2" />
                         Edit
                       </Button>
                     ) : (
-                      <div className="flex gap-2">
+                      <div className="flex gap-3">
                         <Button
                           onClick={() => handleSave('about')}
                           size="sm"
-                          className="bg-green-600 hover:bg-green-700 text-white"
+                          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2"
                         >
                           <Save className="w-4 h-4 mr-2" />
                           Save
@@ -531,6 +539,7 @@ const ProfilePage = () => {
                           onClick={() => handleCancel('about')}
                           size="sm"
                           variant="outline"
+                          className="px-4 py-2"
                         >
                           <X className="w-4 h-4 mr-2" />
                           Cancel
@@ -540,7 +549,7 @@ const ProfilePage = () => {
                   </div>
                   {isEditing.about ? (
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-semibold text-gray-700 mb-3">
                         Bio
                       </label>
                       <textarea
@@ -549,13 +558,13 @@ const ProfilePage = () => {
                           setEditData({ ...editData, bio: e.target.value })
                         }
                         placeholder="Tell us about yourself, your experience, and what you're looking for..."
-                        className="w-full h-32 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                        className="w-full h-40 p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-base"
                       />
                     </div>
                   ) : (
-                    <p className="text-gray-600 leading-relaxed">
+                    <p className="text-gray-600 leading-relaxed text-base">
                       {currentUser.bio || 
-                       "No bio added yet. Click 'Edit Profile' to add information about yourself."}
+                       "No bio added yet. Click 'Edit' to add information about yourself."}
                     </p>
                   )}
                 </div>
@@ -563,10 +572,10 @@ const ProfilePage = () => {
             )}
 
             {mainActiveTab === 'experience' && (
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                    <Briefcase className="w-5 h-5" />
+              <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                    <Briefcase className="w-6 h-6 text-blue-600" />
                     Experience
                   </h3>
                   {!isEditing.experience ? (
@@ -574,16 +583,17 @@ const ProfilePage = () => {
                       onClick={() => setIsEditing(prev => ({ ...prev, experience: true }))}
                       size="sm"
                       variant="outline"
+                      className="px-4 py-2"
                     >
                       <Edit3 className="w-4 h-4 mr-2" />
                       Edit
                     </Button>
                   ) : (
-                    <div className="flex gap-2">
+                    <div className="flex gap-3">
                       <Button
                         onClick={() => handleSave('experience')}
                         size="sm"
-                        className="bg-green-600 hover:bg-green-700 text-white"
+                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2"
                       >
                         <Save className="w-4 h-4 mr-2" />
                         Save
@@ -592,6 +602,7 @@ const ProfilePage = () => {
                         onClick={() => handleCancel('experience')}
                         size="sm"
                         variant="outline"
+                        className="px-4 py-2"
                       >
                         <X className="w-4 h-4 mr-2" />
                         Cancel
@@ -602,51 +613,54 @@ const ProfilePage = () => {
 
                 {isEditing.experience ? (
                   <>
-                    <Button onClick={addExperience} size="sm" variant="outline" className="mb-4">
-                      <Plus className="w-4 h-4 mr-1" />
+                    <Button onClick={addExperience} size="sm" variant="outline" className="mb-6 px-4 py-2">
+                      <Plus className="w-4 h-4 mr-2" />
                       Add Experience
                     </Button>
-                    <div className="space-y-6">
+                    <div className="space-y-8">
                       {editData.experience?.map((exp, index) => (
-                        <div key={index} className="border border-gray-200 rounded-lg p-4 space-y-3">
+                        <div key={index} className="border border-gray-200 rounded-xl p-6 space-y-4">
                           <div className="flex justify-between items-start">
-                            <h4 className="font-medium text-gray-900">Experience {index + 1}</h4>
+                            <h4 className="font-semibold text-gray-900 text-lg">Experience {index + 1}</h4>
                             <Button
                               onClick={() => removeExperience(index)}
                               size="sm"
                               variant="outline"
-                              className="text-red-600 hover:text-red-700"
+                              className="text-red-600 hover:text-red-700 px-3 py-2"
                             >
                               <Trash2 className="w-4 h-4" />
                             </Button>
                           </div>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <Input
                               value={exp.title || ""}
                               onChange={(e) => updateExperience(index, "title", e.target.value)}
                               placeholder="Job title"
+                              className="text-base"
                             />
                             <Input
                               value={exp.company || ""}
                               onChange={(e) => updateExperience(index, "company", e.target.value)}
                               placeholder="Company name"
+                              className="text-base"
                             />
                           </div>
                           <Input
                             value={exp.duration || ""}
                             onChange={(e) => updateExperience(index, "duration", e.target.value)}
                             placeholder="Duration (e.g., Jan 2020 - Present)"
+                            className="text-base"
                           />
                           <textarea
                             value={exp.description || ""}
                             onChange={(e) => updateExperience(index, "description", e.target.value)}
                             placeholder="Job description and achievements"
-                            className="w-full h-24 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                            className="w-full h-32 p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-base"
                           />
                         </div>
                       ))}
                       {(!editData.experience || editData.experience.length === 0) && (
-                        <p className="text-gray-500 text-center py-4">
+                        <p className="text-gray-500 text-center py-8 text-base">
                           No experience added yet. Click "Add Experience" to get started.
                         </p>
                       )}
@@ -655,23 +669,23 @@ const ProfilePage = () => {
                 ) : (
                   <>
                     {(currentUser.experience?.length > 0 || currentUser.workExperience?.length > 0) ? (
-                      <div className="space-y-4">
+                      <div className="space-y-6">
                         {(currentUser.experience || currentUser.workExperience || []).map((exp, index) => (
-                          <div key={index} className="border-l-4 border-blue-500 pl-4">
-                            <h4 className="font-semibold text-gray-900">{exp.title || exp.position}</h4>
-                            <p className="text-blue-600">{exp.company}</p>
-                            <p className="text-sm text-gray-500">{exp.duration || exp.period}</p>
+                          <div key={index} className="border-l-4 border-blue-500 pl-6 py-4">
+                            <h4 className="font-bold text-gray-900 text-lg">{exp.title || exp.position}</h4>
+                            <p className="text-blue-600 font-medium text-base">{exp.company}</p>
+                            <p className="text-sm text-gray-500 mb-3">{exp.duration || exp.period}</p>
                             {exp.description && (
-                              <p className="text-gray-600 mt-2">{exp.description}</p>
+                              <p className="text-gray-600 text-base leading-relaxed">{exp.description}</p>
                             )}
                           </div>
                         ))}
                       </div>
                     ) : (
-                      <div className="text-center py-8 text-gray-500">
-                        <Briefcase className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                        <p>No work experience added yet</p>
-                        <p className="text-sm">Add your work experience to build credibility</p>
+                      <div className="text-center py-12 text-gray-500">
+                        <Briefcase className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+                        <p className="text-lg font-medium">No work experience added yet</p>
+                        <p className="text-base">Add your work experience to build credibility</p>
                       </div>
                     )}
                   </>
@@ -680,10 +694,10 @@ const ProfilePage = () => {
             )}
 
             {mainActiveTab === 'education' && (
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                    <GraduationCap className="w-5 h-5" />
+              <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                    <GraduationCap className="w-6 h-6 text-blue-600" />
                     Education
                   </h3>
                   {!isEditing.education ? (
@@ -691,16 +705,17 @@ const ProfilePage = () => {
                       onClick={() => setIsEditing(prev => ({ ...prev, education: true }))}
                       size="sm"
                       variant="outline"
+                      className="px-4 py-2"
                     >
                       <Edit3 className="w-4 h-4 mr-2" />
                       Edit
                     </Button>
                   ) : (
-                    <div className="flex gap-2">
+                    <div className="flex gap-3">
                       <Button
                         onClick={() => handleSave('education')}
                         size="sm"
-                        className="bg-green-600 hover:bg-green-700 text-white"
+                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2"
                       >
                         <Save className="w-4 h-4 mr-2" />
                         Save
@@ -709,6 +724,7 @@ const ProfilePage = () => {
                         onClick={() => handleCancel('education')}
                         size="sm"
                         variant="outline"
+                        className="px-4 py-2"
                       >
                         <X className="w-4 h-4 mr-2" />
                         Cancel
@@ -719,45 +735,48 @@ const ProfilePage = () => {
 
                 {isEditing.education ? (
                   <>
-                    <Button onClick={addEducation} size="sm" variant="outline" className="mb-4">
-                      <Plus className="w-4 h-4 mr-1" />
+                    <Button onClick={addEducation} size="sm" variant="outline" className="mb-6 px-4 py-2">
+                      <Plus className="w-4 h-4 mr-2" />
                       Add Education
                     </Button>
-                    <div className="space-y-4">
+                    <div className="space-y-6">
                       {editData.education?.map((edu, index) => (
-                        <div key={index} className="border border-gray-200 rounded-lg p-4 space-y-3">
+                        <div key={index} className="border border-gray-200 rounded-xl p-6 space-y-4">
                           <div className="flex justify-between items-start">
-                            <h4 className="font-medium text-gray-900">Education {index + 1}</h4>
+                            <h4 className="font-semibold text-gray-900 text-lg">Education {index + 1}</h4>
                             <Button
                               onClick={() => removeEducation(index)}
                               size="sm"
                               variant="outline"
-                              className="text-red-600 hover:text-red-700"
+                              className="text-red-600 hover:text-red-700 px-3 py-2"
                             >
                               <Trash2 className="w-4 h-4" />
                             </Button>
                           </div>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <Input
                               value={edu.degree || ""}
                               onChange={(e) => updateEducation(index, "degree", e.target.value)}
                               placeholder="Degree/Course"
+                              className="text-base"
                             />
                             <Input
                               value={edu.institution || ""}
                               onChange={(e) => updateEducation(index, "institution", e.target.value)}
                               placeholder="Institution name"
+                              className="text-base"
                             />
                           </div>
                           <Input
                             value={edu.year || ""}
                             onChange={(e) => updateEducation(index, "year", e.target.value)}
                             placeholder="Year (e.g., 2020-2024)"
+                            className="text-base"
                           />
                         </div>
                       ))}
                       {(!editData.education || editData.education.length === 0) && (
-                        <p className="text-gray-500 text-center py-4">
+                        <p className="text-gray-500 text-center py-8 text-base">
                           No education added yet. Click "Add Education" to get started.
                         </p>
                       )}
@@ -766,20 +785,20 @@ const ProfilePage = () => {
                 ) : (
                   <>
                     {currentUser.education?.length > 0 ? (
-                      <div className="space-y-4">
+                      <div className="space-y-6">
                         {currentUser.education.map((edu, index) => (
-                          <div key={index} className="border-l-4 border-green-500 pl-4">
-                            <h4 className="font-semibold text-gray-900">{edu.degree}</h4>
-                            <p className="text-green-600">{edu.institution}</p>
+                          <div key={index} className="border-l-4 border-green-500 pl-6 py-4">
+                            <h4 className="font-bold text-gray-900 text-lg">{edu.degree}</h4>
+                            <p className="text-green-600 font-medium text-base">{edu.institution}</p>
                             <p className="text-sm text-gray-500">{edu.year}</p>
                           </div>
                         ))}
                       </div>
                     ) : (
-                      <div className="text-center py-8 text-gray-500">
-                        <GraduationCap className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                        <p>No education added yet</p>
-                        <p className="text-sm">Add your educational background</p>
+                      <div className="text-center py-12 text-gray-500">
+                        <GraduationCap className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+                        <p className="text-lg font-medium">No education added yet</p>
+                        <p className="text-base">Add your educational background</p>
                       </div>
                     )}
                   </>
@@ -788,10 +807,10 @@ const ProfilePage = () => {
             )}
 
             {mainActiveTab === 'skills' && (
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                    <Award className="w-5 h-5" />
+              <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                    <Award className="w-6 h-6 text-blue-600" />
                     Skills
                   </h3>
                   {!isEditing.skills ? (
@@ -799,16 +818,17 @@ const ProfilePage = () => {
                       onClick={() => setIsEditing(prev => ({ ...prev, skills: true }))}
                       size="sm"
                       variant="outline"
+                      className="px-4 py-2"
                     >
                       <Edit3 className="w-4 h-4 mr-2" />
                       Edit
                     </Button>
                   ) : (
-                    <div className="flex gap-2">
+                    <div className="flex gap-3">
                       <Button
                         onClick={() => handleSave('skills')}
                         size="sm"
-                        className="bg-green-600 hover:bg-green-700 text-white"
+                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2"
                       >
                         <Save className="w-4 h-4 mr-2" />
                         Save
@@ -817,6 +837,7 @@ const ProfilePage = () => {
                         onClick={() => handleCancel('skills')}
                         size="sm"
                         variant="outline"
+                        className="px-4 py-2"
                       >
                         <X className="w-4 h-4 mr-2" />
                         Cancel
@@ -827,31 +848,31 @@ const ProfilePage = () => {
                 
                 {isEditing.skills ? (
                   <>
-                    <Button onClick={addSkill} size="sm" variant="outline" className="mb-4">
-                      <Plus className="w-4 h-4 mr-1" />
+                    <Button onClick={addSkill} size="sm" variant="outline" className="mb-6 px-4 py-2">
+                      <Plus className="w-4 h-4 mr-2" />
                       Add Skill
                     </Button>
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                       {editData.skills?.map((skill, index) => (
-                        <div key={index} className="flex gap-2">
+                        <div key={index} className="flex gap-3">
                           <Input
                             value={skill}
                             onChange={(e) => updateSkill(index, e.target.value)}
                             placeholder="Enter skill"
-                            className="flex-1"
+                            className="flex-1 text-base"
                           />
                           <Button
                             onClick={() => removeSkill(index)}
                             size="sm"
                             variant="outline"
-                            className="text-red-600 hover:text-red-700"
+                            className="text-red-600 hover:text-red-700 px-3 py-2"
                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>
                         </div>
                       ))}
                       {(!editData.skills || editData.skills.length === 0) && (
-                        <p className="text-gray-500 text-center py-4">
+                        <p className="text-gray-500 text-center py-8 text-base">
                           No skills added yet. Click "Add Skill" to get started.
                         </p>
                       )}
@@ -860,21 +881,21 @@ const ProfilePage = () => {
                 ) : (
                   <>
                     {currentUser.skills?.length > 0 ? (
-                      <div className="flex flex-wrap gap-2">
+                      <div className="flex flex-wrap gap-3">
                         {currentUser.skills.map((skill, index) => (
                           <span
                             key={index}
-                            className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium"
+                            className="px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-base font-medium"
                           >
                             {skill}
                           </span>
                         ))}
                       </div>
                     ) : (
-                      <div className="text-center py-8 text-gray-500">
-                        <Award className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                        <p>No skills added yet</p>
-                        <p className="text-sm">Add your skills to showcase your expertise</p>
+                      <div className="text-center py-12 text-gray-500">
+                        <Award className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+                        <p className="text-lg font-medium">No skills added yet</p>
+                        <p className="text-base">Add your skills to showcase your expertise</p>
                       </div>
                     )}
                   </>
@@ -884,35 +905,35 @@ const ProfilePage = () => {
           </div>
 
           {/* Right Column */}
-          <div className="space-y-8">
+          <div className="xl:col-span-1 space-y-8">
             {/* Profile Completion */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-bold text-gray-900">
                   Complete Your Profile
                 </h3>
-                <span className="text-2xl font-bold text-blue-600">
+                <span className="text-3xl font-bold text-blue-600">
                   {completionPercentage}%
                 </span>
               </div>
-              <Progress value={completionPercentage} className="mb-4" />
-              <p className="text-sm text-gray-600 mb-4">
+              <Progress value={completionPercentage} className="mb-6" />
+              <p className="text-sm text-gray-600 mb-6">
                 Increase your visibility to employers by completing your profile
               </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="space-y-4">
                 {[
                   { label: "Add a bio", completed: !!currentUser.bio },
                   { label: "Add skills", completed: currentUser.skills?.length > 0 },
                   { label: "Add work experience", completed: (currentUser.experience?.length > 0 || currentUser.workExperience?.length > 0) },
                   { label: "Add education", completed: currentUser.education?.length > 0 },
                 ].map((item, index) => (
-                  <div key={index} className="flex items-center gap-2">
+                  <div key={index} className="flex items-center gap-3">
                     {item.completed ? (
-                      <CheckCircle2 className="w-4 h-4 text-green-500" />
+                      <CheckCircle2 className="w-5 h-5 text-green-500" />
                     ) : (
-                      <div className="w-4 h-4 rounded-full border-2 border-gray-300" />
+                      <div className="w-5 h-5 rounded-full border-2 border-gray-300" />
                     )}
-                    <span className={`text-sm ${item.completed ? 'text-green-700' : 'text-gray-600'}`}>
+                    <span className={`text-sm ${item.completed ? 'text-green-700 font-medium' : 'text-gray-600'}`}>
                       {item.label}
                     </span>
                   </div>
@@ -921,10 +942,10 @@ const ProfilePage = () => {
             </div>
 
             {/* Social Links */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                  <LinkIcon className="w-5 h-5" />
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                  <LinkIcon className="w-5 h-5 text-blue-600" />
                   Social Links
                 </h3>
                 {!isEditing.social ? (
@@ -932,8 +953,9 @@ const ProfilePage = () => {
                     onClick={() => setIsEditing(prev => ({ ...prev, social: true }))}
                     size="sm"
                     variant="outline"
+                    className="px-3 py-2"
                   >
-                    <Edit3 className="w-4 h-4 mr-2" />
+                    <Edit3 className="w-4 h-4 mr-1" />
                     Edit
                   </Button>
                 ) : (
@@ -941,17 +963,18 @@ const ProfilePage = () => {
                     <Button
                       onClick={() => handleSave('social')}
                       size="sm"
-                      className="bg-green-600 hover:bg-green-700 text-white"
+                      className="bg-green-600 hover:bg-green-700 text-white px-3 py-2"
                     >
-                      <Save className="w-4 h-4 mr-2" />
+                      <Save className="w-4 h-4 mr-1" />
                       Save
                     </Button>
                     <Button
                       onClick={() => handleCancel('social')}
                       size="sm"
                       variant="outline"
+                      className="px-3 py-2"
                     >
-                      <X className="w-4 h-4 mr-2" />
+                      <X className="w-4 h-4 mr-1" />
                       Cancel
                     </Button>
                   </div>
@@ -959,7 +982,7 @@ const ProfilePage = () => {
               </div>
               
               {isEditing.social ? (
-                <div className="space-y-3">
+                <div className="space-y-4">
                   <div className="flex items-center gap-3">
                     <Linkedin className="w-5 h-5 text-blue-600" />
                     <Input
@@ -974,7 +997,7 @@ const ProfilePage = () => {
                         })
                       }
                       placeholder="LinkedIn profile URL"
-                      className="flex-1"
+                      className="flex-1 text-sm"
                     />
                   </div>
                   <div className="flex items-center gap-3">
@@ -991,7 +1014,7 @@ const ProfilePage = () => {
                         })
                       }
                       placeholder="GitHub profile URL"
-                      className="flex-1"
+                      className="flex-1 text-sm"
                     />
                   </div>
                   <div className="flex items-center gap-3">
@@ -1008,27 +1031,27 @@ const ProfilePage = () => {
                         })
                       }
                       placeholder="Portfolio website URL"
-                      className="flex-1"
+                      className="flex-1 text-sm"
                     />
                   </div>
                 </div>
               ) : (
-                <div className="space-y-3">
+                <div className="space-y-4">
                   <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                     <Linkedin className="w-5 h-5 text-blue-600" />
-                    <span className="text-gray-500">
+                    <span className="text-gray-500 text-sm">
                       {currentUser.socialLinks?.linkedin || "No LinkedIn profile added"}
                     </span>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                     <Github className="w-5 h-5 text-gray-800" />
-                    <span className="text-gray-500">
+                    <span className="text-gray-500 text-sm">
                       {currentUser.socialLinks?.github || "No GitHub profile added"}
                     </span>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                     <Globe className="w-5 h-5 text-green-600" />
-                    <span className="text-gray-500">
+                    <span className="text-gray-500 text-sm">
                       {currentUser.socialLinks?.portfolio || "No portfolio website added"}
                     </span>
                   </div>
@@ -1037,20 +1060,20 @@ const ProfilePage = () => {
             </div>
 
             {/* Resume Section */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                  <FileText className="w-5 h-5" />
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                  <FileText className="w-5 h-5 text-blue-600" />
                   Resume
                 </h3>
               </div>
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-400 transition-colors">
+              <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-blue-400 transition-colors">
                 <Upload className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-                <p className="text-gray-600 mb-2">Upload your resume</p>
+                <p className="text-gray-600 mb-2 font-medium">Upload your resume</p>
                 <p className="text-sm text-gray-500 mb-4">
                   PDF, DOC, DOCX up to 5MB
                 </p>
-                <Button variant="outline" className="mx-auto">
+                <Button variant="outline" className="mx-auto px-6 py-2">
                   Choose File
                 </Button>
               </div>
