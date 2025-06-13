@@ -1004,7 +1004,6 @@ const CandidateProfile = () => {
               </p>
               <div className="space-y-3">
                 {[
-                  { label: "Add professional photo", completed: !!currentUser.profileImage, points: 10 },
                   { label: "Write about yourself", completed: !!currentUser.bio, points: 15 },
                   { label: "Add skills", completed: currentUser.skills?.length > 0, points: 15 },
                   { label: "Add work experience", completed: currentUser.experience?.length > 0, points: 20 },
