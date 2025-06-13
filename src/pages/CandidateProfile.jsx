@@ -520,7 +520,7 @@ const CandidateProfile = () => {
                 >
                   <Camera className="w-4 h-4 text-white" />
                 </button>
-                <div className="absolute -bottom-2 -left-2 w-8 h-8 bg-green-500 rounded-full border-4 border-white flex items-center justify-center">
+               
                   <div className="w-2 h-2 bg-white rounded-full"></div>
                 </div>
               </div>
