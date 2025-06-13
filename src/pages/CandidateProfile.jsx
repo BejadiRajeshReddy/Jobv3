@@ -520,9 +520,7 @@ const CandidateProfile = () => {
                 >
                   <Camera className="w-4 h-4 text-white" />
                 </button>
-               
-                  <div className="w-2 h-2 bg-white rounded-full"></div>
-                </div>
+                <div className="w-2 h-2 bg-white rounded-full"></div>
               </div>
 
               {/* User Info */}
@@ -566,9 +564,8 @@ const CandidateProfile = () => {
           onChange={(e) => handleProfilePictureUpload(e.target.files[0])}
           className="hidden"
         />
-
-        {/* Tab Navigation */}
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 mb-8 p-6">
+               {/* Tab Navigation */}
+               <div className="bg-white rounded-2xl shadow-lg border border-gray-200 mb-8 p-6">
           <div className="flex flex-wrap border-b border-gray-200 gap-2">
             <Button
               onClick={() => setActiveTab('overview')}
