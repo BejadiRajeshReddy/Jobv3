@@ -265,74 +265,37 @@ const ProfilePage = () => {
                 )}
               </div>
 
-              {/* Profile Info */}
+              {/* Profile Info - No input fields here anymore */}
               <div className="flex-1 text-white">
-                {isEditing ? (
-                  <div className="space-y-4">
-                    <Input
-                      value={editData.name || ""}
-                      onChange={(e) =>
-                        setEditData({ ...editData, name: e.target.value })
-                      }
-                      className="text-2xl font-bold bg-white/20 border-white/30 text-white placeholder-white/70"
-                      placeholder="Your name"
-                    />
-                    <Input
-                      value={editData.jobTitle || ""}
-                      onChange={(e) =>
-                        setEditData({ ...editData, jobTitle: e.target.value })
-                      }
-                      className="text-lg bg-white/20 border-white/30 text-white placeholder-white/70"
-                      placeholder="Your job title"
-                    />
-                    <Input
-                      value={editData.location || ""}
-                      onChange={(e) =>
-                        setEditData({ ...editData, location: e.target.value })
-                      }
-                      className="bg-white/20 border-white/30 text-white placeholder-white/70"
-                      placeholder="Your location"
-                    />
-                    <Input
-                      value={editData.phoneNumber || ""}
-                      onChange={(e) =>
-                        setEditData({ ...editData, phoneNumber: e.target.value })
-                      }
-                      className="bg-white/20 border-white/30 text-white placeholder-white/70"
-                      placeholder="Phone number"
-                    />
-                  </div>
-                ) : (
-                  <div>
-                    <h1 className="text-3xl lg:text-4xl font-bold mb-2">
-                      {currentUser.name}
-                    </h1>
-                    <p className="text-xl text-blue-100 mb-4">
-                      {currentUser.jobTitle || 
-                       (currentUser.role === "recruiter" ? "Recruiter" : "Job Seeker")}
-                    </p>
-                    <div className="flex flex-wrap gap-6 text-blue-100">
-                      <div className="flex items-center gap-2">
-                        <Mail className="w-4 h-4" />
-                        <span className="text-sm">
-                          {currentUser.email || currentUser.company?.email}
-                        </span>
-                      </div>
-                      {currentUser.phoneNumber && (
-                        <div className="flex items-center gap-2">
-                          <Phone className="w-4 h-4" />
-                          <span className="text-sm">{currentUser.phoneNumber}</span>
-                        </div>
-                      )}
-                      {currentUser.location && (
-                        <div className="flex items-center gap-2">
-                          <MapPin className="w-4 h-4" />
-                          <span className="text-sm">{currentUser.location}</span>
-                        </div>
-                      )}
+                <div>
+                  <h1 className="text-3xl lg:text-4xl font-bold mb-2">
+                    {currentUser.name}
+                  </h1>
+                  <p className="text-xl text-blue-100 mb-4">
+                    {currentUser.jobTitle || 
+                     (currentUser.role === "recruiter" ? "Recruiter" : "Job Seeker")}
+                  </p>
+                  <div className="flex flex-wrap gap-6 text-blue-100">
+                    <div className="flex items-center gap-2">
+                      <Mail className="w-4 h-4" />
+                      <span className="text-sm">
+                        {currentUser.email || currentUser.company?.email}
+                      </span>
                     </div>
+                    {currentUser.phoneNumber && (
+                      <div className="flex items-center gap-2">
+                        <Phone className="w-4 h-4" />
+                        <span className="text-sm">{currentUser.phoneNumber}</span>
+                      </div>
+                    )}
+                    {currentUser.location && (
+                      <div className="flex items-center gap-2">
+                        <MapPin className="w-4 h-4" />
+                        <span className="text-sm">{currentUser.location}</span>
+                      </div>
+                    )}
                   </div>
-                )}
+                </div>
               </div>
 
               {/* Action Buttons */}
@@ -407,6 +370,66 @@ const ProfilePage = () => {
               </div>
             </div>
 
+            {/* Personal Information Section - Input fields moved here */}
+            {isEditing && (
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-6 flex items-center gap-2">
+                  <User className="w-5 h-5" />
+                  Personal Information
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Full Name
+                    </label>
+                    <Input
+                      value={editData.name || ""}
+                      onChange={(e) =>
+                        setEditData({ ...editData, name: e.target.value })
+                      }
+                      placeholder="Your full name"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Job Title
+                    </label>
+                    <Input
+                      value={editData.jobTitle || ""}
+                      onChange={(e) =>
+                        setEditData({ ...editData, jobTitle: e.target.value })
+                      }
+                      placeholder="Your job title"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Location
+                    </label>
+                    <Input
+                      value={editData.location || ""}
+                      onChange={(e) =>
+                        setEditData({ ...editData, location: e.target.value })
+                      }
+                      placeholder="Your location"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Phone Number
+                    </label>
+                    <Input
+                      value={editData.phoneNumber || ""}
+                      onChange={(e) =>
+                        setEditData({ ...editData, phoneNumber: e.target.value })
+                      }
+                      placeholder="Your phone number"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* About Section */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-4">
@@ -416,14 +439,19 @@ const ProfilePage = () => {
                 </h3>
               </div>
               {isEditing ? (
-                <textarea
-                  value={editData.bio || ""}
-                  onChange={(e) =>
-                    setEditData({ ...editData, bio: e.target.value })
-                  }
-                  placeholder="Tell us about yourself, your experience, and what you're looking for..."
-                  className="w-full h-32 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                />
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Bio
+                  </label>
+                  <textarea
+                    value={editData.bio || ""}
+                    onChange={(e) =>
+                      setEditData({ ...editData, bio: e.target.value })
+                    }
+                    placeholder="Tell us about yourself, your experience, and what you're looking for..."
+                    className="w-full h-32 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  />
+                </div>
               ) : (
                 <p className="text-gray-600 leading-relaxed">
                   {currentUser.bio || 
