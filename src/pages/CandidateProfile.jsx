@@ -1191,24 +1191,7 @@ const CandidateProfile = () => {
               )}
             </div>
 
-            {/* Quick Actions */}
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Quick Actions</h3>
-              <div className="space-y-3">
-                <Button variant="outline" className="w-full justify-start">
-                  <Eye className="w-4 h-4 mr-3" />
-                  Preview Profile
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  <Download className="w-4 h-4 mr-3" />
-                  Download Resume
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  <Star className="w-4 h-4 mr-3" />
-                  Saved Jobs
-                </Button>
-              </div>
-            </div>
+           
           </div>
         </div>
       </div>
