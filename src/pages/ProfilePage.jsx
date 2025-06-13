@@ -311,6 +311,43 @@ const ProfilePage = () => {
           </div>
         </div>
 
+         {/* Right Column */}
+          <div className="xl:col-span-1 space-y-8">
+            {/* Profile Completion */}
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-bold text-gray-900">
+                  Complete Your Profile
+                </h3>
+                <span className="text-3xl font-bold text-blue-600">
+                  {completionPercentage}%
+                </span>
+              </div>
+              <Progress value={completionPercentage} className="mb-6" />
+              <p className="text-sm text-gray-600 mb-6">
+                Increase your visibility to employers by completing your profile
+              </p>
+              <div className="space-y-4">
+                {[
+                  { label: "Add a bio", completed: !!currentUser.bio },
+                  { label: "Add skills", completed: currentUser.skills?.length > 0 },
+                  { label: "Add work experience", completed: (currentUser.experience?.length > 0 || currentUser.workExperience?.length > 0) },
+                  { label: "Add education", completed: currentUser.education?.length > 0 },
+                ].map((item, index) => (
+                  <div key={index} className="flex items-center gap-3">
+                    {item.completed ? (
+                      <CheckCircle2 className="w-5 h-5 text-green-500" />
+                    ) : (
+                      <div className="w-5 h-5 rounded-full border-2 border-gray-300" />
+                    )}
+                    <span className={`text-sm ${item.completed ? 'text-green-700 font-medium' : 'text-gray-600'}`}>
+                      {item.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
         {/* Main Tab Navigation */}
         <div className="bg-white rounded-2xl shadow-lg border border-gray-200 mb-12 p-6">
           <div className="flex flex-wrap border-b border-gray-200 gap-2">
