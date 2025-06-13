@@ -520,9 +520,6 @@ const CandidateProfile = () => {
                 >
                   <Camera className="w-4 h-4 text-white" />
                 </button>
-               
-                  <div className="w-2 h-2 bg-white rounded-full"></div>
-                </div>
               </div>
 
               {/* User Info */}
