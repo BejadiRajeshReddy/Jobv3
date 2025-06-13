@@ -1153,43 +1153,7 @@ const CandidateProfile = () => {
             </div>
 
             {/* Resume Section */}
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-blue-600" />
-                  Resume
-                </h3>
-              </div>
-              <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-blue-400 transition-colors">
-                <Upload className="w-10 h-10 mx-auto mb-3 text-gray-400" />
-                <p className="text-gray-600 mb-2 font-medium">Upload your resume</p>
-                <p className="text-sm text-gray-500 mb-4">
-                  PDF, DOC, DOCX up to 5MB
-                </p>
-                <Button variant="outline" className="mx-auto">
-                  <Upload className="w-4 h-4 mr-2" />
-                  Choose File
-                </Button>
-              </div>
-              {currentUser.resume && (
-                <div className="mt-4 p-3 bg-green-50 rounded-lg border border-green-200">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <FileText className="w-4 h-4 text-green-600" />
-                      <span className="text-sm font-medium text-green-800">Resume uploaded</span>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button size="sm" variant="outline">
-                        <Eye className="w-4 h-4" />
-                      </Button>
-                      <Button size="sm" variant="outline">
-                        <Download className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
+          
 
            
           </div>
