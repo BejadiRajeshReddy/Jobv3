@@ -11,19 +11,20 @@ import {
   Plus,
   Trash2,
   Upload,
+  FileText,
   Download,
   Eye,
+  Briefcase,
+  GraduationCap,
+  Award,
   Calendar,
   Building,
-  GraduationCap,
-  Briefcase,
-  Award,
-  Globe,
+  ExternalLink,
   Github,
   Linkedin,
-  ExternalLink,
-  FileText,
+  Globe,
   CheckCircle2,
+  AlertCircle,
 } from "lucide-react";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/input";
@@ -37,34 +38,35 @@ const CandidateProfile = () => {
     experience: false,
     education: false,
     skills: false,
-    socialLinks: false,
+    social: false,
   });
-  
+
   // Form states
-  const [personalInfo, setPersonalInfo] = useState({
+  const [personalForm, setPersonalForm] = useState({
     name: "",
     email: "",
     phone: "",
     location: "",
     jobTitle: "",
   });
-  
-  const [aboutMe, setAboutMe] = useState("");
-  const [experiences, setExperiences] = useState([]);
-  const [education, setEducation] = useState([]);
-  const [skills, setSkills] = useState([]);
-  const [socialLinks, setSocialLinks] = useState({
+
+  const [aboutForm, setAboutForm] = useState("");
+  const [experienceForm, setExperienceForm] = useState([]);
+  const [educationForm, setEducationForm] = useState([]);
+  const [skillsForm, setSkillsForm] = useState([]);
+  const [socialForm, setSocialForm] = useState({
     linkedin: "",
     github: "",
     portfolio: "",
     website: "",
   });
-  
+
+  // Resume upload states
   const [resume, setResume] = useState(null);
-  const [resumeFile, setResumeFile] = useState(null);
-  const [uploadError, setUploadError] = useState("");
-  const [isUploading, setIsUploading] = useState(false);
-  
+  const [resumeUploading, setResumeUploading] = useState(false);
+  const [resumeError, setResumeError] = useState("");
+  const [dragActive, setDragActive] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -80,9 +82,8 @@ const CandidateProfile = () => {
         navigate("/dashboard");
         return;
       }
-      
       setCurrentUser(userData);
-      loadUserProfile(userData);
+      initializeForms(userData);
     } catch (error) {
       console.error("Error parsing user data:", error);
       navigate("/login");
@@ -91,28 +92,29 @@ const CandidateProfile = () => {
     }
   }, [navigate]);
 
-  const loadUserProfile = (user) => {
-    // Load personal info
-    setPersonalInfo({
-      name: user.name || "",
-      email: user.email || "",
-      phone: user.phoneNumber || "",
-      location: user.location || "",
-      jobTitle: user.jobTitle || "",
+  const initializeForms = (userData) => {
+    setPersonalForm({
+      name: userData.name || "",
+      email: userData.email || "",
+      phone: userData.phoneNumber || "",
+      location: userData.location || "",
+      jobTitle: userData.jobTitle || "",
     });
-    
-    // Load other profile data
-    setAboutMe(user.aboutMe || "");
-    setExperiences(user.experiences || []);
-    setEducation(user.education || []);
-    setSkills(user.skills || []);
-    setSocialLinks(user.socialLinks || {
-      linkedin: "",
-      github: "",
-      portfolio: "",
-      website: "",
+
+    setAboutForm(userData.about || "");
+    setExperienceForm(userData.experience || []);
+    setEducationForm(userData.education || []);
+    setSkillsForm(userData.skills || []);
+    setSocialForm({
+      linkedin: userData.socialLinks?.linkedin || "",
+      github: userData.socialLinks?.github || "",
+      portfolio: userData.socialLinks?.portfolio || "",
+      website: userData.socialLinks?.website || "",
     });
-    setResume(user.resume || null);
+
+    if (userData.resume) {
+      setResume(userData.resume);
+    }
   };
 
   const toggleEdit = (section) => {
@@ -124,54 +126,126 @@ const CandidateProfile = () => {
 
   const saveSection = async (section) => {
     try {
-      const updatedUser = {
-        ...currentUser,
-        ...personalInfo,
-        aboutMe,
-        experiences,
-        education,
-        skills,
-        socialLinks,
-        resume,
-      };
+      const updatedUser = { ...currentUser };
+
+      switch (section) {
+        case "personal":
+          Object.assign(updatedUser, personalForm);
+          break;
+        case "about":
+          updatedUser.about = aboutForm;
+          break;
+        case "experience":
+          updatedUser.experience = experienceForm;
+          break;
+        case "education":
+          updatedUser.education = educationForm;
+          break;
+        case "skills":
+          updatedUser.skills = skillsForm;
+          break;
+        case "social":
+          updatedUser.socialLinks = socialForm;
+          break;
+      }
 
       // Update localStorage
+      localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+      
+      // Update users array
       const users = JSON.parse(localStorage.getItem("users") || "[]");
-      const userIndex = users.findIndex(u => u.id === currentUser.id);
+      const userIndex = users.findIndex(u => u.id === updatedUser.id);
       if (userIndex !== -1) {
-        users[userIndex] = updatedUser;
+        users[userIndex] = { ...users[userIndex], ...updatedUser };
         localStorage.setItem("users", JSON.stringify(users));
       }
 
-      localStorage.setItem("currentUser", JSON.stringify(updatedUser));
       setCurrentUser(updatedUser);
+      toggleEdit(section);
       
-      // Exit edit mode
-      setEditingSections(prev => ({
-        ...prev,
-        [section]: false
-      }));
+      // Dispatch event to update navbar
+      window.dispatchEvent(new Event("userStateChanged"));
     } catch (error) {
       console.error("Error saving profile:", error);
     }
   };
 
   const cancelEdit = (section) => {
-    // Reload data from current user
-    loadUserProfile(currentUser);
-    setEditingSections(prev => ({
-      ...prev,
-      [section]: false
-    }));
+    // Reset form to current user data
+    initializeForms(currentUser);
+    toggleEdit(section);
   };
 
-  const handleResumeUpload = (file) => {
-    setUploadError("");
-    
-    if (!file) {
-      setResumeFile(null);
-      return;
-    }
+  // Experience management
+  const addExperience = () => {
+    setExperienceForm([
+      ...experienceForm,
+      {
+        id: Date.now(),
+        title: "",
+        company: "",
+        location: "",
+        startDate: "",
+        endDate: "",
+        current: false,
+        description: "",
+      },
+    ]);
+  };
+
+  const updateExperience = (id, field, value) => {
+    setExperienceForm(prev =>
+      prev.map(exp => (exp.id === id ? { ...exp, [field]: value } : exp))
+    );
+  };
+
+  const removeExperience = (id) => {
+    setExperienceForm(prev => prev.filter(exp => exp.id !== id));
+  };
+
+  // Education management
+  const addEducation = () => {
+    setEducationForm([
+      ...educationForm,
+      {
+        id: Date.now(),
+        degree: "",
+        institution: "",
+        location: "",
+        startDate: "",
+        endDate: "",
+        current: false,
+        gpa: "",
+      },
+    ]);
+  };
+
+  const updateEducation = (id, field, value) => {
+    setEducationForm(prev =>
+      prev.map(edu => (edu.id === id ? { ...edu, [field]: value } : edu))
+    );
+  };
+
+  const removeEducation = (id) => {
+    setEducationForm(prev => prev.filter(edu => edu.id !== id));
+  };
+
+  // Skills management
+  const addSkill = () => {
+    setSkillsForm([...skillsForm, ""]);
+  };
+
+  const updateSkill = (index, value) => {
+    setSkillsForm(prev => prev.map((skill, i) => (i === index ? value : skill)));
+  };
+
+  const removeSkill = (index) => {
+    setSkillsForm(prev => prev.filter((_, i) => i !== index));
+  };
+
+  // Resume upload functions
+  const handleResumeUpload = async (file) => {
+    if (!file) return;
 
     // Validate file type
     const allowedTypes = [
@@ -179,51 +253,53 @@ const CandidateProfile = () => {
       "application/msword",
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     ];
-    
+
     if (!allowedTypes.includes(file.type)) {
-      setUploadError("Please upload a PDF or Word document (.pdf, .doc, .docx)");
+      setResumeError("Please upload a PDF or Word document (.pdf, .doc, .docx)");
       return;
     }
 
     // Validate file size (5MB limit)
-    const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+    const maxSize = 5 * 1024 * 1024;
     if (file.size > maxSize) {
-      setUploadError("File size must be less than 5MB");
+      setResumeError("File size must be less than 5MB");
       return;
     }
 
-    setResumeFile(file);
-    setUploadError("");
-    
-    // Simulate upload
-    setIsUploading(true);
-    setTimeout(() => {
+    setResumeUploading(true);
+    setResumeError("");
+
+    try {
+      // Simulate upload delay
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
       const resumeData = {
         name: file.name,
         size: file.size,
+        type: file.type,
         uploadedAt: new Date().toISOString(),
-        url: URL.createObjectURL(file), // In real app, this would be a server URL
+        url: URL.createObjectURL(file), // In real app, this would be the server URL
       };
-      
+
       setResume(resumeData);
-      setIsUploading(false);
-      
-      // Auto-save resume
-      const updatedUser = {
-        ...currentUser,
-        resume: resumeData,
-      };
+
+      // Save to user profile
+      const updatedUser = { ...currentUser, resume: resumeData };
+      localStorage.setItem("currentUser", JSON.stringify(updatedUser));
       
       const users = JSON.parse(localStorage.getItem("users") || "[]");
-      const userIndex = users.findIndex(u => u.id === currentUser.id);
+      const userIndex = users.findIndex(u => u.id === updatedUser.id);
       if (userIndex !== -1) {
-        users[userIndex] = updatedUser;
+        users[userIndex] = { ...users[userIndex], ...updatedUser };
         localStorage.setItem("users", JSON.stringify(users));
       }
-      
-      localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+
       setCurrentUser(updatedUser);
-    }, 1500);
+    } catch (error) {
+      setResumeError("Failed to upload resume. Please try again.");
+    } finally {
+      setResumeUploading(false);
+    }
   };
 
   const handleFileInputChange = (e) => {
@@ -236,81 +312,40 @@ const CandidateProfile = () => {
   const handleDragOver = (e) => {
     e.preventDefault();
     e.stopPropagation();
+    setDragActive(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    
+    setDragActive(false);
+
     const files = e.dataTransfer.files;
     if (files.length > 0) {
       handleResumeUpload(files[0]);
     }
   };
 
-  const addExperience = () => {
-    setExperiences([...experiences, {
-      id: Date.now(),
-      title: "",
-      company: "",
-      location: "",
-      startDate: "",
-      endDate: "",
-      current: false,
-      description: "",
-    }]);
-  };
-
-  const updateExperience = (id, field, value) => {
-    setExperiences(experiences.map(exp => 
-      exp.id === id ? { ...exp, [field]: value } : exp
-    ));
-  };
-
-  const removeExperience = (id) => {
-    setExperiences(experiences.filter(exp => exp.id !== id));
-  };
-
-  const addEducation = () => {
-    setEducation([...education, {
-      id: Date.now(),
-      degree: "",
-      institution: "",
-      location: "",
-      startDate: "",
-      endDate: "",
-      current: false,
-      gpa: "",
-    }]);
-  };
-
-  const updateEducation = (id, field, value) => {
-    setEducation(education.map(edu => 
-      edu.id === id ? { ...edu, [field]: value } : edu
-    ));
-  };
-
-  const removeEducation = (id) => {
-    setEducation(education.filter(edu => edu.id !== id));
-  };
-
-  const addSkill = () => {
-    const newSkill = prompt("Enter a skill:");
-    if (newSkill && newSkill.trim()) {
-      setSkills([...skills, newSkill.trim()]);
+  const removeResume = () => {
+    setResume(null);
+    const updatedUser = { ...currentUser };
+    delete updatedUser.resume;
+    
+    localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+    const users = JSON.parse(localStorage.getItem("users") || "[]");
+    const userIndex = users.findIndex(u => u.id === updatedUser.id);
+    if (userIndex !== -1) {
+      users[userIndex] = { ...users[userIndex], ...updatedUser };
+      localStorage.setItem("users", JSON.stringify(users));
     }
-  };
-
-  const removeSkill = (index) => {
-    setSkills(skills.filter((_, i) => i !== index));
-  };
-
-  const getInitials = (name) => {
-    return name
-      ?.split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase() || "U";
+    
+    setCurrentUser(updatedUser);
   };
 
   const formatFileSize = (bytes) => {
@@ -319,6 +354,14 @@ const CandidateProfile = () => {
     const sizes = ["Bytes", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+  };
+
+  const getInitials = (name) => {
+    return name
+      ?.split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase() || "U";
   };
 
   if (isLoading) {
@@ -331,67 +374,61 @@ const CandidateProfile = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header Section */}
         <div className="relative bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 rounded-3xl shadow-2xl overflow-hidden mb-8">
           <div className="absolute inset-0 bg-black/10"></div>
           <div className="relative px-6 sm:px-8 py-8 sm:py-12">
-            <div className="flex flex-col lg:flex-row items-center lg:items-start gap-6 lg:gap-8">
+            <div className="flex flex-col lg:flex-row items-start lg:items-center gap-6 lg:gap-8">
               {/* Profile Picture */}
               <div className="relative group">
                 <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-white/20 backdrop-blur-sm border-4 border-white/30 flex items-center justify-center overflow-hidden shadow-2xl">
-                  <span className="text-2xl sm:text-4xl font-bold text-white">
-                    {getInitials(personalInfo.name)}
-                  </span>
+                  {currentUser.profilePicture ? (
+                    <img
+                      src={currentUser.profilePicture}
+                      alt="Profile"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-2xl sm:text-4xl font-bold text-white">
+                      {getInitials(currentUser.name)}
+                    </span>
+                  )}
                 </div>
               </div>
 
               {/* User Info */}
-              <div className="flex-1 text-white text-center lg:text-left">
+              <div className="flex-1 text-white">
                 <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2">
-                  {personalInfo.name || "Your Name"}
+                  {currentUser.name}
                 </h1>
                 <p className="text-lg sm:text-xl text-blue-100 mb-4">
-                  {personalInfo.jobTitle || "Job Seeker"}
+                  {currentUser.jobTitle || "Job Seeker"}
                 </p>
-                <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4 sm:gap-6 text-blue-100">
-                  {personalInfo.email && (
-                    <div className="flex items-center justify-center lg:justify-start gap-2">
-                      <Mail className="w-4 h-4" />
-                      <span className="text-sm">{personalInfo.email}</span>
-                    </div>
-                  )}
-                  {personalInfo.phone && (
-                    <div className="flex items-center justify-center lg:justify-start gap-2">
+                <div className="flex flex-wrap gap-4 sm:gap-6 text-blue-100">
+                  <div className="flex items-center gap-2">
+                    <Mail className="w-4 h-4" />
+                    <span className="text-sm">{currentUser.email}</span>
+                  </div>
+                  {currentUser.phoneNumber && (
+                    <div className="flex items-center gap-2">
                       <Phone className="w-4 h-4" />
-                      <span className="text-sm">{personalInfo.phone}</span>
+                      <span className="text-sm">{currentUser.phoneNumber}</span>
                     </div>
                   )}
-                  {personalInfo.location && (
-                    <div className="flex items-center justify-center lg:justify-start gap-2">
+                  {currentUser.location && (
+                    <div className="flex items-center gap-2">
                       <MapPin className="w-4 h-4" />
-                      <span className="text-sm">{personalInfo.location}</span>
+                      <span className="text-sm">{currentUser.location}</span>
                     </div>
                   )}
-                </div>
-              </div>
-
-              {/* Stats */}
-              <div className="flex gap-6 lg:gap-8 text-white">
-                <div className="text-center">
-                  <div className="text-2xl sm:text-3xl font-bold">{skills.length}</div>
-                  <div className="text-sm text-blue-100">Skills</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl sm:text-3xl font-bold">{experiences.length}</div>
-                  <div className="text-sm text-blue-100">Experience</div>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Main Content */}
+        {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Left Column */}
           <div className="lg:col-span-2 space-y-6 lg:space-y-8">
@@ -404,110 +441,107 @@ const CandidateProfile = () => {
                   </div>
                   <h2 className="text-xl font-bold text-gray-900">Personal Information</h2>
                 </div>
-                {!editingSections.personal ? (
-                  <Button
-                    onClick={() => toggleEdit('personal')}
-                    variant="outline"
-                    size="sm"
-                  >
-                    <Edit3 className="w-4 h-4 mr-2" />
-                    Edit
-                  </Button>
-                ) : (
-                  <div className="flex gap-2">
-                    <Button
-                      onClick={() => saveSection('personal')}
-                      size="sm"
-                    >
-                      <Save className="w-4 h-4 mr-2" />
-                      Save
-                    </Button>
-                    <Button
-                      onClick={() => cancelEdit('personal')}
-                      variant="outline"
-                      size="sm"
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  </div>
-                )}
+                <Button
+                  onClick={() => editingSections.personal ? cancelEdit('personal') : toggleEdit('personal')}
+                  variant="outline"
+                  size="sm"
+                >
+                  {editingSections.personal ? <X className="w-4 h-4" /> : <Edit3 className="w-4 h-4" />}
+                </Button>
               </div>
 
               {editingSections.personal ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Full Name
-                    </label>
-                    <Input
-                      value={personalInfo.name}
-                      onChange={(e) => setPersonalInfo({...personalInfo, name: e.target.value})}
-                      placeholder="Your full name"
-                    />
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Full Name
+                      </label>
+                      <Input
+                        value={personalForm.name}
+                        onChange={(e) => setPersonalForm({...personalForm, name: e.target.value})}
+                        placeholder="Your full name"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Job Title
+                      </label>
+                      <Input
+                        value={personalForm.jobTitle}
+                        onChange={(e) => setPersonalForm({...personalForm, jobTitle: e.target.value})}
+                        placeholder="e.g. Frontend Developer"
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Email
+                      </label>
+                      <Input
+                        type="email"
+                        value={personalForm.email}
+                        onChange={(e) => setPersonalForm({...personalForm, email: e.target.value})}
+                        placeholder="your.email@example.com"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Phone
+                      </label>
+                      <Input
+                        value={personalForm.phone}
+                        onChange={(e) => setPersonalForm({...personalForm, phone: e.target.value})}
+                        placeholder="+1 (555) 123-4567"
+                      />
+                    </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Job Title
-                    </label>
-                    <Input
-                      value={personalInfo.jobTitle}
-                      onChange={(e) => setPersonalInfo({...personalInfo, jobTitle: e.target.value})}
-                      placeholder="e.g. Frontend Developer"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Email
-                    </label>
-                    <Input
-                      type="email"
-                      value={personalInfo.email}
-                      onChange={(e) => setPersonalInfo({...personalInfo, email: e.target.value})}
-                      placeholder="your.email@example.com"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Phone Number
-                    </label>
-                    <Input
-                      value={personalInfo.phone}
-                      onChange={(e) => setPersonalInfo({...personalInfo, phone: e.target.value})}
-                      placeholder="+1 (555) 123-4567"
-                    />
-                  </div>
-                  <div className="sm:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
                       Location
                     </label>
                     <Input
-                      value={personalInfo.location}
-                      onChange={(e) => setPersonalInfo({...personalInfo, location: e.target.value})}
+                      value={personalForm.location}
+                      onChange={(e) => setPersonalForm({...personalForm, location: e.target.value})}
                       placeholder="City, Country"
                     />
                   </div>
+                  <div className="flex gap-3 pt-4">
+                    <Button onClick={() => saveSection('personal')} className="flex-1">
+                      <Save className="w-4 h-4 mr-2" />
+                      Save Changes
+                    </Button>
+                    <Button onClick={() => cancelEdit('personal')} variant="outline" className="flex-1">
+                      Cancel
+                    </Button>
+                  </div>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                    <p className="text-gray-900">{personalInfo.name || "Not provided"}</p>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-500 mb-1">Full Name</label>
+                      <p className="text-gray-900">{currentUser.name || "Not provided"}</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-500 mb-1">Job Title</label>
+                      <p className="text-gray-900">{currentUser.jobTitle || "Not provided"}</p>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-500 mb-1">Email</label>
+                      <p className="text-gray-900">{currentUser.email}</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-500 mb-1">Phone</label>
+                      <p className="text-gray-900">{currentUser.phoneNumber || "Not provided"}</p>
+                    </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Job Title</label>
-                    <p className="text-gray-900">{personalInfo.jobTitle || "Not provided"}</p>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                    <p className="text-gray-900">{personalInfo.email || "Not provided"}</p>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-                    <p className="text-gray-900">{personalInfo.phone || "Not provided"}</p>
-                  </div>
-                  <div className="sm:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
-                    <p className="text-gray-900">{personalInfo.location || "Not provided"}</p>
+                    <label className="block text-sm font-medium text-gray-500 mb-1">Location</label>
+                    <p className="text-gray-900">{currentUser.location || "Not provided"}</p>
                   </div>
                 </div>
               )}
@@ -522,57 +556,46 @@ const CandidateProfile = () => {
                   </div>
                   <h2 className="text-xl font-bold text-gray-900">About Me</h2>
                 </div>
-                {!editingSections.about ? (
-                  <Button
-                    onClick={() => toggleEdit('about')}
-                    variant="outline"
-                    size="sm"
-                  >
-                    <Edit3 className="w-4 h-4 mr-2" />
-                    Edit
-                  </Button>
-                ) : (
-                  <div className="flex gap-2">
-                    <Button
-                      onClick={() => saveSection('about')}
-                      size="sm"
-                    >
-                      <Save className="w-4 h-4 mr-2" />
-                      Save
-                    </Button>
-                    <Button
-                      onClick={() => cancelEdit('about')}
-                      variant="outline"
-                      size="sm"
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  </div>
-                )}
+                <Button
+                  onClick={() => editingSections.about ? cancelEdit('about') : toggleEdit('about')}
+                  variant="outline"
+                  size="sm"
+                >
+                  {editingSections.about ? <X className="w-4 h-4" /> : <Edit3 className="w-4 h-4" />}
+                </Button>
               </div>
 
               {editingSections.about ? (
-                <textarea
-                  value={aboutMe}
-                  onChange={(e) => setAboutMe(e.target.value)}
-                  placeholder="Write a compelling summary about yourself, your experience, and what you're looking for..."
-                  rows={6}
-                  className="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                />
+                <div className="space-y-4">
+                  <textarea
+                    value={aboutForm}
+                    onChange={(e) => setAboutForm(e.target.value)}
+                    placeholder="Write a compelling summary about yourself, your experience, and what you're looking for..."
+                    rows={6}
+                    className="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  />
+                  <div className="flex gap-3">
+                    <Button onClick={() => saveSection('about')} className="flex-1">
+                      <Save className="w-4 h-4 mr-2" />
+                      Save Changes
+                    </Button>
+                    <Button onClick={() => cancelEdit('about')} variant="outline" className="flex-1">
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
               ) : (
                 <div>
-                  {aboutMe ? (
-                    <p className="text-gray-700 whitespace-pre-wrap">{aboutMe}</p>
+                  {currentUser.about ? (
+                    <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                      {currentUser.about}
+                    </p>
                   ) : (
                     <div className="text-center py-8">
                       <FileText className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                       <p className="text-gray-500 mb-4">No professional summary added yet</p>
-                      <Button
-                        onClick={() => toggleEdit('about')}
-                        variant="outline"
-                        size="sm"
-                      >
-                        Add a compelling summary to showcase your expertise
+                      <Button onClick={() => toggleEdit('about')} variant="outline">
+                        Add Summary
                       </Button>
                     </div>
                   )}
@@ -589,40 +612,31 @@ const CandidateProfile = () => {
                   </div>
                   <h2 className="text-xl font-bold text-gray-900">Experience</h2>
                 </div>
-                {!editingSections.experience ? (
-                  <Button
-                    onClick={() => toggleEdit('experience')}
-                    variant="outline"
-                    size="sm"
-                  >
-                    <Edit3 className="w-4 h-4 mr-2" />
-                    Edit
-                  </Button>
-                ) : (
-                  <div className="flex gap-2">
-                    <Button
-                      onClick={() => saveSection('experience')}
-                      size="sm"
-                    >
-                      <Save className="w-4 h-4 mr-2" />
-                      Save
-                    </Button>
-                    <Button
-                      onClick={() => cancelEdit('experience')}
-                      variant="outline"
-                      size="sm"
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  </div>
-                )}
+                <Button
+                  onClick={() => editingSections.experience ? cancelEdit('experience') : toggleEdit('experience')}
+                  variant="outline"
+                  size="sm"
+                >
+                  {editingSections.experience ? <X className="w-4 h-4" /> : <Edit3 className="w-4 h-4" />}
+                </Button>
               </div>
 
               {editingSections.experience ? (
                 <div className="space-y-6">
-                  {experiences.map((exp) => (
+                  {experienceForm.map((exp, index) => (
                     <div key={exp.id} className="p-4 border border-gray-200 rounded-xl">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                      <div className="flex justify-between items-start mb-4">
+                        <h4 className="font-medium text-gray-900">Experience {index + 1}</h4>
+                        <Button
+                          onClick={() => removeExperience(exp.id)}
+                          variant="outline"
+                          size="sm"
+                          className="text-red-600 hover:text-red-700"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <Input
                           placeholder="Job Title"
                           value={exp.title}
@@ -654,7 +668,7 @@ const CandidateProfile = () => {
                           />
                         </div>
                       </div>
-                      <div className="mb-4">
+                      <div className="mt-4">
                         <label className="flex items-center gap-2">
                           <input
                             type="checkbox"
@@ -662,62 +676,47 @@ const CandidateProfile = () => {
                             onChange={(e) => updateExperience(exp.id, 'current', e.target.checked)}
                             className="rounded"
                           />
-                          <span className="text-sm text-gray-600">I currently work here</span>
+                          <span className="text-sm text-gray-600">Currently working here</span>
                         </label>
                       </div>
                       <textarea
-                        placeholder="Describe your responsibilities and achievements..."
+                        placeholder="Describe your role and achievements..."
                         value={exp.description}
                         onChange={(e) => updateExperience(exp.id, 'description', e.target.value)}
                         rows={3}
-                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                        className="w-full mt-4 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
                       />
-                      <div className="mt-4 flex justify-end">
-                        <Button
-                          onClick={() => removeExperience(exp.id)}
-                          variant="outline"
-                          size="sm"
-                          className="text-red-600 hover:text-red-700"
-                        >
-                          <Trash2 className="w-4 h-4 mr-2" />
-                          Remove
-                        </Button>
-                      </div>
                     </div>
                   ))}
-                  <Button
-                    onClick={addExperience}
-                    variant="outline"
-                    className="w-full"
-                  >
+                  
+                  <Button onClick={addExperience} variant="outline" className="w-full">
                     <Plus className="w-4 h-4 mr-2" />
                     Add Experience
                   </Button>
+                  
+                  <div className="flex gap-3 pt-4">
+                    <Button onClick={() => saveSection('experience')} className="flex-1">
+                      <Save className="w-4 h-4 mr-2" />
+                      Save Changes
+                    </Button>
+                    <Button onClick={() => cancelEdit('experience')} variant="outline" className="flex-1">
+                      Cancel
+                    </Button>
+                  </div>
                 </div>
               ) : (
                 <div>
-                  {experiences.length > 0 ? (
+                  {currentUser.experience && currentUser.experience.length > 0 ? (
                     <div className="space-y-6">
-                      {experiences.map((exp) => (
-                        <div key={exp.id} className="border-l-4 border-blue-500 pl-6">
+                      {currentUser.experience.map((exp, index) => (
+                        <div key={index} className="border-l-4 border-blue-500 pl-6">
                           <h3 className="text-lg font-semibold text-gray-900">{exp.title}</h3>
                           <p className="text-blue-600 font-medium">{exp.company}</p>
-                          <div className="flex flex-wrap gap-4 text-sm text-gray-500 mt-1">
-                            {exp.location && (
-                              <span className="flex items-center gap-1">
-                                <MapPin className="w-3 h-3" />
-                                {exp.location}
-                              </span>
-                            )}
-                            {exp.startDate && (
-                              <span className="flex items-center gap-1">
-                                <Calendar className="w-3 h-3" />
-                                {exp.startDate} - {exp.current ? "Present" : exp.endDate}
-                              </span>
-                            )}
-                          </div>
+                          <p className="text-sm text-gray-500 mb-2">
+                            {exp.location} • {exp.startDate} - {exp.current ? 'Present' : exp.endDate}
+                          </p>
                           {exp.description && (
-                            <p className="text-gray-700 mt-3 whitespace-pre-wrap">{exp.description}</p>
+                            <p className="text-gray-700 leading-relaxed">{exp.description}</p>
                           )}
                         </div>
                       ))}
@@ -726,12 +725,8 @@ const CandidateProfile = () => {
                     <div className="text-center py-8">
                       <Briefcase className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                       <p className="text-gray-500 mb-4">No work experience added yet</p>
-                      <Button
-                        onClick={() => toggleEdit('experience')}
-                        variant="outline"
-                        size="sm"
-                      >
-                        Add your work experience
+                      <Button onClick={() => toggleEdit('experience')} variant="outline">
+                        Add Experience
                       </Button>
                     </div>
                   )}
@@ -748,40 +743,31 @@ const CandidateProfile = () => {
                   </div>
                   <h2 className="text-xl font-bold text-gray-900">Education</h2>
                 </div>
-                {!editingSections.education ? (
-                  <Button
-                    onClick={() => toggleEdit('education')}
-                    variant="outline"
-                    size="sm"
-                  >
-                    <Edit3 className="w-4 h-4 mr-2" />
-                    Edit
-                  </Button>
-                ) : (
-                  <div className="flex gap-2">
-                    <Button
-                      onClick={() => saveSection('education')}
-                      size="sm"
-                    >
-                      <Save className="w-4 h-4 mr-2" />
-                      Save
-                    </Button>
-                    <Button
-                      onClick={() => cancelEdit('education')}
-                      variant="outline"
-                      size="sm"
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  </div>
-                )}
+                <Button
+                  onClick={() => editingSections.education ? cancelEdit('education') : toggleEdit('education')}
+                  variant="outline"
+                  size="sm"
+                >
+                  {editingSections.education ? <X className="w-4 h-4" /> : <Edit3 className="w-4 h-4" />}
+                </Button>
               </div>
 
               {editingSections.education ? (
                 <div className="space-y-6">
-                  {education.map((edu) => (
+                  {educationForm.map((edu, index) => (
                     <div key={edu.id} className="p-4 border border-gray-200 rounded-xl">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                      <div className="flex justify-between items-start mb-4">
+                        <h4 className="font-medium text-gray-900">Education {index + 1}</h4>
+                        <Button
+                          onClick={() => removeEducation(edu.id)}
+                          variant="outline"
+                          size="sm"
+                          className="text-red-600 hover:text-red-700"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <Input
                           placeholder="Degree"
                           value={edu.degree}
@@ -816,7 +802,7 @@ const CandidateProfile = () => {
                           disabled={edu.current}
                         />
                       </div>
-                      <div className="mb-4">
+                      <div className="mt-4">
                         <label className="flex items-center gap-2">
                           <input
                             type="checkbox"
@@ -824,59 +810,39 @@ const CandidateProfile = () => {
                             onChange={(e) => updateEducation(edu.id, 'current', e.target.checked)}
                             className="rounded"
                           />
-                          <span className="text-sm text-gray-600">I currently study here</span>
+                          <span className="text-sm text-gray-600">Currently studying here</span>
                         </label>
-                      </div>
-                      <div className="flex justify-end">
-                        <Button
-                          onClick={() => removeEducation(edu.id)}
-                          variant="outline"
-                          size="sm"
-                          className="text-red-600 hover:text-red-700"
-                        >
-                          <Trash2 className="w-4 h-4 mr-2" />
-                          Remove
-                        </Button>
                       </div>
                     </div>
                   ))}
-                  <Button
-                    onClick={addEducation}
-                    variant="outline"
-                    className="w-full"
-                  >
+                  
+                  <Button onClick={addEducation} variant="outline" className="w-full">
                     <Plus className="w-4 h-4 mr-2" />
                     Add Education
                   </Button>
+                  
+                  <div className="flex gap-3 pt-4">
+                    <Button onClick={() => saveSection('education')} className="flex-1">
+                      <Save className="w-4 h-4 mr-2" />
+                      Save Changes
+                    </Button>
+                    <Button onClick={() => cancelEdit('education')} variant="outline" className="flex-1">
+                      Cancel
+                    </Button>
+                  </div>
                 </div>
               ) : (
                 <div>
-                  {education.length > 0 ? (
+                  {currentUser.education && currentUser.education.length > 0 ? (
                     <div className="space-y-6">
-                      {education.map((edu) => (
-                        <div key={edu.id} className="border-l-4 border-orange-500 pl-6">
+                      {currentUser.education.map((edu, index) => (
+                        <div key={index} className="border-l-4 border-orange-500 pl-6">
                           <h3 className="text-lg font-semibold text-gray-900">{edu.degree}</h3>
                           <p className="text-orange-600 font-medium">{edu.institution}</p>
-                          <div className="flex flex-wrap gap-4 text-sm text-gray-500 mt-1">
-                            {edu.location && (
-                              <span className="flex items-center gap-1">
-                                <MapPin className="w-3 h-3" />
-                                {edu.location}
-                              </span>
-                            )}
-                            {edu.startDate && (
-                              <span className="flex items-center gap-1">
-                                <Calendar className="w-3 h-3" />
-                                {edu.startDate} - {edu.current ? "Present" : edu.endDate}
-                              </span>
-                            )}
-                            {edu.gpa && (
-                              <span className="flex items-center gap-1">
-                                <Award className="w-3 h-3" />
-                                GPA: {edu.gpa}
-                              </span>
-                            )}
-                          </div>
+                          <p className="text-sm text-gray-500">
+                            {edu.location} • {edu.startDate} - {edu.current ? 'Present' : edu.endDate}
+                            {edu.gpa && ` • GPA: ${edu.gpa}`}
+                          </p>
                         </div>
                       ))}
                     </div>
@@ -884,12 +850,8 @@ const CandidateProfile = () => {
                     <div className="text-center py-8">
                       <GraduationCap className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                       <p className="text-gray-500 mb-4">No education added yet</p>
-                      <Button
-                        onClick={() => toggleEdit('education')}
-                        variant="outline"
-                        size="sm"
-                      >
-                        Add your education
+                      <Button onClick={() => toggleEdit('education')} variant="outline">
+                        Add Education
                       </Button>
                     </div>
                   )}
@@ -909,70 +871,59 @@ const CandidateProfile = () => {
                   </div>
                   <h2 className="text-xl font-bold text-gray-900">Skills</h2>
                 </div>
-                {!editingSections.skills ? (
-                  <Button
-                    onClick={() => toggleEdit('skills')}
-                    variant="outline"
-                    size="sm"
-                  >
-                    <Edit3 className="w-4 h-4 mr-2" />
-                    Edit
-                  </Button>
-                ) : (
-                  <div className="flex gap-2">
-                    <Button
-                      onClick={() => saveSection('skills')}
-                      size="sm"
-                    >
-                      <Save className="w-4 h-4 mr-2" />
-                      Save
-                    </Button>
-                    <Button
-                      onClick={() => cancelEdit('skills')}
-                      variant="outline"
-                      size="sm"
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  </div>
-                )}
+                <Button
+                  onClick={() => editingSections.skills ? cancelEdit('skills') : toggleEdit('skills')}
+                  variant="outline"
+                  size="sm"
+                >
+                  {editingSections.skills ? <X className="w-4 h-4" /> : <Edit3 className="w-4 h-4" />}
+                </Button>
               </div>
 
               {editingSections.skills ? (
                 <div className="space-y-4">
-                  <div className="flex flex-wrap gap-2">
-                    {skills.map((skill, index) => (
-                      <span
-                        key={index}
-                        className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm font-medium"
+                  {skillsForm.map((skill, index) => (
+                    <div key={index} className="flex gap-2">
+                      <Input
+                        value={skill}
+                        onChange={(e) => updateSkill(index, e.target.value)}
+                        placeholder="Enter a skill"
+                        className="flex-1"
+                      />
+                      <Button
+                        onClick={() => removeSkill(index)}
+                        variant="outline"
+                        size="sm"
+                        className="text-red-600 hover:text-red-700"
                       >
-                        {skill}
-                        <button
-                          onClick={() => removeSkill(index)}
-                          className="text-indigo-600 hover:text-indigo-800"
-                        >
-                          <X className="w-3 h-3" />
-                        </button>
-                      </span>
-                    ))}
-                  </div>
-                  <Button
-                    onClick={addSkill}
-                    variant="outline"
-                    className="w-full"
-                  >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ))}
+                  
+                  <Button onClick={addSkill} variant="outline" className="w-full">
                     <Plus className="w-4 h-4 mr-2" />
                     Add Skill
                   </Button>
+                  
+                  <div className="flex gap-3 pt-4">
+                    <Button onClick={() => saveSection('skills')} className="flex-1">
+                      <Save className="w-4 h-4 mr-2" />
+                      Save Changes
+                    </Button>
+                    <Button onClick={() => cancelEdit('skills')} variant="outline" className="flex-1">
+                      Cancel
+                    </Button>
+                  </div>
                 </div>
               ) : (
                 <div>
-                  {skills.length > 0 ? (
+                  {currentUser.skills && currentUser.skills.length > 0 ? (
                     <div className="flex flex-wrap gap-2">
-                      {skills.map((skill, index) => (
+                      {currentUser.skills.map((skill, index) => (
                         <span
                           key={index}
-                          className="inline-flex items-center px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm font-medium"
+                          className="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm font-medium"
                         >
                           {skill}
                         </span>
@@ -982,12 +933,8 @@ const CandidateProfile = () => {
                     <div className="text-center py-8">
                       <Award className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                       <p className="text-gray-500 mb-4">No skills added yet</p>
-                      <Button
-                        onClick={() => toggleEdit('skills')}
-                        variant="outline"
-                        size="sm"
-                      >
-                        Add your skills
+                      <Button onClick={() => toggleEdit('skills')} variant="outline">
+                        Add Skills
                       </Button>
                     </div>
                   )}
@@ -999,151 +946,126 @@ const CandidateProfile = () => {
             <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 lg:p-8">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
-                    <Globe className="w-5 h-5 text-green-600" />
+                  <div className="w-10 h-10 bg-cyan-100 rounded-xl flex items-center justify-center">
+                    <ExternalLink className="w-5 h-5 text-cyan-600" />
                   </div>
                   <h2 className="text-xl font-bold text-gray-900">Social Links</h2>
                 </div>
-                {!editingSections.socialLinks ? (
-                  <Button
-                    onClick={() => toggleEdit('socialLinks')}
-                    variant="outline"
-                    size="sm"
-                  >
-                    <Edit3 className="w-4 h-4 mr-2" />
-                    Edit
-                  </Button>
-                ) : (
-                  <div className="flex gap-2">
-                    <Button
-                      onClick={() => saveSection('socialLinks')}
-                      size="sm"
-                    >
-                      <Save className="w-4 h-4 mr-2" />
-                      Save
-                    </Button>
-                    <Button
-                      onClick={() => cancelEdit('socialLinks')}
-                      variant="outline"
-                      size="sm"
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  </div>
-                )}
+                <Button
+                  onClick={() => editingSections.social ? cancelEdit('social') : toggleEdit('social')}
+                  variant="outline"
+                  size="sm"
+                >
+                  {editingSections.social ? <X className="w-4 h-4" /> : <Edit3 className="w-4 h-4" />}
+                </Button>
               </div>
 
-              {editingSections.socialLinks ? (
+              {editingSections.social ? (
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
                       LinkedIn
                     </label>
                     <Input
+                      value={socialForm.linkedin}
+                      onChange={(e) => setSocialForm({...socialForm, linkedin: e.target.value})}
                       placeholder="https://linkedin.com/in/yourprofile"
-                      value={socialLinks.linkedin}
-                      onChange={(e) => setSocialLinks({...socialLinks, linkedin: e.target.value})}
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
                       GitHub
                     </label>
                     <Input
+                      value={socialForm.github}
+                      onChange={(e) => setSocialForm({...socialForm, github: e.target.value})}
                       placeholder="https://github.com/yourusername"
-                      value={socialLinks.github}
-                      onChange={(e) => setSocialLinks({...socialLinks, github: e.target.value})}
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
                       Portfolio
                     </label>
                     <Input
+                      value={socialForm.portfolio}
+                      onChange={(e) => setSocialForm({...socialForm, portfolio: e.target.value})}
                       placeholder="https://yourportfolio.com"
-                      value={socialLinks.portfolio}
-                      onChange={(e) => setSocialLinks({...socialLinks, portfolio: e.target.value})}
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
                       Website
                     </label>
                     <Input
+                      value={socialForm.website}
+                      onChange={(e) => setSocialForm({...socialForm, website: e.target.value})}
                       placeholder="https://yourwebsite.com"
-                      value={socialLinks.website}
-                      onChange={(e) => setSocialLinks({...socialLinks, website: e.target.value})}
                     />
+                  </div>
+                  
+                  <div className="flex gap-3 pt-4">
+                    <Button onClick={() => saveSection('social')} className="flex-1">
+                      <Save className="w-4 h-4 mr-2" />
+                      Save Changes
+                    </Button>
+                    <Button onClick={() => cancelEdit('social')} variant="outline" className="flex-1">
+                      Cancel
+                    </Button>
                   </div>
                 </div>
               ) : (
-                <div className="space-y-4">
-                  {socialLinks.linkedin && (
-                    <div className="flex items-center gap-3">
+                <div className="space-y-3">
+                  {currentUser.socialLinks?.linkedin && (
+                    <a
+                      href={currentUser.socialLinks.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-colors"
+                    >
                       <Linkedin className="w-5 h-5 text-blue-600" />
-                      <a
-                        href={socialLinks.linkedin}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:text-blue-800 flex items-center gap-1"
-                      >
-                        LinkedIn
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
-                    </div>
+                      <span className="text-gray-700">LinkedIn</span>
+                    </a>
                   )}
-                  {socialLinks.github && (
-                    <div className="flex items-center gap-3">
-                      <Github className="w-5 h-5 text-gray-800" />
-                      <a
-                        href={socialLinks.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-gray-800 hover:text-gray-600 flex items-center gap-1"
-                      >
-                        GitHub
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
-                    </div>
+                  {currentUser.socialLinks?.github && (
+                    <a
+                      href={currentUser.socialLinks.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:border-gray-500 hover:bg-gray-50 transition-colors"
+                    >
+                      <Github className="w-5 h-5 text-gray-700" />
+                      <span className="text-gray-700">GitHub</span>
+                    </a>
                   )}
-                  {socialLinks.portfolio && (
-                    <div className="flex items-center gap-3">
-                      <Globe className="w-5 h-5 text-green-600" />
-                      <a
-                        href={socialLinks.portfolio}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-green-600 hover:text-green-800 flex items-center gap-1"
-                      >
-                        Portfolio
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
-                    </div>
-                  )}
-                  {socialLinks.website && (
-                    <div className="flex items-center gap-3">
+                  {currentUser.socialLinks?.portfolio && (
+                    <a
+                      href={currentUser.socialLinks.portfolio}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:border-purple-500 hover:bg-purple-50 transition-colors"
+                    >
                       <Globe className="w-5 h-5 text-purple-600" />
-                      <a
-                        href={socialLinks.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-purple-600 hover:text-purple-800 flex items-center gap-1"
-                      >
-                        Website
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
-                    </div>
+                      <span className="text-gray-700">Portfolio</span>
+                    </a>
                   )}
-                  {!socialLinks.linkedin && !socialLinks.github && !socialLinks.portfolio && !socialLinks.website && (
+                  {currentUser.socialLinks?.website && (
+                    <a
+                      href={currentUser.socialLinks.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:border-green-500 hover:bg-green-50 transition-colors"
+                    >
+                      <Globe className="w-5 h-5 text-green-600" />
+                      <span className="text-gray-700">Website</span>
+                    </a>
+                  )}
+                  
+                  {(!currentUser.socialLinks || Object.values(currentUser.socialLinks).every(link => !link)) && (
                     <div className="text-center py-8">
-                      <Globe className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                      <ExternalLink className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                       <p className="text-gray-500 mb-4">No social links added yet</p>
-                      <Button
-                        onClick={() => toggleEdit('socialLinks')}
-                        variant="outline"
-                        size="sm"
-                      >
-                        Add your social links
+                      <Button onClick={() => toggleEdit('social')} variant="outline">
+                        Add Social Links
                       </Button>
                     </div>
                   )}
@@ -1151,7 +1073,7 @@ const CandidateProfile = () => {
               )}
             </div>
 
-            {/* Resume */}
+            {/* Resume Upload */}
             <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 lg:p-8">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center">
@@ -1178,8 +1100,7 @@ const CandidateProfile = () => {
                         variant="outline"
                         size="sm"
                       >
-                        <Eye className="w-4 h-4 mr-2" />
-                        Preview
+                        <Eye className="w-4 h-4" />
                       </Button>
                       <Button
                         onClick={() => {
@@ -1191,78 +1112,88 @@ const CandidateProfile = () => {
                         variant="outline"
                         size="sm"
                       >
-                        <Download className="w-4 h-4 mr-2" />
-                        Download
+                        <Download className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        onClick={removeResume}
+                        variant="outline"
+                        size="sm"
+                        className="text-red-600 hover:text-red-700"
+                      >
+                        <Trash2 className="w-4 h-4" />
                       </Button>
                     </div>
                   </div>
-                  <Button
-                    onClick={() => {
-                      setResume(null);
-                      setResumeFile(null);
-                      setUploadError("");
-                    }}
-                    variant="outline"
-                    className="w-full text-red-600 hover:text-red-700 hover:bg-red-50"
-                  >
-                    <Trash2 className="w-4 h-4 mr-2" />
-                    Remove Resume
-                  </Button>
-                </div>
-              ) : (
-                <div>
-                  <div
-                    className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-gray-400 transition-colors cursor-pointer"
-                    onDragOver={handleDragOver}
-                    onDrop={handleDrop}
-                    onClick={() => document.getElementById('resume-upload').click()}
-                  >
-                    <Upload className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-                    <p className="text-lg font-medium text-gray-900 mb-2">Upload your resume</p>
-                    <p className="text-sm text-gray-500 mb-4">
-                      Drag and drop your file here, or click to browse
-                    </p>
-                    <p className="text-xs text-gray-400">
-                      PDF, DOC, DOCX up to 5MB
-                    </p>
+                  
+                  <div className="text-center">
+                    <label htmlFor="resume-replace" className="cursor-pointer">
+                      <Button variant="outline" className="w-full" asChild>
+                        <span>
+                          <Upload className="w-4 h-4 mr-2" />
+                          Replace Resume
+                        </span>
+                      </Button>
+                    </label>
                     <input
-                      id="resume-upload"
+                      id="resume-replace"
                       type="file"
                       accept=".pdf,.doc,.docx"
                       onChange={handleFileInputChange}
                       className="hidden"
                     />
                   </div>
-
-                  {/* Upload Progress */}
-                  {isUploading && (
-                    <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-xl">
-                      <div className="flex items-center gap-3">
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
-                        <span className="text-sm text-blue-700">Uploading resume...</span>
+                </div>
+              ) : (
+                <div>
+                  <div
+                    className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors ${
+                      dragActive
+                        ? 'border-blue-500 bg-blue-50'
+                        : 'border-gray-300 hover:border-gray-400'
+                    }`}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                  >
+                    {resumeUploading ? (
+                      <div className="space-y-4">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+                        <p className="text-gray-600">Uploading resume...</p>
                       </div>
-                    </div>
-                  )}
-
-                  {/* Error Message */}
-                  {uploadError && (
-                    <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-xl">
-                      <div className="flex items-center gap-3">
-                        <X className="w-5 h-5 text-red-600" />
-                        <span className="text-sm text-red-700">{uploadError}</span>
+                    ) : (
+                      <div className="space-y-4">
+                        <Upload className="w-12 h-12 mx-auto text-gray-400" />
+                        <div>
+                          <p className="text-lg font-medium text-gray-900 mb-2">
+                            Upload your resume
+                          </p>
+                          <p className="text-gray-600 mb-4">
+                            Drag and drop your file here, or click to browse
+                          </p>
+                          <label htmlFor="resume-upload" className="cursor-pointer">
+                            <Button variant="blue" asChild>
+                              <span>Choose File</span>
+                            </Button>
+                          </label>
+                          <input
+                            id="resume-upload"
+                            type="file"
+                            accept=".pdf,.doc,.docx"
+                            onChange={handleFileInputChange}
+                            className="hidden"
+                          />
+                          <p className="text-xs text-gray-500 mt-2">
+                            PDF, DOC, DOCX up to 5MB
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
 
-                  {/* File Selected */}
-                  {resumeFile && !isUploading && !uploadError && (
-                    <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-xl">
-                      <div className="flex items-center gap-3">
-                        <CheckCircle2 className="w-5 h-5 text-green-600" />
-                        <span className="text-sm text-green-700">
-                          {resumeFile.name} ({formatFileSize(resumeFile.size)}) ready to upload
-                        </span>
-                      </div>
+                  {resumeError && (
+                    <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
+                      <AlertCircle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
+                      <p className="text-red-700">{resumeError}</p>
                     </div>
                   )}
                 </div>
