@@ -1534,21 +1534,7 @@ const CandidateProfile = () => {
                       <option value="Expert">Expert</option>
                     </select>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Category
-                    </label>
-                    <select
-                      value={newSkill.category}
-                      onChange={(e) => setNewSkill({...newSkill, category: e.target.value})}
-                      className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                    >
-                      <option value="Technical">Technical</option>
-                      <option value="Soft Skills">Soft Skills</option>
-                      <option value="Languages">Languages</option>
-                      <option value="Tools">Tools</option>
-                    </select>
-                  </div>
+                  
                 </div>
                 <div className="flex gap-3 mt-6">
                   <Button onClick={addSkill} className="flex-1 bg-purple-600 hover:bg-purple-700">
